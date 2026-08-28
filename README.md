@@ -8,7 +8,7 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 | **Doc root tracked** | <https://docs.copilotkit.ai/deepagents> |
 | **Language tab** | **Python** throughout. The TypeScript tabs are not implemented. |
 | **Backend flavour** | LangGraph CLI (`langgraph.json`), not the FastAPI tab |
-| **CopilotKit (npm)** | `@copilotkit/react-core` 1.66.2 · `@copilotkit/runtime` 1.66.2 · `@copilotkit/a2ui-renderer` 1.66.2 |
+| **CopilotKit (npm)** | `@copilotkit/react-core` 1.69.3 · `@copilotkit/runtime` 1.69.3 · `@copilotkit/a2ui-renderer` 1.66.2 |
 | **CopilotKit (PyPI)** | `copilotkit` 0.1.94 |
 | **Agent framework** | `deepagents` 0.7.4 · `langgraph-cli[inmem]` |
 | **Frontend** | Next.js 16.3.0 · React 19.2.8 · TypeScript 5 · Tailwind 4 |
@@ -30,11 +30,11 @@ Everything traces to a doc page. Nothing was invented to fill a gap — where a 
 
 ```
 browser
-  └─ <CopilotKit runtimeUrl="/api/copilotkit">        frontend/src/components/providers.tsx
+  └─ <CopilotKit runtimeUrl useSingleEndpoint={false}> frontend/src/components/providers.tsx
        └─ <CopilotChat agentId="…"> + hooks           frontend/src/app/**/demo-chat/page.tsx
             │  HTTP POST (single-route JSON envelope)
             ▼
-       Next route handler                             frontend/src/app/api/copilotkit/route.ts
+       Next route handler (v2, catch-all)             frontend/src/app/api/copilotkit/[[...slug]]/route.ts
        CopilotRuntime { agents: { <graphId>: LangGraphAgent } }
             │  LangGraph Platform API
             ▼
@@ -49,10 +49,25 @@ browser
 
 **Backend language: Python.** The Quickstart's Python tab describes a `langgraph.json` manifest served by the LangGraph CLI; that is what this repo builds. The page's third tab (FastAPI + `add_langgraph_fastapi_endpoint`) is an alternative not implemented here.
 
-Two runtime endpoints, not one:
+Two runtime endpoints, not one — both built on the **v2** runtime surface (`@copilotkit/runtime/v2`), both mounted at `[[...slug]]/route.ts`, and both exporting GET/POST/PATCH/DELETE:
 
 - `/api/copilotkit` — all thirteen graphs. Sets `a2ui: { injectA2UITool: false, agents: ["a2ui_fixed_agent"] }`, because the fixed-schema agent returns its own A2UI operations and must not also be handed a `generate_a2ui` tool.
 - `/api/copilotkit-a2ui-dynamic` — the dynamic-schema agent only, with no `a2ui` block, so injection stays on. The setting is per-runtime, which is why it needs its own endpoint.
+
+The catch-all path is required, not cosmetic: `createCopilotRuntimeHandler` serves a subtree (`/info`, agent runs, thread list/rename/delete), so a single-segment `route.ts` 404s everything except the bare URL. The provider passes `useSingleEndpoint={false}` for the same reason.
+
+### CopilotKit Intelligence
+
+The Quickstart's step 1 is now "create a free account", and the runtime it builds reads that key. This harness follows it:
+
+| Env var | Where | Effect |
+|---|---|---|
+| `INTELLIGENCE_API_KEY` | `frontend/.env.local` | Puts the runtime in Intelligence mode — `/info` reports `mode: "intelligence"` and threads persist on the platform. Unset, the runtime falls back to SSE with an `InMemoryAgentRunner`: chat works everywhere, thread list/inspect answer locally, mutations and realtime metadata stay off, nothing survives a restart. |
+| `COPILOTKIT_LICENSE_TOKEN` | `frontend/.env.local` | A **separate** credential. `/info` reports `licenseStatus` from it, and `<CopilotThreadsDrawer>` renders its locked "Upgrade" view unless that status is `valid` or `expiring` — *regardless of whether threads actually work*. A runtime can serve threads perfectly and still show every drawer as locked. |
+| `NEXT_PUBLIC_DEMO_USER_ID` / `_NAME` | `frontend/.env.local` | The identity `Providers` sends as `x-user-id` / `x-user-name`, which the runtime's `identifyUser` reads. Threads are per-user; change this and reload to watch the list diverge. |
+
+Neither key is required to run the harness. `/quickstart` renders a **Live connection** panel that probes the agent server and `GET /api/copilotkit/info` during render and reports all three axes separately — mode, license status, and what the runtime says it can do with threads. That panel is the honest answer to "is Intelligence on": a key can be set and still unread, and SSE mode already reports `threadEndpoints.list: true` from its in-memory runner, so the flags alone read as a false positive.
+
 
 ---
 
@@ -97,6 +112,9 @@ cp .env.example frontend/.env.local # then keep the frontend block
 | `OPENAI_MODEL` | `backend/.env` | no | Model id for every agent. Defaults to `gpt-4o`. |
 | `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8123`. |
 | `LANGSMITH_API_KEY` | `frontend/.env.local` | no | Sent as `langsmithApiKey`. Ignored by a local `langgraph dev`. |
+| `INTELLIGENCE_API_KEY` | `frontend/.env.local` | no | Puts the runtime in Intelligence mode so threads persist. Without it: SSE + in-memory runner. |
+| `COPILOTKIT_LICENSE_TOKEN` | `frontend/.env.local` | no | Separate credential. What `<CopilotThreadsDrawer>` gates its unlocked view on. |
+| `NEXT_PUBLIC_DEMO_USER_ID` / `_NAME` | `frontend/.env.local` | no | The demo identity `identifyUser` keys threads on. |
 | `COPILOTKIT_TELEMETRY_DISABLED` | `frontend/.env.local` | no | Silences the runtime's telemetry notice. |
 
 **Ports:** frontend `3000`, agent server `8123`. Change the agent port and you must change `LANGGRAPH_DEPLOYMENT_URL` to match.
@@ -156,6 +174,28 @@ Proves the whole stack in one message: a Deep Agent with a single Python tool, p
 *Try:* `What's the weather in Lisbon?`
 *Pass:* tokens stream a word at a time; a collapsed `Called get_weather` row appears (that's `useDefaultRenderTool`); the reply says Lisbon is sunny.
 *Fail:* an error banner or no reply — `langgraph dev` is down, or `OPENAI_API_KEY` is missing from `backend/.env`.
+
+### Basics
+
+**`/prebuilt-components/copilot-threads-drawer`** → `sample_agent`
+The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` inside one `CopilotChatConfigurationProvider` — the shared configuration holds the active thread, so selecting a row connects the chat and replays its history with no `threadId` state of your own.
+*Try:* send a message, then press **New Conversation** and send another.
+*Pass:* two rows in the drawer; clicking between them swaps the transcript.
+*Fail:* a locked "Threads are a CopilotKit Intelligence feature" panel — that is `licenseStatus`, not a bug. See the Quickstart's Live connection panel.
+
+### Rich Threads
+
+**`/headless-threads`** → `sample_agent`
+The same thread data through `useThreads`, with a hand-built list — including **rename**, which the prebuilt drawer omits. The selected id is ordinary React state passed to `<CopilotChat threadId={...}>`.
+*Try:* send a message, then Rename / Archive / Delete the row.
+*Pass:* the row's label changes, the archived tag appears, the row disappears.
+*Fail:* mutations no-op — in SSE mode `/info` reports `mutations: false`, so those endpoints do not exist.
+
+**`/threads-lifecycle`** → `sample_agent`
+Where a `threadId` comes from, and how switching differs from starting fresh. `setActiveThreadId(id, { explicit: true })` replays history; `{ explicit: false }` sets the same id and shows the welcome screen; `startNewThread()` mints a new one.
+*Try:* watch the `threadId` readout while pressing **New chat**, then **Open conversation**.
+*Pass:* the id changes on New chat, and `explicit` flips to `true` when you open a known conversation.
+*Fail:* the setters log a warning and no-op — that happens when the `threadId` is prop-controlled, which this demo deliberately avoids.
 
 ### Generative UI
 
@@ -248,6 +288,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | Doc page | Route | Graph | Status | Notes |
 |---|---|---|---|---|
 | [quickstart](https://docs.copilotkit.ai/deepagents/quickstart) | `/quickstart` | `sample_agent` | ✅ Working | Python tab + Deep Agent runtime tab |
+| [prebuilt-components/copilot-threads-drawer](https://docs.copilotkit.ai/deepagents/prebuilt-components/copilot-threads-drawer) | `/prebuilt-components/copilot-threads-drawer` | `sample_agent` | ✅ Working | Needs Intelligence mode; the unlocked view needs a license token |
+| [headless-threads](https://docs.copilotkit.ai/deepagents/headless-threads) | `/headless-threads` | `sample_agent` | ✅ Working | Rename/archive/delete need `mutations: true`, i.e. Intelligence mode |
+| [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads-lifecycle` | `sample_agent` | ✅ Working | Switch/start are live regardless; replay needs a server-side store |
 | [generative-ui/tool-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering) | `/generative-ui/tool-rendering` | `tool_rendering_agent` | ✅ Working | Page's `useDefaultRenderTool` destructures a prop that doesn't exist |
 | [generative-ui/state-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/state-rendering) | `/generative-ui/state-rendering` | `state_rendering_agent` | ✅ Working | Emit coroutine's caller is not shown by the page |
 | [.../your-components/interrupt-based](https://docs.copilotkit.ai/deepagents/generative-ui/your-components/interrupt-based) | `/generative-ui/your-components/interrupt-based` | `interrupt_agent`, `interrupt_multi_agent` | ✅ Working | Conditional snippet cannot work as printed |
@@ -264,7 +307,7 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [shared-state/state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) | `/shared-state/state-inputs-outputs` | `state_io_graph` | ✅ Working | Custom `StateGraph`, not a Deep Agent — the page calls for exactly that |
 | [shared-state/workflow-execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution) | `/shared-state/workflow-execution` | — | ❌ Broken | Upstream duplicate of the page above |
 
-**Totals:** 13 ✅ Working · 2 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken.
+**Totals:** 16 ✅ Working · 2 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken.
 
 The same table is rendered in-app at `/status`, generated from `frontend/src/lib/nav-config.ts` — that file is the single source of truth for routes, statuses and doc links, so this table and the app cannot drift apart.
 
