@@ -60,7 +60,18 @@ export type TakeStep =
   | { kind: 'doc'; url: string; select: DocSelection[] }
   | { kind: 'ide'; ranges: IdeRange[] }
   | { kind: 'browser'; label: string; run: (page: Page) => Promise<void> }
-  | { kind: 'note'; text: string; fileName?: string; dwellMs?: number };
+  | {
+      kind: 'note';
+      text: string;
+      fileName?: string;
+      dwellMs?: number;
+      /**
+       * Typed only if this returns true when the step is reached. For a note
+       * that states what an earlier browser step was supposed to show: the
+       * note must not say it if the take did not show it.
+       */
+      when?: () => boolean;
+    };
 
 export interface TakeEnv {
   page: Page;
@@ -104,6 +115,10 @@ export async function runTake(steps: TakeStep[], env: TakeEnv): Promise<void> {
         await step.run(env.page);
         break;
       case 'note':
+        if (step.when && !step.when()) {
+          console.log(`${tag} note skipped (not observed): ${step.text.split('\n')[0].slice(0, 80)}`);
+          break;
+        }
         console.log(`${tag} note: ${step.text.split('\n')[0].slice(0, 80)}`);
         await noteStep(env, step.text, step.fileName, step.dwellMs);
         break;

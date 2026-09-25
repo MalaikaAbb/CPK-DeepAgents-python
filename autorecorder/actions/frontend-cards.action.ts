@@ -1,4 +1,5 @@
 import { type Page } from 'playwright';
+import { captureConsole, findEntries } from '../core/console-capture';
 import { beat } from '../core/overlays/human';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 import { glideClick, glideTo, visibleWithin, waitForText } from './glide-click';
@@ -29,7 +30,15 @@ import { openUrl, runTake, type TakeStep } from './take';
  * The add-card click waits for `isReady true` on purpose: a card added while
  * the runtime is still connecting goes to a provisional agent and is silently
  * dropped when the real one arrives (a separate finding, 3/3), which is not
- * what this clip is about.
+ * what this clip is about -- so that half of the knownIssue's impact is NOT
+ * observed here, by design. Nor is "the run payload carries only `user`",
+ * which this take does not send a run to check.
+ *
+ * What is observed, and reported with `ctx.reproduced`: the published
+ * provider's throw, "Agent 'default' not found", read from the demo's error
+ * boundary on the page and/or the browser console. The notes that explain the
+ * crash and the fix are typed only if that throw was seen, and the closing
+ * "the same page works" note only if the card actually rendered.
  */
 
 const DEMO_FILE = 'frontend/src/app/generative-ui/frontend-cards/demo-chat/page.tsx';
@@ -41,6 +50,11 @@ export const runFrontendCardsAction: PageActionHandler = async (
   rootPath: string,
   ctx: ActionContext,
 ) => {
+  // What the take actually showed; the notes below are gated on it.
+  const seen = { crash: '', cardRendered: false };
+  const capture = captureConsole(page);
+  const crashed = () => Boolean(seen.crash);
+
   const steps: TakeStep[] = [
     {
       kind: 'doc',
@@ -64,11 +78,17 @@ export const runFrontendCardsAction: PageActionHandler = async (
       label: 'the route as published crashes',
       run: async (p) => {
         await openUrl(p, config.demoUrl, ctx.timeouts.demoNavMs);
-        await showPublishedCrash(p, ctx);
+        seen.crash = (await showPublishedCrash(p, ctx)) ?? '';
+        if (!seen.crash) {
+          // The boundary may have missed it; the console is the other witness.
+          seen.crash = findEntries(capture, DEFAULT_AGENT_MISSING, 1)[0]?.text ?? '';
+        }
+        if (seen.crash) ctx.reproduced(`published provider threw: ${seen.crash.slice(0, 180)}`);
       },
     },
     {
       kind: 'note',
+      when: crashed,
       text:
         "With no name, CopilotKit looks for an agent called 'default'.\n" +
         'Deep Agents registers graphs by name, like sample_agent,\n' +
@@ -80,6 +100,7 @@ export const runFrontendCardsAction: PageActionHandler = async (
     },
     {
       kind: 'note',
+      when: crashed,
       text:
         'Fix: pass the agent name, as the Deep Agents quickstart does:\n' +
         '<CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" ...>\n' +
@@ -91,36 +112,60 @@ export const runFrontendCardsAction: PageActionHandler = async (
       run: async (p) => {
         await openUrl(p, config.demoUrl, ctx.timeouts.demoNavMs);
         // Still broken as published -- a second look before switching.
-        await showPublishedCrash(p, ctx, 1800);
-        await showFixedVariant(p, ctx);
+        await showPublishedCrash(p, ctx, 1800, false);
+        seen.cardRendered = await showFixedVariant(p, ctx);
       },
     },
-    { kind: 'note', text: 'Add agent="sample_agent" and the same page works.' },
+    {
+      kind: 'note',
+      when: () => crashed() && seen.cardRendered,
+      text: 'Add agent="sample_agent" and the same page works.',
+    },
   ];
 
-  await runTake(steps, { page, rootDir: rootPath, origin: new URL(config.demoUrl).origin, ctx, noteFile: 'frontend-cards.txt' });
+  try {
+    await runTake(steps, { page, rootDir: rootPath, origin: new URL(config.demoUrl).origin, ctx, noteFile: 'frontend-cards.txt' });
+  } finally {
+    capture.stop();
+  }
 };
 
-/** Waits for the published provider's real throw and rests the cursor on it. */
-async function showPublishedCrash(page: Page, ctx: ActionContext, dwellMs = 3500): Promise<void> {
+const DEFAULT_AGENT_MISSING = /Agent 'default' not found/;
+
+/**
+ * Waits for the published provider's real throw and rests the cursor on it.
+ * Returns the thrown text when it is the documented "Agent 'default' not
+ * found", otherwise null. `report: false` on the second look, so one missing
+ * throw is not warned about twice.
+ */
+async function showPublishedCrash(
+  page: Page,
+  ctx: ActionContext,
+  dwellMs = 3500,
+  report = true,
+): Promise<string | null> {
   const thrown = page.locator('[data-testid=provider-error]');
   if (!(await visibleWithin(thrown, 30_000))) {
-    ctx.warn(
-      'The published provider did not throw -- a `default` agent may be registered now. ' +
-        'Re-check the finding on /generative-ui/frontend-cards.',
-    );
-    return;
+    if (report) {
+      ctx.warn(
+        'The published provider did not throw -- a `default` agent may be registered now. ' +
+          'Re-check the finding on /generative-ui/frontend-cards.',
+      );
+    }
+    return null;
   }
   const text = ((await thrown.textContent().catch(() => '')) ?? '').trim();
   console.log(`   [Frontend Cards] the published provider threw: ${text.slice(0, 140)}`);
-  if (!/Agent 'default' not found/.test(text)) {
+  const documented = DEFAULT_AGENT_MISSING.test(text);
+  if (!documented && report) {
     ctx.warn(`The published provider threw something else: "${text.slice(0, 160)}"`);
   }
   await glideTo(page, thrown, dwellMs);
+  return documented ? text : null;
 }
 
-/** The page's quickstart-agent tab: wait for the agent, add a card, show it. */
-async function showFixedVariant(page: Page, ctx: ActionContext): Promise<void> {
+/** The page's quickstart-agent tab: wait for the agent, add a card, show it. Returns whether it rendered. */
+async function showFixedVariant(page: Page, ctx: ActionContext): Promise<boolean> {
   await glideClick(page, page.locator('[data-testid=cards-provider-quickstart-agent]'));
   await beat(800);
 
@@ -136,7 +181,8 @@ async function showFixedVariant(page: Page, ctx: ActionContext): Promise<void> {
   const card = page.locator(CARD).first();
   if (!(await visibleWithin(card, 5000))) {
     ctx.fail('The activity card never rendered in the transcript');
-  } else {
-    await glideTo(page, card, 3000);
+    return false;
   }
+  await glideTo(page, card, 3000);
+  return true;
 }

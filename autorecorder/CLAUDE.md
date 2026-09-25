@@ -54,3 +54,13 @@ track on the pages that have one.
 
 `ADAPT.md` Step 5b documents the contract. If you are reading this while porting
 somewhere else, these are already yours to use.
+
+Two later changes (ported from DeepAgentspy-angular) tighten those verdicts:
+
+- `types.ts` / `engine.ts`: `ctx.reproduced(evidence)`. A `knownIssue` page is
+  `[ISSUE]` only when its handler saw the defect; otherwise it is `[PASS*]` with
+  "KNOWN ISSUE NOT REPRODUCED". Handlers with a `knownIssue` must call it.
+- `console-capture.ts` / `engine.ts`: `breakingErrors`. An uncaught exception,
+  or a failed request to a localhost harness server, now FAILs the take unless
+  a reproduced `knownIssue` accounts for it. Hydration mismatches are no longer
+  in `IGNORED`: they show as console errors (warnings), not silence.

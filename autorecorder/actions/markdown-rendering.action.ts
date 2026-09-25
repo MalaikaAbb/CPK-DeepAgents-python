@@ -1,5 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { type Page } from 'playwright';
 import { promptsFor, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
+import { captureConsole, findEntries } from '../core/console-capture';
 import { sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 import { markServerLogs } from './error-evidence';
@@ -48,6 +51,7 @@ export const runMarkdownRenderingAction: PageActionHandler = async (
 ) => {
   const logs = markServerLogs(rootPath);
   const [first, second] = promptsFor(config);
+  const capture = captureConsole(page);
 
   // Pass 1 -- the published block.
   console.log('   [Markdown] 1/3: the page block, verbatim...');
@@ -124,13 +128,121 @@ export const runMarkdownRenderingAction: PageActionHandler = async (
   }
   await glideTo(page, anchor, 3000);
 
+  // The published block's throw: on the page (the demo's error boundary prints
+  // it) or in the console. Either is the defect, observed.
+  const consoleThrow = findEntries(capture, DEFAULT_AGENT_MISSING, 1)[0];
+  capture.stop();
+  const thrownSeen = DEFAULT_AGENT_MISSING.test(thrownText) ? thrownText : consoleThrow?.text ?? '';
+  if (thrownText && !DEFAULT_AGENT_MISSING.test(thrownText)) {
+    ctx.warn(`The published block threw something else: "${thrownText.slice(0, 160)}"`);
+  }
+
+  // The headline example's classes, looked up in every stylesheet the page
+  // loaded. None defining them is the impact's "changes nothing a reader can
+  // see", observed rather than asserted.
+  const undefinedClasses = await classesWithNoRule(page, ['my-link', 'my-heading']);
+
+  if (thrownSeen) {
+    ctx.reproduced(
+      `published block (no agent id) threw: ${thrownSeen.split(' Known agents')[0].slice(0, 160)}` +
+        (consoleThrow && thrownText ? ' (on the page and in the console)' : thrownText ? ' (on the page)' : ' (console only)'),
+    );
+  }
+
+  // NOT observable from a take: that no block carries "use client". That is a
+  // fact about the doc's source; the demo has to add it to compile at all.
   await evidenceThenIssueNote(page, config, logs, RELEVANT, {
+    note: () =>
+      noteFor({
+        thrown: thrownSeen,
+        overridden,
+        nodeCount,
+        baseline,
+        undefinedClasses,
+        versions: installedVersions(rootPath),
+      }),
+    writeNote: Boolean(thrownSeen),
     extraLines: () => {
       const lines: string[] = [];
-      if (thrownText) lines.push(`thrown: ${thrownText.split(' Known agents')[0]}`);
+      if (thrownSeen) lines.push(`thrown: ${thrownSeen.split(' Known agents')[0]}`);
       if (overridden.startsWith('<a')) lines.push(`overridden: ${overridden.slice(0, 160)}`);
       if (baseline.startsWith('<a')) lines.push(`default:    ${baseline.slice(0, 160)}`);
       return lines;
     },
   });
 };
+
+const DEFAULT_AGENT_MISSING = /Agent 'default' not found/;
+
+/** Of `classes`, those no CSS rule in any readable stylesheet selects. */
+async function classesWithNoRule(page: Page, classes: string[]): Promise<string[]> {
+  // tsx's keepNames wraps the named `walk` below in `__name(...)`, which the
+  // page does not define (see take.ts).
+  await page.evaluate('window.__name = window.__name || function (f) { return f; }').catch(() => {});
+  return page
+    .evaluate((names) => {
+      const found = new Set<string>();
+      const walk = (rules: CSSRuleList) => {
+        for (const rule of Array.from(rules)) {
+          const sel = (rule as CSSStyleRule).selectorText;
+          if (sel) for (const n of names) if (sel.includes(`.${n}`)) found.add(n);
+          const inner = (rule as CSSGroupingRule).cssRules;
+          if (inner) walk(inner);
+        }
+      };
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          walk(sheet.cssRules);
+        } catch {
+          // cross-origin sheet: unreadable, and not the page's own CSS
+        }
+      }
+      return names.filter((n) => !found.has(n));
+    }, classes)
+    .catch(() => []);
+}
+
+/** "react-core 1.73.3, streamdown 1.6.11", read from what this run installed. */
+function installedVersions(rootPath: string): string {
+  const read = (pkg: string) => {
+    try {
+      const file = join(rootPath, 'frontend', 'node_modules', ...pkg.split('/'), 'package.json');
+      return (JSON.parse(readFileSync(file, 'utf8')) as { version?: string }).version ?? '?';
+    } catch {
+      return '?';
+    }
+  };
+  return `react-core ${read('@copilotkit/react-core')}, streamdown ${read('streamdown')}`;
+}
+
+/** The note, one block per thing this take showed. Written only when the throw was seen. */
+function noteFor(s: {
+  thrown: string;
+  overridden: string;
+  nodeCount: string;
+  baseline: string;
+  undefinedClasses: string[];
+  versions: string;
+}): string {
+  const lines = [
+    'markdown rendering - published blocks crash the route',
+    '',
+    'tab 1 = the page block exactly, no agent id',
+    "so CopilotChat asks for 'default'. deep agents registers sample_agent, no default",
+    `-> ${s.thrown.split(' Known agents')[0].slice(0, 120)}`,
+  ];
+  if (s.overridden.startsWith('<a')) {
+    lines.push('', 'tab 2 = same + agentId="sample_agent":', `anchor: ${s.overridden.slice(0, 140)}`);
+    if (s.nodeCount === '0') lines.push('node attribute count 0, so "drop node" works');
+  }
+  if (s.baseline.startsWith('<a')) lines.push(`tab 3 (no override): ${s.baseline.slice(0, 140)}`);
+  if (s.undefinedClasses.length > 0) {
+    lines.push(
+      '',
+      `no stylesheet on the page defines ${s.undefinedClasses.map((c) => `.${c}`).join(' / ')}`,
+      'so the headline example is a no-op visually',
+    );
+  }
+  lines.push('and no block has "use client", which app router needs for these', '', `installed ${s.versions}`);
+  return lines.join('\n');
+}

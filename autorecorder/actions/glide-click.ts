@@ -68,6 +68,10 @@ export async function visibleWithin(target: Locator, timeoutMs: number): Promise
  * `note` replaces `knownIssue.note` for a take whose outcome depends on the
  * environment (an Intelligence key or not); `extraLines(serverLines)` adds what
  * only this take knows (a save result) before the version lines.
+ *
+ * `writeNote: false` skips the note and still shows the overlay and terminal:
+ * those are what the app and servers actually said, while the note asserts the
+ * knownIssue, and a take that did not observe it must not type it.
  */
 export async function evidenceThenIssueNote(
   page: Page,
@@ -77,16 +81,21 @@ export async function evidenceThenIssueNote(
   opts: {
     note?: (serverLines: string[]) => string;
     extraLines?: (serverLines: string[]) => string[];
+    writeNote?: boolean | ((serverLines: string[]) => boolean);
   } = {},
-): Promise<void> {
+): Promise<string[]> {
   const overlay = await showNextIssues(page);
   console.log(`   [evidence] Next overlay: ${overlay ?? '(no issues badge)'}`);
   const serverLines = serverLogSince(logs, { relevant });
   console.log(`   [evidence] ${serverLines.length} server line(s) on screen`);
   for (const l of serverLines) console.log(`      | ${l}`);
   await showServerTerminal(page, serverLines);
-  if (config.knownIssue) {
+  const write = typeof opts.writeNote === 'function' ? opts.writeNote(serverLines) : opts.writeNote ?? true;
+  if (config.knownIssue && write) {
     const issue = opts.note ? { ...config.knownIssue, note: opts.note(serverLines) } : config.knownIssue;
     await writeIssueNote(page, config.id, issue, { extraLines: opts.extraLines?.(serverLines) ?? [] });
+  } else if (config.knownIssue) {
+    console.log(`   [evidence] knownIssue not observed in this take -- no note typed.`);
   }
+  return serverLines;
 }

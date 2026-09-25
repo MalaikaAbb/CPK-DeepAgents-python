@@ -32,8 +32,18 @@
  * daily report only see what goes through `ctx`.
  *
  * ── Handlers for pages that reproduce a defect ─────────────────────────────
- * Five pages here carry a `knownIssue`, and their handlers have one extra
- * obligation: make the defect visible, then write it down.
+ * Pages here that carry a `knownIssue` give their handlers extra obligations:
+ * detect the defect, make it visible, then write it down.
+ *
+ * Detect first. A take is `[ISSUE]` only when the handler calls
+ * `ctx.reproduced('<what it saw>')` with the observed value -- a console line,
+ * a panel's text, a computed colour. Declaring a defect is not evidence of it;
+ * without the call the take reports KNOWN ISSUE NOT REPRODUCED. The Notepad
+ * note is written only when the defect was seen, and only says what was seen:
+ * a note typed regardless of the result keeps "proving" a bug after it is
+ * fixed. Where part of a `knownIssue` cannot be observed in a take (a source
+ * fact, an install-time 404), the handler says so in a comment rather than
+ * claiming it.
  *
  * The governing rule is that a take may only contain things a person testing
  * this app could actually have done. That rule cost this suite two helpers it
@@ -61,14 +71,14 @@
 
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 import { runStandardAction } from '../core/actions';
-import { writeIssueNote } from '../core/issue-note';
 import { type Page } from 'playwright';
 
-import { runA2uiFixedSchemaAction, runA2uiSurfaceAction } from './a2ui.action';
+import { runA2uiFixedSchemaAction, runA2uiStylingAction, runA2uiSurfaceAction } from './a2ui.action';
 import { runFrontendCardsAction } from './frontend-cards.action';
 import { runFrontendToolsAction } from './frontend-tools.action';
 import { runGovernedActionsAction } from './governed-actions.action';
 import { runInterruptAction } from './interrupt.action';
+import { runLearnedSkillsAction } from './learned-skills.action';
 import { runLearningAction } from './learning.action';
 import { runMarkdownRenderingAction } from './markdown-rendering.action';
 import { runMemoriesAction } from './memories.action';
@@ -96,7 +106,7 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
 
   'a2ui-fixed-schema': runA2uiFixedSchemaAction,
   'a2ui-dynamic-schema': runA2uiSurfaceAction,
-  'a2ui-styling': runA2uiSurfaceAction,
+  'a2ui-styling': runA2uiStylingAction,
   'a2ui-advanced': runA2uiSurfaceAction,
 
   'frontend-tools': runFrontendToolsAction,
@@ -112,30 +122,11 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   'frontend-cards': runFrontendCardsAction,
   'intelligence-memories': runMemoriesAction,
   learning: runLearningAction,
-  'intelligence-learned-skills': runPromptThenIssueNote,
+  'intelligence-learned-skills': runLearnedSkillsAction,
 
   'markdown-rendering': runMarkdownRenderingAction,
   'threads-lifecycle': runThreadsLifecycleAction,
 };
-
-/**
- * The prompt, then the page's `knownIssue` typed into Notepad over the reply.
- *
- * Only `intelligence-learned-skills` uses it, and that page is in
- * SKIP_RECORDING, so today it never runs. It exists because the doctor
- * requires every knownIssue page to have a handler that writes the note, and
- * so that taking the page off SKIP_RECORDING films the defect rather than a
- * bare prompt. Give the page a real take before filming it for a report.
- */
-async function runPromptThenIssueNote(
-  page: Page,
-  config: PageRecordConfig,
-  rootPath: string,
-  ctx: ActionContext,
-): Promise<void> {
-  await runStandardAction(page, config, rootPath, ctx);
-  if (config.knownIssue) await writeIssueNote(page, config.id, config.knownIssue);
-}
 
 export async function executePageAction(
   page: Page,

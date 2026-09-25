@@ -42,6 +42,33 @@ function discoverTracks() {
     .map((e) => ({ audioFile: e.name, videoName: path.basename(e.name, path.extname(e.name)) }));
 }
 
+/**
+ * Per-clip results from the RECORD_RESULTS*.json files in `dir`, by filename.
+ *
+ * Every narration here describes a defect, so a track goes on a clip only when
+ * that take was `[ISSUE]` with evidence (`reproduced`). Muxing used to run
+ * whatever the take showed, so a voiceover could assert a defect the video did
+ * not contain -- the automatic version of moving a file to `audio/on-hold/`.
+ */
+function resultsByFilename(dir) {
+  const byFile = new Map();
+  let files = [];
+  try {
+    files = fs.readdirSync(dir).filter((f) => /^RECORD_RESULTS.*\.json$/.test(f));
+  } catch {
+    return byFile;
+  }
+  for (const f of files) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+      for (const r of parsed.results ?? []) if (r.filename) byFile.set(r.filename, r);
+    } catch {
+      // unreadable results file: its clips get no narration
+    }
+  }
+  return byFile;
+}
+
 function hasFfmpeg() {
   try {
     execSync('ffmpeg -version', { stdio: 'ignore' });
@@ -69,6 +96,7 @@ export function muxAudioFiles(dir = VIDEOS_DIR) {
   }
 
   const files = fs.readdirSync(dir);
+  const results = resultsByFilename(dir);
 
   for (const track of tracks) {
     const audioPath = path.join(AUDIO_DIR, track.audioFile);
@@ -78,6 +106,15 @@ export function muxAudioFiles(dir = VIDEOS_DIR) {
     if (!video) {
       console.log(
         `ℹ️ [Audio Mux] No *${suffix} in this run; skipping ${track.audioFile}.`,
+      );
+      continue;
+    }
+
+    const result = results.get(video);
+    if (!(result?.outcome === 'issue' && result.reproduced?.length > 0)) {
+      console.log(
+        `ℹ️ [Audio Mux] ${video}: take was ${result?.outcome ?? 'not in RECORD_RESULTS'} without an observed ` +
+          `defect; not narrating it with ${track.audioFile}.`,
       );
       continue;
     }

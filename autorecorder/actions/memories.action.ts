@@ -1,4 +1,4 @@
-import { type Page } from 'playwright';
+import { type Page, type Request } from 'playwright';
 import { promptsFor, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
@@ -29,13 +29,47 @@ import { evidenceThenIssueNote, glideClick, glideTo, visibleWithin, waitForText 
 /** Memory routes and the platform's memory codes. */
 const RELEVANT = /memor|MEMORY_/i;
 
-const NOTE_HEAD = [
-  'memories - blocked on entitlement',
-  '',
-  'the /v2 import bug is fixed upstream as of 21 sep, snippet compiles now',
-  'runtime needs memory: { access }, page never says',
-  'org has no memory (403 MEMORY_NOT_ENTITLED), managed so no embedder needed',
-];
+/** What pass one (the documented runtime) showed. */
+interface DocumentedPass {
+  /** Requests to a memory route under /api during the pass. */
+  memoryRequests: number;
+  /** `useMemories().isAvailable` and the list length, as the probe printed them. */
+  isAvailable: string;
+  count: string;
+  /** The save button's result line. */
+  save: string;
+}
+
+const RUNTIME_URL_ERROR = /Runtime URL is not configured/i;
+
+/**
+ * The parts of the knownIssue pass one can show. Each is an observation. The
+ * cause (the store only gets a context when /info advertises an Intelligence
+ * socket) is a fact about the client's source and is not observable here, and
+ * the agent saying it will remember is not checked: any reply would pass.
+ */
+function documentedFindings(p: DocumentedPass): string[] {
+  const out: string[] = [];
+  if (p.memoryRequests === 0) out.push('no memory request left the browser');
+  if (p.isAvailable === 'true' && p.count === '0') out.push('isAvailable true over an empty list');
+  if (RUNTIME_URL_ERROR.test(p.save)) out.push(`save: ${p.save}`);
+  return out;
+}
+
+/** The note, built from what this take saw. The static lines are doc facts. */
+function noteFor(p: DocumentedPass, serverLines: string[], opened: string): string {
+  const entitled = serverLines.some((l) => /MEMORY_NOT_ENTITLED/.test(l));
+  const seen = documentedFindings(p);
+  return [
+    entitled ? 'memories - blocked on entitlement' : 'memories - nothing happens on the documented runtime',
+    '',
+    'the /v2 import bug is fixed upstream as of 21 sep, snippet compiles now',
+    ...(seen.length > 0 ? ['on the quickstart runtime, as documented:', ...seen.map((l) => `  ${l}`)] : []),
+    'runtime needs memory: { access }, page never says',
+    '',
+    ...accessLines(serverLines, opened),
+  ].join('\n');
+}
 
 /** What the memory.access mount did, in the tester's words. */
 function accessLines(serverLines: string[], opened: string): string[] {
@@ -94,7 +128,13 @@ export const runMemoriesAction: PageActionHandler = async (
   const logs = markServerLogs(rootPath);
   const prompts = promptsFor(config);
 
-  // Pass 1 -- as documented.
+  // Pass 1 -- as documented. Memory requests are counted from here, because
+  // "no memory request ever leaves the browser" is part of the finding.
+  let memoryRequests = 0;
+  const onRequest = (req: Request) => {
+    if (/\/api\/[^?]*memor/i.test(req.url())) memoryRequests++;
+  };
+  page.on('request', onRequest);
   console.log('   [Memories] 1/2: the runtime the page describes...');
   await settledMemory(page, 8000);
   await glideTo(page, page.locator('[data-testid=memory-list]'), 1500);
@@ -103,6 +143,20 @@ export const runMemoriesAction: PageActionHandler = async (
 
   const msgCount = await sendPrompt(page, prompts[0]);
   await waitForAgentResponseCompletion(page, config.waitAfterPromptMs ?? 3000, msgCount);
+  page.off('request', onRequest);
+
+  const probe = async (k: string) =>
+    ((await page.locator(`[data-testid=memory-${k}]`).textContent().catch(() => '')) ?? '').trim();
+  const pass1: DocumentedPass = {
+    memoryRequests,
+    isAvailable: await probe('isAvailable'),
+    count: await probe('memories'),
+    save: documented,
+  };
+  console.log(
+    `   [Memories] documented runtime: ${memoryRequests} memory request(s), isAvailable ${pass1.isAvailable}, ` +
+      `${pass1.count} memories`,
+  );
 
   // Pass 2 -- with the option the page leaves out.
   console.log('   [Memories] 2/2: the same graphs with memory.access...');
@@ -116,7 +170,27 @@ export const runMemoriesAction: PageActionHandler = async (
   // The note depends on what the memory.access mount answered, which is only
   // known from the server lines -- so it is built after they are read.
   await evidenceThenIssueNote(page, config, logs, RELEVANT, {
-    note: (lines) => [...NOTE_HEAD, '', ...accessLines(lines, opened)].join('\n'),
+    note: (lines) => noteFor(pass1, lines, opened),
     extraLines: () => [`save, as documented: ${documented}`, `save, with memory.access: ${opened}`],
+    // Decided from pass one: that is the documented path the knownIssue's
+    // problem describes. What the memory.access mount answered (403
+    // entitlement, or 503 without a key) is the likely cause, not the defect,
+    // so it goes into the evidence and the note but does not decide them.
+    writeNote: (lines) => {
+      const seen = documentedFindings(pass1);
+      if (seen.length === 0) {
+        ctx.warn(
+          `The documented runtime did not show the defect: ${memoryRequests} memory request(s), ` +
+            `isAvailable ${pass1.isAvailable}, save "${documented}".`,
+        );
+        return false;
+      }
+      const entitled = lines.find((l) => /MEMORY_NOT_ENTITLED/.test(l));
+      ctx.reproduced(
+        `documented runtime: ${seen.join('; ')}` +
+          (entitled ? `; memory.access mount: ${entitled.trim().slice(0, 140)}` : ''),
+      );
+      return true;
+    },
   });
 };

@@ -4,6 +4,7 @@ import { showWorkingVariant } from '../core/compare';
 import { writeIssueNote } from '../core/issue-note';
 import { beat, humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
+import { excerpt, latestReplyText, looksSpanish } from './reply-text';
 
 /**
  * The two shared-state defects, each recorded as a pair.
@@ -88,6 +89,33 @@ async function toggleToSpanish(ctx: ActionContext, page: Page): Promise<boolean>
   return false;
 }
 
+/**
+ * The left panel as the app shows it: the `Language:` label's value and the
+ * raw `agent.state` JSON under it. Scoped to the panel, because a reply can
+ * carry its own `<pre>` code block.
+ */
+async function readLanguagePanel(
+  page: Page,
+): Promise<{ label: string; state: Record<string, unknown> | null; raw: string } | null> {
+  return page
+    .evaluate(() => {
+      const p = Array.from(document.querySelectorAll('p')).find((el) =>
+        (el.textContent ?? '').trim().startsWith('Language:'),
+      );
+      if (!p) return null;
+      const label = (p.querySelector('strong')?.textContent ?? '').trim();
+      const raw = (p.parentElement?.querySelector('pre')?.textContent ?? '').trim();
+      let state: Record<string, unknown> | null = null;
+      try {
+        state = raw ? (JSON.parse(raw) as Record<string, unknown>) : null;
+      } catch {
+        state = null;
+      }
+      return { label, state, raw };
+    })
+    .catch(() => null);
+}
+
 /** Rests the cursor on an element and pauses, if it is there at all. */
 async function restOn(
   page: Page,
@@ -129,6 +157,8 @@ export const runSharedStateReadAction: PageActionHandler = async (
   ctx,
 ) => {
 
+  const before = await readLanguagePanel(page);
+
   console.log(`   [Shared State Read] Asking the agent to switch language...`);
   const msgCount = await sendPrompt(page, config.prompt, { timeoutMs: 12000 });
   await waitForAgentResponseCompletion(page, 2500, msgCount);
@@ -138,6 +168,33 @@ export const runSharedStateReadAction: PageActionHandler = async (
 
   await sleep(config.waitAfterPromptMs ?? 3000);
 
+  // The finding, read off the page before the working variant navigates away:
+  // the reply is in Spanish and the panel is not. Both halves are required --
+  // an English reply means the agent never switched, and then an unchanged
+  // panel is the honest answer, not the defect.
+  const after = await readLanguagePanel(page);
+  const reply = await latestReplyText(page);
+  const spanishReply = looksSpanish(reply);
+  const panelSpanish = /spanish|espa[nñ]ol/i.test(after?.label ?? '');
+  console.log(
+    `   [Shared State Read] panel "${before?.label ?? '?'}" -> "${after?.label ?? '?'}"; ` +
+      `reply Spanish: ${spanishReply} ("${excerpt(reply, 80)}")`,
+  );
+  let reproduced = false;
+  if (!after) {
+    ctx.fail('The "Language:" panel is not on the page -- the demo route changed.');
+  } else if (!spanishReply) {
+    ctx.warn(`The agent did not answer in Spanish ("${excerpt(reply, 90)}"), so this take cannot show the panel lagging behind it.`);
+  } else if (!panelSpanish) {
+    reproduced = true;
+    ctx.reproduced(
+      `language panel still "${after.label}" (was "${before?.label ?? '?'}"; agent.state ${excerpt(after.raw.replace(/\s+/g, ' '), 80)}) ` +
+        `after the agent replied in Spanish: "${excerpt(reply, 90)}"`,
+    );
+  } else {
+    console.log(`   [Shared State Read] The panel followed the agent to "${after.label}".`);
+  }
+
   await showWorkingVariant(page, {
     route: 'shared-state/in-app-agent-read/fixed',
     prompt: config.prompt,
@@ -146,7 +203,7 @@ export const runSharedStateReadAction: PageActionHandler = async (
   });
   await restOn(page, 'pre', 2500, 'Raw agent.state on the fixed route');
 
-  if (config.knownIssue) {
+  if (config.knownIssue && reproduced) {
     await writeIssueNote(page, config.id, config.knownIssue);
   }
 };
@@ -179,11 +236,43 @@ export const runSharedStateWriteAction: PageActionHandler = async (
   await restOn(page, 'p:has-text("Language:")', 1800, 'Language now reads spanish');
   await restOn(page, 'pre', 2000, 'Raw agent.state carries the write');
 
+  const before = await readLanguagePanel(page);
+
   console.log(`   [Shared State Write] Prompting so the new value ships with a run...`);
   const msgCount = await sendPrompt(page, config.prompt, { timeoutMs: 12000 });
   await waitForAgentResponseCompletion(page, 2500, msgCount);
 
   await sleep(config.waitAfterPromptMs ?? 3500);
+
+  // The finding: `language` was set before the run and is gone after it. Read
+  // from the raw `agent.state` rather than the label, because the label falls
+  // back to "english" when the key is missing and would hide the drop.
+  const after = await readLanguagePanel(page);
+  const reply = await latestReplyText(page);
+  const wasSet = typeof before?.state?.language === 'string' && before.state.language !== '';
+  const nowValue = after?.state?.language;
+  const emptied = nowValue === undefined || nowValue === null || nowValue === '';
+  console.log(
+    `   [Shared State Write] language before run: ${JSON.stringify(before?.state?.language)}, ` +
+      `after: ${JSON.stringify(nowValue)}; reply Spanish: ${looksSpanish(reply)}`,
+  );
+  let reproduced = false;
+  if (!after) {
+    ctx.fail('The "Language:" panel is not on the page -- the demo route changed.');
+  } else if (!wasSet) {
+    ctx.warn('agent.state carried no language before the run, so the take cannot show the run dropping it.');
+  } else if (after.state === null) {
+    ctx.warn(`agent.state could not be read after the run ("${excerpt(after.raw, 80)}").`);
+  } else if (emptied) {
+    reproduced = true;
+    ctx.reproduced(
+      `language was ${JSON.stringify(before?.state?.language)} before the run and is ` +
+        `${nowValue === undefined ? 'missing' : JSON.stringify(nowValue)} from agent.state after it ` +
+        `(label "${after.label}"); reply ${looksSpanish(reply) ? 'in Spanish' : 'not in Spanish'}: "${excerpt(reply, 80)}"`,
+    );
+  } else {
+    console.log(`   [Shared State Write] language survived the run as ${JSON.stringify(nowValue)}.`);
+  }
 
   await showWorkingVariant(page, {
     route: 'shared-state/in-app-agent-write/fixed',
@@ -198,7 +287,7 @@ export const runSharedStateWriteAction: PageActionHandler = async (
     waitAfterPromptMs: 1200,
   });
 
-  if (config.knownIssue) {
+  if (config.knownIssue && reproduced) {
     await writeIssueNote(page, config.id, config.knownIssue);
   }
 };

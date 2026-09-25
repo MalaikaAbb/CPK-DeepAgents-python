@@ -47,6 +47,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #18 Frontend tools links to `/langgraph/quickstart`.
 - #16 State I/O: deprecated `input=`/`output=`, and the snippet has no imports.
 - #32 Markdown: `my-link`/`my-heading` classes are undefined, and `node` is unused.
+- #42 Windows: `langgraph dev` crashes on startup with `ValueError: Unable to configure formatter 'simple'`, caused by `SystemError: ConsoleRenderer with colors=True on Windows requires the colorama package`; nothing installs `colorama`. Upstream packaging, not a CopilotKit doc defect; Linux is unaffected. Installed langgraph-cli 0.4.32 (declared `langgraph-cli[inmem]>=0.4.7`), langgraph-api 0.14.4, structlog 25.5.0, uvicorn 0.54.0. Started fine on 2026-09-24.
 
 ## Build-only (`tsc` / `next build`; `npm run dev` runs fine)
 - **#5 [Tool rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering):** `useDefaultRenderTool({ render: ({ name, args, status, result }) => … })` fails with `TS2339: Property 'args' does not exist on type 'DefaultRenderProps'`. The prop is `parameters`, and in dev `args` is just undefined.
