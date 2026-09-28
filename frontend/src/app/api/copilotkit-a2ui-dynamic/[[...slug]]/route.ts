@@ -1,7 +1,8 @@
 import {
   CopilotRuntime,
-  createCopilotRuntimeHandler,
   InMemoryAgentRunner,
+  CopilotKitIntelligence,
+  createCopilotRuntimeHandler,
 } from "@copilotkit/runtime/v2";
 import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
 

@@ -120,7 +120,7 @@ export default function Page() {
         title="The runtime"
         description="injectA2UITool: false, scoped to this one agent."
       >
-        <SourceCode file="frontend/src/app/api/copilotkit/route.ts" />
+        <SourceCode file="frontend/src/app/api/copilotkit/[[...slug]]/route.ts" />
       </Panel>
 
       <Callout tone="info" title="Where injectA2UITool lives">

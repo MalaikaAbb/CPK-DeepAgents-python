@@ -51,7 +51,7 @@ export default function Page() {
         title="The runtime"
         description="No a2ui block at all — that is the page's point. The catalog on the provider is the switch."
       >
-        <SourceCode file="frontend/src/app/api/copilotkit-a2ui-dynamic/route.ts" />
+        <SourceCode file="frontend/src/app/api/copilotkit-a2ui-dynamic/[[...slug]]/route.ts" />
       </Panel>
 
       <Panel
