@@ -4,15 +4,14 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 
 | | |
 |---|---|
-| **Doc-sync date** | 2026-08-06 — every page below was fetched live on this date |
+| **Doc-sync date** | `syncedAt` in `doc-snapshot/manifest.json` is the only one, 2026-09-23 at the last sync |
 | **Doc root tracked** | <https://docs.copilotkit.ai/deepagents> |
 | **Language tab** | **Python** throughout. The TypeScript tabs are not implemented. |
 | **Backend flavour** | LangGraph CLI (`langgraph.json`), not the FastAPI tab |
-| **CopilotKit (npm)** | `@copilotkit/react-core` 1.69.3 · `@copilotkit/runtime` 1.69.3 · `@copilotkit/a2ui-renderer` 1.66.2 |
+| **CopilotKit (npm)** | declared `^1.73.3` · lockfile 1.73.3 · installed 1.73.3 (`frontend/VERSIONS.md`, written by `autorecorder/scripts/write-versions.mjs`) for `react-core`, `runtime` and `a2ui-renderer` alike. Upgraded 2026-09-23 from declared `^1.69.0` · lockfile 1.69.0 · installed 1.71.0; findings recorded before then name the version they were observed on |
 | **CopilotKit (PyPI)** | `copilotkit` 0.1.94 |
 | **Agent framework** | `deepagents` 0.7.4 · `langgraph-cli[inmem]` |
 | **Frontend** | Next.js 16.3.0 · React 19.2.8 · TypeScript 5 · Tailwind 4 |
-| **CI** | none |
 
 ---
 
@@ -20,9 +19,9 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 
 Deep Agents is LangChain's framework for long-horizon agents — `create_deep_agent` returns a compiled LangGraph graph with planning and virtual-filesystem tools already installed. CopilotKit connects one of those graphs to a React app over the AG-UI protocol, so the agent can render components, call browser-side tools, suspend for human input, and share state with your UI.
 
-This repo implements every Deep Agents doc page in that list as a live route. It is a QA tool, not a tutorial: each route shows what the page teaches actually running, alongside the repo's own source read off disk at render time, plus a plain statement of anywhere the page and the shipped packages disagree. Fifteen doc pages, thirteen routes (three doc URLs are query-string variants of one page), thirteen graphs — ten Deep Agents plus three hand-built `StateGraph`s, for the pages that are about LangGraph features `create_deep_agent` does not expose.
+This repo implements most Deep Agents doc pages in that list as a live route, and tracks three more for drift without building a demo behind them (see §8). It is a QA tool, not a tutorial: each route shows what the page teaches actually running, alongside the repo's own source read off disk at render time, plus a plain statement of anywhere the page and the shipped packages disagree. Eighteen doc pages, sixteen routes (three doc URLs are query-string variants of one page), thirteen graphs — ten Deep Agents plus three hand-built `StateGraph`s, for the pages that are about LangGraph features `create_deep_agent` does not expose.
 
-Everything traces to a doc page. Nothing was invented to fill a gap — where a page omits something needed to run, the gap is named on the route and in [§9](#9-known-issues--docvsimplementation-discrepancies).
+Everything traces to a doc page. Nothing was invented to fill a gap — where a page omits something needed to run, the gap is named on the route and in [[FINDINGS.md](FINDINGS.md)](#9-known-issues--docvsimplementation-discrepancies).
 
 ---
 
@@ -38,7 +37,7 @@ browser
        CopilotRuntime { agents: { <graphId>: LangGraphAgent } }
             │  LangGraph Platform API
             ▼
-       LangGraph dev server  :8123                    backend/langgraph.json
+       LangGraph dev server  :8030                    backend/langgraph.json
        ├─ 10 compiled graphs from create_deep_agent   backend/main.py, backend/src/*.py
        └─  3 hand-built StateGraphs                   predictive_state_manual / predictive_state_tool
             │                                         / state_inputs_outputs
@@ -110,14 +109,14 @@ cp .env.example frontend/.env.local # then keep the frontend block
 |---|---|---|---|
 | `OPENAI_API_KEY` | `backend/.env` | **yes** | The model key. Every agent reads it. |
 | `OPENAI_MODEL` | `backend/.env` | no | Model id for every agent. Defaults to `gpt-4o`. |
-| `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8123`. |
+| `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8030`. |
 | `LANGSMITH_API_KEY` | `frontend/.env.local` | no | Sent as `langsmithApiKey`. Ignored by a local `langgraph dev`. |
 | `INTELLIGENCE_API_KEY` | `frontend/.env.local` | no | Puts the runtime in Intelligence mode so threads persist. Without it: SSE + in-memory runner. |
 | `COPILOTKIT_LICENSE_TOKEN` | `frontend/.env.local` | no | Separate credential. What `<CopilotThreadsDrawer>` gates its unlocked view on. |
 | `NEXT_PUBLIC_DEMO_USER_ID` / `_NAME` | `frontend/.env.local` | no | The demo identity `identifyUser` keys threads on. |
 | `COPILOTKIT_TELEMETRY_DISABLED` | `frontend/.env.local` | no | Silences the runtime's telemetry notice. |
 
-**Ports:** frontend `3000`, agent server `8123`. Change the agent port and you must change `LANGGRAPH_DEPLOYMENT_URL` to match.
+**Ports:** frontend `3030`, agent server `8030`. Change the agent port and you must change `LANGGRAPH_DEPLOYMENT_URL` to match.
 
 ---
 
@@ -128,7 +127,7 @@ Two terminals — the CLI does not start both.
 **Terminal 1 — the agent server:**
 
 ```bash
-cd backend && uv run langgraph dev --port 8123 --no-browser
+cd backend && uv run langgraph dev --port 8030 --no-browser
 ```
 
 Success looks like this, with all thirteen graphs importing:
@@ -138,14 +137,14 @@ Welcome to
 ╦  ┌─┐┌┐┌┌─┐╔═╗┬─┐┌─┐┌─┐┬ ┬
 ║  ├─┤││││ ┬║ ╦├┬┘├─┤├─┘├─┤
 ╩═╝┴ ┴┘└┘└─┘╚═╝┴└─┴ ┴┴  ┴ ┴
-- 🚀 API: http://localhost:8123
+- 🚀 API: http://localhost:8030
 ...
 Importing graph  graph_id=sample_agent  path=./main.py
 Importing graph  graph_id=tool_rendering_agent  ...
 Application started up in 3.55s
 ```
 
-Confirm with `curl http://localhost:8123/ok` → `{"ok":true}`.
+Confirm with `curl http://localhost:8030/ok` → `{"ok":true}`.
 
 **Terminal 2 — the app:**
 
@@ -153,9 +152,9 @@ Confirm with `curl http://localhost:8123/ok` → `{"ok":true}`.
 cd frontend && npm run dev
 ```
 
-You should see `✓ Ready in …` and `- Local: http://localhost:3000`.
+You should see `✓ Ready in …` and `- Local: http://localhost:3030`.
 
-**Open <http://localhost:3000>.** Start at `/quickstart` — if that streams a reply, every other route's plumbing is fine.
+**Open <http://localhost:3030>.** Start at `/quickstart` — if that streams a reply, every other route's plumbing is fine.
 
 > The Quickstart's Deep Agent tab says to start the agent with `npx @langchain/langgraph-cli dev --port 8123`. That does work against this Python manifest, but the CLI itself prints *"Launching Python server from @langchain/langgraph-cli is experimental. Please use the `langgraph-cli` package from PyPi instead"* and then downloads its own copy of `uv`. This repo takes that advice.
 
@@ -167,7 +166,7 @@ Every route has a notes page (source, discrepancies, a **Try it** box) and, wher
 
 ### Getting Started
 
-**`/`** — Introduction. Orientation and the live graph roster. Nothing to drive.
+**`/`** — Introduction. Orientation and the live graph roster. Nothing to drive. Since 2026-09-21 the doc page carries a code block of its own, a `CopilotRuntime` route titled with the same filename the Quickstart uses and holding different code; both are printed side by side on the route, with the differences named. See [FINDINGS.md](FINDINGS.md) #28 and #29.
 
 **`/quickstart`** → `sample_agent`
 Proves the whole stack in one message: a Deep Agent with a single Python tool, published by the LangGraph server, reached through `CopilotRuntime`, driven by a `CopilotSidebar`.
@@ -222,7 +221,7 @@ A component tree authored as JSON up front; the tool supplies only data and retu
 *Try:* `Find me a flight from SFO to JFK on United for around $289`
 *Pass:* a rendered itinerary card — airport codes either side of an arrow, an airline pill, a price, a Book button.
 *Fail:* a raw JSON dump — the container was not detected. An empty card — the `catalogId` in the agent does not match `catalog.ts`.
-*Known limit:* the Book button does nothing. See [§9](#9-known-issues--docvsimplementation-discrepancies).
+*Known limit:* the Book button does nothing. See [[FINDINGS.md](FINDINGS.md)](#9-known-issues--docvsimplementation-discrepancies).
 
 **`/generative-ui/a2ui/dynamic-schema`** → `a2ui_dynamic_agent`
 A secondary LLM writes the schema and the data per request. The backend contributes only `CopilotKitMiddleware`.
@@ -241,7 +240,17 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 *Try:* `Chart quarterly revenue for three product lines`
 *Pass:* a grey `Building interface...` box with a spinner, gaining an `N components, M items` line as the schema streams, then vanishing as the surface paints.
 *Fail:* CopilotKit's own shimmering skeleton — the renderer was registered outside the provider that owns this agent.
-*Known limit:* the action-handler half of this page is not implementable. See [§9](#9-known-issues--docvsimplementation-discrepancies).
+*Known limit:* the action-handler half of this page is not implementable. See [[FINDINGS.md](FINDINGS.md)](#9-known-issues--docvsimplementation-discrepancies).
+
+**`/generative-ui/frontend-cards`** — ❌ **Broken as published**, works with one prop the page never mentions. New upstream 2026-09-11. A card pushed into the transcript from frontend code as a `role: "activity"` message, which is stripped from every run. The demo has two tabs. **As published** is step 2's provider unchanged (`runtimeUrl` + `renderActivityMessages`); its bare `useAgent()` and `<CopilotChat />` ask for the agent id `default`, which a Deep Agents runtime does not register. *Try:* just open it. *What happens:* the chat paints, then `useAgent()` throws `Agent 'default' not found after runtime sync` as soon as `/info` answers (3/3), and the demo prints that error where the chat was. **+ agent="sample_agent"** adds the Quickstart's provider prop and nothing else. *Try:* click **Simulate: deployment finished**, then ask `Have you been shown any deployment card?` *Pass:* the card renders; the probe row reads `agent.messages = activity, user, assistant` and `run payload = user` (read off the request that left the browser); the agent says it saw no card. *Fail:* no card, or `activity` in the payload row. The three snippets are verbatim; step 3's `<DeploymentWatcher />` is mounted inside step 2's provider, which the page never says to do, and its `wss://example.com` socket never delivers, so the button fires the same `addMessage`. See [FINDINGS.md](FINDINGS.md) #22.
+
+### Custom Look and Feel
+
+**`/custom-look-and-feel/markdown`** → `sample_agent` — ⚠️ **Partial.** New upstream 2026-09-21. The `markdownRenderer` slot on `CopilotChatAssistantMessage`, reached from `<CopilotChat messageView={{ assistantMessage: { markdownRenderer } }} />`, in all three of the page's forms. The demo has five tabs and a probe that reads the rendered HTML rather than the library's own bookkeeping: the opening tag of the first `<a>`, the number of `[data-streamdown]` elements, the number of elements carrying a literal `node` attribute, and the number carrying the page's `.my-link` / `.my-heading`. **Page code, verbatim** is the published block with nothing added. *Try:* just open it. *Expect:* the chat paints, then throws `Agent 'default' not found after runtime sync` — the block carries no agent id, and Deep Agents registers no `default`, the same defect already reproduced on Frontend-Driven Cards. The other four tabs add `agentId="sample_agent"` and nothing else. **Not yet driven:** this route was built on 2026-09-21 and has no clip; the lines below are what the take should show. *Try:* `Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.` *Pass:* on **components map** the anchor row reads `<a href="…" target="_blank" rel="noopener noreferrer" class="my-link">` with no `data-streamdown`, and the `node` count is 0; on **no override** the same anchor carries `data-streamdown="link"` and Streamdown's classes; the reference-chip is plain text on every tab. *Fail:* a `node` count above 0, or a missing `rel`/`target` on the components tab. See [FINDINGS.md](FINDINGS.md) #32.
+
+### Rich Threads
+
+**`/threads/lifecycle`** → `sample_agent` — ⚠️ **Partial.** Tracked 2026-09-21; the only Rich Threads page this repo implements. One button per lifecycle claim on the page, with the chat's resolved state read back from its `CopilotChatConfigurationProvider`, including the id of the parent provider the root `<CopilotKit>` supplies. **Try:** send a message, press "Remount chat", then "Open conversation", "New chat", "Pin a threadId prop" and "New chat" again. **Pass:** the remount keeps the id, because it is inherited from the parent, and the chat empties; "Open conversation" flips `hasExplicitThreadId` to true and replays the messages from the runtime's `InMemoryAgentRunner`; with the id pinned, "New chat" changes nothing and the amber line shows the `Ignoring startNewThread()` warning; the pinned id survives a remount. **Fail:** the re-opened thread shows 0 messages (nothing replayed). See [FINDINGS.md](FINDINGS.md) #35.
 
 ### App Control
 
@@ -250,6 +259,10 @@ A tool whose body runs in the browser. The Python side defines no tool at all.
 *Try:* `Say hello to Ada`
 *Pass:* a browser `alert()` reading `Hello, Ada!`; dismiss it and a green line appears in the left panel; the agent then reports it said hello — that reply is the handler's return value.
 *Fail:* the agent describing what it *would* do — the tool never reached it; check `CopilotKitMiddleware` is in the middleware list.
+
+**`/webmcp`** — 🚧 **Tracked, not implemented.** The doc adds a `webmcp` flag to a frontend tool so browser agents can discover it through `document.modelContext`. Its own test procedure needs Chrome 149+ with the WebMCP origin trial (or `chrome://flags/#enable-webmcp-testing`) and Chrome's Model Context Tool Inspector; CopilotKit no-ops where `document.modelContext` is absent, so a demo here would register nothing and still look green.
+
+**`/human-in-the-loop/governed-actions`** — ✅ **Working.** An approval card gating a side-effecting action. The run stops on the card, which shows the policy verdict, the reference that produced it, and the exact arguments; it proceeds only on approval. The `useHumanInTheLoop` variant is implemented; the `useInterrupt` variant is not, because it needs a backend that pauses a run and attaches `interrupt.metadata.action`, and no graph here does. The published schema goes in unchanged — `z.record(z.unknown())` is valid on this repo's zod 3, though it does not compile on the zod 4 that MsPy-react and AG2-react run. The `useEffect` that auto-resolves `allow` and `deny` omits `onApprove` and `onBlock` from its dependency array; kept as published, warning and all.
 
 ### Shared State
 
@@ -269,7 +282,7 @@ Reading agent state as ordinary reactive React state.
 **All three of the page's variants are live**, behind a toggle at the top of the demo. Variants 2 and 3 are not Deep Agents — they are hand-built `StateGraph`s, which is what those tabs are for.
 *Try:* `Plan and execute a website redesign` on each tab.
 *Pass:* **Prebuilt** — step rows appear one at a time, noticeably *before* the chat message completes. **Custom · manual** — exactly four fixed rows, one per second, then an ordinary answer (verified: four distinct state updates in order). **Custom · tool** — steps stream as the model writes the tool call, then the node's `Command` copies the same argument into `observed_steps` so it persists.
-*Fail:* all rows at once after the reply — the streaming did not intercept. Nothing at all — the provider is `<CopilotKitProvider>` rather than `<CopilotKit>`; see [§9](#9-known-issues--docvsimplementation-discrepancies).
+*Fail:* all rows at once after the reply — the streaming did not intercept. Nothing at all — the provider is `<CopilotKitProvider>` rather than `<CopilotKit>`; see [[FINDINGS.md](FINDINGS.md)](#9-known-issues--docvsimplementation-discrepancies).
 
 **`/shared-state/state-inputs-outputs`** → `state_io_graph` — *the one route that is not a Deep Agent*
 A hand-built `StateGraph` with `input_schema` / `output_schema`, because the page's own callout says `create_deep_agent` does not expose them. Three fields, three fates: `question` goes in and never comes back, `answer` comes back, `resources` never crosses the wire at all.
@@ -278,6 +291,18 @@ A hand-built `StateGraph` with `input_schema` / `output_schema`, because the pag
 *Fail:* a red badge on `question` or `resources` — `input_schema` / `output_schema` were dropped from the `StateGraph` call and the whole of `OverallState` is coming back.
 
 **`/shared-state/workflow-execution`** — reference only, no demo. The page currently serves the Input/Output Schemas content verbatim.
+
+### Intelligence
+
+**`/intelligence/memories`** — ❌ **Broken as documented.** New upstream 2026-09-11. **Try:** **Save**, then `Please remember that I prefer concise status updates.`, then switch to the second runtime and **Save** again. **What happens:** the page's React snippet used not to compile (it imported `useMemories` from the package root); the 2026-09-21 sync fixed that to `@copilotkit/react-core/v2`, so the published file now runs here as published and the demo's corrected copy is gone. On the documented runtime — the Deep Agents Quickstart's, which is not an Intelligence runtime — no memory request ever leaves the browser: the hook reports `isAvailable: true`, the page's `MemoryList` renders an empty list instead of "Memory is not available", the save fails with "Runtime URL is not configured", and the agent says "Got it! I'll keep updates brief." The second runtime adds `memory: { access }`, which the page never mentions and without which every `/memories/*` route 404s even on an Intelligence runtime; it needs `CPK_INTELLIGENCE_API_KEY`, which this harness does not have, so it answers 503 and the platform side was not reached. See [FINDINGS.md](FINDINGS.md) #23.
+
+**`/intelligence/learned-skills`** — ❌ **Broken as published.** New upstream 2026-09-15, restructured 2026-09-21. Automatic delivery of a Learning container's published Skills through a framework-native adapter. **Try:** just open it, then `List the skills you can load, then load the refund-policy skill and follow it.` **What happens:** the agent answers from its own instructions with no tool call, because no adapter is mounted and none can be. Every Python package on the page's table is 404 on PyPI; the BuiltInAgent row added on 2026-09-21 uses the package this repo does install; it did not typecheck on 1.71.0 and does on the 1.73.3 installed since 2026-09-23, but it would replace the Deep Agent rather than attach to it. Both BuiltInAgent snippets are in the repo verbatim (`built-in-agent-classic.ts`, `built-in-agent-factory.ts`), imported by nothing. See [FINDINGS.md](FINDINGS.md) #26 and #38.
+
+**`/learning`** — ❌ **Broken without an Intelligence key.** New upstream 2026-09-11, new delivery and schedule sections 2026-09-21. The page's runtime snippet on its own mount at `/api/copilotkit-learning`, with `expense-agent` and `sample_agent` both on the Quickstart graph. The selector shipped here returns one container for both rather than the page's conditional, which is [FINDINGS.md](FINDINGS.md) #25. **Try:** on `expense-agent`, `Review this expense: $42 team lunch, receipt attached.`; then on `sample_agent`, `Say hello in five words.` **What happens:** neither can send. `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws "apiKey is required and cannot be blank" at module load, the route answers 500 (shown in the panel's last row), the provider sits in `error` and the send button never enables. Container assignment, and the dashboard/CLI half of the page (create a container, Run Learning, approve a Skill, `copilotkit skills download`), need a provisioned project and are not exercised. The 2026-09-21 sync added a **Set up automatic skill delivery** section and a **Choose the daily schedule** step on top of that: an agent-server environment block (`CPK_INTELLIGENCE_API_KEY`, `CPK_INTELLIGENCE_LEARNING_CONTAINER_ID=expense-review`) for an adapter this backend cannot install, and a dashboard schedule (15 eligible Threads, 02:00 UTC default) with no code in it at all. See [FINDINGS.md](FINDINGS.md) #24 and #27.
+
+### Cookbook
+
+**`/cookbook/jev-generative-ui`** — ❌ **Not runnable here, and not stood in for.** New upstream 2026-09-21. A workspace picker whose next control and candidate ranking come from Jev, TypeSafe's decision service. The route carries every published TypeScript block verbatim; four of the six files are imported by nothing, compile, and cannot run. **Try:** open the route and use the two panel buttons, then press an option. **Not yet driven** — built 2026-09-21, no server was started for it; what follows is what it is wired to do. **Expect:** the prepared controls, `PanelSchema`/`StateSchema` and `readAction` all run for real — a clarification answer is rewritten to `I answered the workspace clarification: …`, a room selection sets `selectedId` and the note `Selected Quiet room. No booking was made.` — and the trail stops at `choosePanel`, which needs `@typesafe-ai/sdk` and a `TYPESAFE_API_KEY` from a third-party vendor. The comparison panel is in catalog order, labelled on screen as such, because the Jev fit scores that order it do not exist here. No demo and no recorder entry: there is nothing to film that would not be a stand-in for the decision layer. See [FINDINGS.md](FINDINGS.md) #33.
 
 ---
 
@@ -299,6 +324,8 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [.../a2ui/styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling) | `/generative-ui/a2ui/styling` | `a2ui_dynamic_agent` | ✅ Working | Page's dark-mode rule is invalid CSS |
 | [.../a2ui/advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced) | `/generative-ui/a2ui/advanced` | `a2ui_dynamic_agent` | ⚠️ Partial | Progress renderer works; action-handler exports missing |
 | [frontend-tools](https://docs.copilotkit.ai/deepagents/frontend-tools) | `/frontend-tools` | `frontend_tools_agent` | ✅ Working | Page duplicates two of its own sections |
+| [webmcp](https://docs.copilotkit.ai/deepagents/webmcp) | `/webmcp` | — | 🚧 Not started | Tracked for drift. Needs Chrome 149+ and the WebMCP origin trial |
+| [human-in-the-loop/governed-actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) | `/human-in-the-loop/governed-actions` | `sample_agent` | ✅ Working | Tool-call variant. `useInterrupt` half needs a backend that pauses a run; published schema compiles unchanged on zod 3 |
 | [shared-state/in-app-agent-read](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read) | `/shared-state/in-app-agent-read` | `shared_state_agent` | ✅ Working | `Literal[...] = "english"` is not a runtime default |
 | [shared-state/in-app-agent-write](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-write) | `/shared-state/in-app-agent-write` | `shared_state_agent` | ✅ Working | Needs `expose_state`, which neither page mentions |
 | [.../predictive-state-updates?agent-type=prebuilt](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=prebuilt) | `/shared-state/predictive-state-updates` | `predictive_state_agent` | ✅ Working | Requires `<CopilotKit>`, not `<CopilotKitProvider>` |
@@ -306,8 +333,17 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [...&state-emission=tool-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=tool-emission) | same route, tab 3 | `predictive_tool_graph` | ✅ Working | Python snippet is near-complete; only the state class and graph were missing |
 | [shared-state/state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) | `/shared-state/state-inputs-outputs` | `state_io_graph` | ✅ Working | Custom `StateGraph`, not a Deep Agent — the page calls for exactly that |
 | [shared-state/workflow-execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution) | `/shared-state/workflow-execution` | — | ❌ Broken | Upstream duplicate of the page above |
+| [generative-ui/frontend-cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards) | `/generative-ui/frontend-cards` | `sample_agent` | ❌ Broken | New 2026-09-11. As published `useAgent()` targets `default`, which Deep Agents does not register, and throws; with the Quickstart's `agent` prop the card renders and never reaches the agent. Pre-connect cards silently lost — [FINDINGS.md](FINDINGS.md) #22 |
+| [intelligence/memories](https://docs.copilotkit.ai/deepagents/intelligence/memories) | `/intelligence/memories` | `sample_agent` | ❌ Broken | New 2026-09-11. Import path fixed upstream 2026-09-21; on the Quickstart runtime the hook still reports available over an empty list and never sends a request; `memory: { access }` undocumented — [FINDINGS.md](FINDINGS.md) #23 |
+| [intelligence/learned-skills](https://docs.copilotkit.ai/deepagents/intelligence/learned-skills) | `/intelligence/learned-skills` | `sample_agent` | ❌ Broken | New 2026-09-15. Every Python adapter 404s on PyPI; the BuiltInAgent row added 2026-09-21 needs runtime 1.73.0, which the page does not name (compiles here since the 2026-09-23 upgrade to 1.73.3) — [FINDINGS.md](FINDINGS.md) #26, #38 |
+| [learning](https://docs.copilotkit.ai/deepagents/learning) | `/learning` | `sample_agent` | ❌ Broken | New 2026-09-11. Page's runtime throws at load without `CPK_INTELLIGENCE_API_KEY` (route 500); `agents`/`identifyUser` undefined; needs runtime 1.70+ — [FINDINGS.md](FINDINGS.md) #24, #25, #27 |
+| [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — [FINDINGS.md](FINDINGS.md) #32 |
+| [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
+| [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 
-**Totals:** 16 ✅ Working · 2 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
+
+**Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
 The same table is rendered in-app at `/status`, generated from `frontend/src/lib/nav-config.ts` — that file is the single source of truth for routes, statuses and doc links, so this table and the app cannot drift apart.
 
@@ -315,91 +351,7 @@ The same table is rendered in-app at `/status`, generated from `frontend/src/lib
 
 ## 9. Known issues / doc-vs-implementation discrepancies
 
-Every item was checked against the installed packages, and the runtime ones were reproduced against a live run.
-
-### Blocking — the doc's code cannot work
-
-**1. `copilotkit.a2ui` has different function names.**
-[fixed-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/fixed-schema) calls four helpers that are not in `copilotkit` 0.1.94:
-
-| Page | Actual |
-|---|---|
-| `a2ui.surface_update(id, schema)` | `a2ui.update_components(id, schema)` |
-| `a2ui.data_model_update(id, data)` | `a2ui.update_data_model(id, data)` |
-| `a2ui.begin_rendering(id, "root")` | `a2ui.create_surface(id, catalog_id)` |
-| `a2ui.render(operations=…, action_handlers=…)` | `a2ui.render(operations=…)` — no `action_handlers` |
-
-`create_surface` is not a rename of `begin_rendering`: it carries the catalog id and must come *first*. Implemented on the real API in `backend/src/a2ui_fixed.py`, with the mapping in its docstring.
-
-**2. A2UI buttons cannot do anything.**
-The agent-side half (`action_handlers=`) does not exist (above); the frontend escape hatch [advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced) offers — `useA2UIActionHandler`, `resolveDeclaredOps`, `defaultActionOrchestrator` — is not exported by `@copilotkit/react-core` 1.66.2 either. Both routes say so. `createA2UIMessageRenderer` and `a2uiDefaultTheme` *are* exported, so the "custom orchestrator" snippet is half-real.
-
-**3. `enabled` has no `eventValue`, and `event.value` is a string.**
-[interrupt-based](https://docs.copilotkit.ai/deepagents/generative-ui/your-components/interrupt-based)'s "Condition UI executions" section destructures `enabled: ({ eventValue }) => …`. The predicate receives the whole event, `{ name, value }`, so `eventValue` is `undefined` and neither handler ever fires. Separately, a LangGraph `interrupt()` reaches the browser as the legacy `on_interrupt` custom event with its value **serialised** — the wire carries `"value": "{\"type\":\"approval\",…}"` — so `event.value.type` is `undefined` on a string. Both confirmed on a live run; `payloadOf` in the demo handles it. The page's *first* section is fine: it passes a plain string, so `event.value` really is that string.
-
-**4. The dark-mode CSS is invalid.**
-[styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling) prints `.dark .a2ui-surface, @media (prefers-color-scheme: dark) { … }`. An at-rule cannot appear in a selector list; browsers discard the whole rule, so dark mode silently does nothing. Split into two rules in `frontend/src/a2ui/theme.css`.
-
-**5. `useDefaultRenderTool` render props have no `args`.**
-[tool-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering) destructures `{ name, args, status, result }`. The prop is `parameters` — as it is in the page's own `useRenderTool` snippet directly above. Reading `args` returns `undefined`, silently.
-
-**6. Predictions need `<CopilotKit>`, not `<CopilotKitProvider>`.**
-Not stated on any page, and the worst failure mode here because it is completely silent. The backend emits a `PredictState` custom event; the *browser* applies it by watching `TOOL_CALL_ARGS` and calling `agent.setState`. Nothing appears in any `STATE_SNAPSHOT` on the wire — verified. That subscriber lives in `CopilotListeners`, which `<CopilotKit>` mounts and `<CopilotKitProvider>` does not. With the bare provider the event arrives, nobody listens, the panel stays empty, and no error is logged anywhere.
-
-### Incomplete — the doc omits something needed to run
-
-**7. No page shows how custom state reaches a Deep Agent.**
-[frontend-tools](https://docs.copilotkit.ai/deepagents/frontend-tools), [state-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/state-rendering), both shared-state pages and [predictive-state-updates](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates) each define a `CopilotKitState` subclass and then build an agent that never references it. `create_deep_agent` has no `state=` parameter. The only documented route in is an `AgentMiddleware` carrying `state_schema`, which the interrupt-based page uses for its own purposes — so every one of those agents here wraps its state class in a one-line middleware.
-
-**8. `state-rendering` never calls its own coroutine.**
-It prints `emit_research_progress(state, config)` and stops, saying only that it belongs "inside a custom tool or middleware hook". A `@tool` is the one place a prebuilt Deep Agent gets a `RunnableConfig`, so that is where it went. Two further things the page does not mention: emitted state is a *prediction* and is overwritten when the node returns (its own list would flash and vanish), and a tool returning a `Command` must include a `ToolMessage` with an injected `tool_call_id` or LangChain rejects the update outright.
-
-**9. Writing state does not make the model see it.**
-Both shared-state pages say the agent "reads `state["language"]` … as it runs", but nothing puts the value in the prompt, so the toggle changes state the LLM never sees and the reply stays in English. The fix is `CopilotKitMiddleware(expose_state=["language"])` — real API in `copilotkit` 0.1.94, off by default, mentioned on neither page.
-
-**10. `setState` replaces, it does not merge.**
-`AbstractAgent.setState` assigns `this.state = structuredClone(newState)`. The write page's one-key `agent.setState({ language })` therefore discards every other key, including `copilotkit`, which is where frontend tools live. Harmless on this agent, a data-loss bug on a richer one. Spread `agent.state` first.
-
-**11. `Literal[...] = "english"` is not a default.**
-`CopilotKitState` is a `dict` subclass; the assignment is a class attribute that LangGraph never applies. Without help the key is absent and you are looking at the `??` fallback in the component, not agent state. Seeded in `before_agent` here.
-
-**12. The A2UI schemas and catalog are never shown.**
-[fixed-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/fixed-schema) says to design `flight_schema.json` in the A2UI Composer and never prints one; [dynamic-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/dynamic-schema) writes `a2ui={{ catalog: myCatalog }}` and links to a "Bring Your Own Catalog" page that resolves outside the Deep Agents tree. Both were supplied for this repo, as were the shadcn-style primitives the [advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced) renderers import — that file is marked `⚠ SELF-DEFINED` at the top.
-
-**13. Neither custom-graph variant of predictive-state-updates is complete in Python.**
-Both show a bare node with no `StateGraph`, no `add_node`, no `compile`. The manual-emission one also omits the model call and the return, returns `Command[Literal["cpk_action_node", …]]` naming a node that appears nowhere on the page, and uses `asyncio`, `Command`, `Literal` and `RunnableConfig` without importing any of them.
-
-**Both are live here anyway**, because the missing half is on the *same page's TypeScript tab*, which prints the annotation, wiring and `compile` in full. So each graph is the Python tab's node body inside the TypeScript tab's scaffolding — two tabs of one page, no third source. The unreachable `cpk_action_node` is dropped from the signature, since the graph goes straight to `END` exactly as the TypeScript one does.
-
-Two further notes. The tool-emission variant binds `state["copilotkit"]["actions"]` straight into `bind_tools` as though those were LangChain tools; its TypeScript tab wraps them in `convertActionsToDynamicStructuredTools` first, and nothing in the Python package does that conversion — harmless here only because no frontend tools are registered against that graph. And it needs no `ToolNode`: the node routes to `END` on both paths, so the tool is never executed and the model's *argument* is the payload.
-
-**14. The Python LangGraph API rejects a checkpointer; the JS one does not.**
-The TypeScript tab compiles both custom graphs with a `MemorySaver`. Do the same in Python and the dev server refuses to start: *"Your graph 'graph' … includes a custom checkpointer … With LangGraph API, persistence is handled automatically by the platform … please remove the custom checkpointer."* It is a hard `ValueError` at graph-load time, not a warning. Both graphs here therefore call `workflow.compile()` bare and let the server provide persistence. The JS dev server accepts the same `MemorySaver` without complaint.
-
-### Upstream page bugs
-
-**15. `workflow-execution` serves the wrong page.**
-`/deepagents/shared-state/workflow-execution` returns [state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) byte for byte — same subtitle, prose, code and closing snippet. Only the `h1` differs, and even the subtitle describes the *other* page's topic. Both fetched as raw markdown and compared. Marked ❌ Broken rather than guessed at.
-
-**16. `state-inputs-outputs` uses the deprecated LangGraph spelling.**
-`StateGraph(OverallState, input=…, output=…)`. Still accepted in LangGraph 1.2.10, but it warns: *"`input` is deprecated and will be removed. Please use `input_schema` instead."* The implementation here uses `input_schema=` / `output_schema=`. The snippet also imports nothing it uses, switches from `list[str]` to `List[str]` midway, and never fills in `resources` — the field the whole page is about — leaving `# ...add the rest of the agent implementation` where it would be written. An absent key proves nothing if the node never sets it, so `answer_node` records what it actually sent to the model.
-
-**17. `useRenderToolCall` is not the hook the prose means.**
-[tool-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering) names it three times as the counterpart to `useDefaultRenderTool`. It is a real export, but a different hook — no arguments, returns a function that renders a given tool call from renderers already registered. The one meant is `useRenderTool`, which the page's own snippets use.
-
-**18. `frontend-tools` repeats itself and links elsewhere.**
-Its Step 1 links to `/langgraph/quickstart` rather than the Deep Agents one, and Steps 4–5 repeat "What is this?", "When should I use this?" and the whole `useFrontendTool` snippet verbatim.
-
-**19. Broken anchors on `advanced`.**
-Links to `./fixed-schema#adding-interactivity-action-handlers` (no such anchor — the section is "Action handler details") and `./fixed-schema-streaming#…` (page does not exist).
-
-**20. Model ids vary across pages.**
-`openai:gpt-4o` on Quickstart and Tool Rendering, `gpt-5.4` on Dynamic Schema A2UI and Predictive State Updates, `gpt-4` inside the tool-emission snippet. Every agent here reads `OPENAI_MODEL` instead, defaulting to `gpt-4o`.
-
-**21. The Quickstart installs a package it never uses.**
-Its install line is `npm install @copilotkit/react-ui @copilotkit/react-core @copilotkit/runtime`, but every import it then writes is from `@copilotkit/react-core/v2`. `@copilotkit/react-ui` is the v1 UI package; nothing here imports it and it is not installed.
-
----
+Moved to [FINDINGS.md](FINDINGS.md).
 
 ## 10. Troubleshooting
 
@@ -408,11 +360,11 @@ The Deep Agents doc tree has **no** Troubleshooting section as of 2026-08-06 —
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Failed to create thread: HTTP 422: Invalid thread ID: must be a UUID` | Something posted a non-UUID `threadId`. The browser always generates one; scripted clients often don't. | Use `crypto.randomUUID()`. |
-| Chat shows an error banner; agent server log is silent | The runtime cannot reach `:8123`. | Is `langgraph dev` running? `curl http://localhost:8123/ok`. Check `LANGGRAPH_DEPLOYMENT_URL`. |
+| Chat shows an error banner; agent server log is silent | The runtime cannot reach `:8030`. | Is `langgraph dev` running? `curl http://localhost:8030/ok`. Check `LANGGRAPH_DEPLOYMENT_URL`. |
 | Agent runs but every reply is an auth error | `OPENAI_API_KEY` missing. | It goes in **`backend/.env`**, not `frontend/.env.local`. `langgraph.json` points at `.env` next to it. |
 | A route 500s with "Agent … not found" | Graph id mismatch. | `frontend/src/lib/agents.ts` must list the same ids as `backend/langgraph.json`. |
-| Predictive State Updates panel never fills | Root provider is `<CopilotKitProvider>`. | Use `<CopilotKit>` — see §9 item 6. Fails silently. |
-| Shared-state toggle flips but the agent ignores it | `expose_state` not set. | `CopilotKitMiddleware(expose_state=["language"])` — see §9 item 9. |
+| Predictive State Updates panel never fills | Root provider is `<CopilotKitProvider>`. | Use `<CopilotKit>` — see [FINDINGS.md](FINDINGS.md) #6. Fails silently. |
+| Shared-state toggle flips but the agent ignores it | `expose_state` not set. | `CopilotKitMiddleware(expose_state=["language"])` — see [FINDINGS.md](FINDINGS.md) #9. |
 | A2UI surface renders empty | `catalogId` mismatch, or a generated schema with no `id: "root"`. | Fixed schema: `CATALOG_ID` in `backend/src/a2ui_fixed.py` must equal the one in `catalog.ts`. Dynamic: try a stronger `OPENAI_MODEL`. |
 | Tool renders as the default bubble | Renderer name ≠ Python tool name. | They must match exactly. |
 | `Expected to have a matching ToolMessage in Command.update` | A tool returned a `Command` without one. | Include a `ToolMessage` with an injected `tool_call_id` — see `backend/src/state_rendering.py`. |
@@ -424,7 +376,7 @@ The Deep Agents doc tree has **no** Troubleshooting section as of 2026-08-06 —
 
 ## Doc drift detection
 
-`/doc-sync` keeps this repo honest about the docs it mirrors. Press **Sync docs now** (on the landing page or on `/doc-sync`) and it fetches the markdown source behind all 15 tracked doc pages, diffs each against the copy stored in `doc-snapshot/`, replaces that copy, and reports what moved — ranked by whether the change can actually break an implementation.
+`/doc-sync` keeps this repo honest about the docs it mirrors. Press **Sync docs now** (on the landing page or on `/doc-sync`) and it fetches the markdown source behind all 18 tracked doc pages, diffs each against the copy stored in `doc-snapshot/`, replaces that copy, and reports what moved — ranked by whether the change can actually break an implementation.
 
 Doc pages are fetched by appending `.md` to their URL, which returns the authored MDX rather than 250 KB of rendered HTML. Every response is checked for `text/markdown` before it is allowed near the snapshot: a URL that misses the markdown handler still answers `200` with the HTML app shell, and writing that in would destroy the baseline and report the whole corpus as rewritten on the next run. A run commits all pages or none.
 
@@ -445,6 +397,61 @@ Doc pages are fetched by appending `.md` to their URL, which returns the authore
 **To test it**, edit any `doc-snapshot/pages/*.md` file and press the button — a line inside a code fence for High, a `##` heading for Medium, a sentence for Low. The comparison reads the stored file itself, so nothing else needs changing. Both `/doc-sync` and the changelog label the result as a local snapshot edit rather than upstream drift.
 
 Commit `doc-snapshot/` — `pages/`, `manifest.json` and `CHANGELOG.md` are the baseline every diff is taken against. `reports/` is gitignored derived data.
+
+---
+
+## Screen recording
+
+`autorecorder/` records one demo video per doc page — read the doc, show the
+code in a simulated VS Code, then drive the live feature. Start both servers
+(§6) first; the recorder checks they answer before it launches a browser.
+
+```bash
+npm run record:all         # every page
+npm run record:issues      # only the pages with a known defect
+npm run record -- --list   # what is registered
+npm run record:doctor      # is the recorder's config still valid?
+```
+
+The recorder is documented in [`autorecorder/README.md`](autorecorder/README.md).
+
+### Pages that are supposed to fail
+
+Twelve routes are on the QA report as broken, and their clips exist to **show**
+that rather than to work around it. Each declares a `knownIssue` in
+`autorecorder/config/pages.config.ts`, and that one object drives three things:
+the run reports `[ISSUE]` instead of `[PASS]` (and still exits 0, so a dozen
+documented defects do not make every run fail), the recorder types the report
+into a simulated Notepad at the end of the clip, and the same object is written
+to `autorecorder/videos/RECORD_RESULTS.json`. The sentence on screen and the row
+that reaches a manager are the same string, written once.
+
+`[ISSUE]` means the page is on the known-issues list and recorded cleanly. It
+does **not** mean the defect was confirmed on this run — the recorder alone
+cannot establish that. Watch the clip before sending the report on.
+
+### Paired routes
+
+Most of these defects are an absence — a label that never changes, a list that
+stays empty — and a clip of an absence invites one question: was the demo just
+wired up wrong? The answer has to be on screen, so where the fix is known the
+route is paired:
+
+| Doc's code, verbatim | Same page, with the omitted line |
+|---|---|
+| `/shared-state/in-app-agent-read` | `/shared-state/in-app-agent-read/fixed` |
+| `/shared-state/in-app-agent-write` | `/shared-state/in-app-agent-write/fixed` |
+
+The `/fixed` routes differ from their siblings by exactly one thing: they
+address `shared_state_fixed_agent` (`backend/src/shared_state_fixed.py`), which
+is `shared_state.py` plus `CopilotKitMiddleware(expose_state=["language"])` and
+a middleware that seeds the key on the first turn. Both omissions are [FINDINGS.md](FINDINGS.md) #9
+below. Keep those files diffable — the value of the pair is that nothing else
+differs.
+
+Only pair a route where the fix is genuinely known. Two of these defects have no
+established fix; a `/fixed` route that quietly did something else would be worse
+evidence than no pair at all.
 
 ---
 
@@ -490,8 +497,15 @@ deepagents/
             ├── page.tsx              Introduction
             ├── status/               the QA table
             ├── api/
-            │   ├── copilotkit/route.ts               all 10 graphs, A2UI off for fixed-schema
-            │   └── copilotkit-a2ui-dynamic/route.ts  dynamic-schema only, injection on
+            │   ├── copilotkit/[[...slug]]/route.ts   all graphs, A2UI off for fixed-schema
+            │   ├── copilotkit-a2ui-dynamic/[[...slug]]/route.ts  dynamic-schema only, injection on
+            │   ├── copilotkit-learning/[[...slug]]/route.ts      the Learning page's runtime
+            │   └── copilotkit-memory/[[...slug]]/route.ts        memory: { access }, the undocumented option
+            ├── cookbook/jev-generative-ui/            every published block, four of them compiled and unmounted
+            │   ├── workspaces.ts · read-action.ts     the two that run
+            │   ├── choose-panel.ts · picker-agent.ts  need @typesafe-ai/sdk and @langchain/openai
+            │   ├── runtime-route.ts · picker-page.tsx deliberately not route.ts / page.tsx
+            │   └── prepared-controls.tsx              the live half, Jev absent and labelled absent
             └── <doc-path>/
                 ├── page.tsx          notes, source, discrepancies, Try it
                 └── demo-chat/page.tsx   the chrome-free live surface
@@ -517,9 +531,26 @@ Grouped the way the doc nav groups them.
 - [A2UI · Dynamic Schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/dynamic-schema)
 - [A2UI · Styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling)
 - [A2UI · Advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced)
+- [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
+
+**Custom Look and Feel**
+- [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
+
+**Rich Threads**
+- [Thread & History Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle)
+
+**Cookbook**
+- [Jev: fast generative UI](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) — tracked and compiled; not runnable without a TypeSafe vendor key
+
+**Intelligence**
+- [Memories & Recall](https://docs.copilotkit.ai/deepagents/intelligence/memories)
+- [Skill delivery](https://docs.copilotkit.ai/deepagents/intelligence/learned-skills)
+- [Learning](https://docs.copilotkit.ai/deepagents/learning)
 
 **App Control**
 - [Frontend Tools](https://docs.copilotkit.ai/deepagents/frontend-tools)
+- [WebMCP](https://docs.copilotkit.ai/deepagents/webmcp) — tracked for drift only
+- [Governed Actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) — tool-call variant implemented; the `useInterrupt` variant is not
 
 **Shared State**
 - [Reading agent state](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read)

@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-08-26T10:23:57.993Z",
+  "syncedAt": "2026-09-25T07:49:08.992Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
-      "sha256": "d0d82bb3837c8c0f4e8f66746f110a94455cfe9ea5a90e2d85d836a1994069e8",
-      "bytes": 3261,
-      "lines": 55,
+      "sha256": "e3a39f804c4415946a8958ef80695c687b6b5370a48c7113af3af56e05b1ca19",
+      "bytes": 2943,
+      "lines": 76,
       "routes": [
         "/",
         "/doc-sync"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Mon, 21 Sep 2026 07:26:47 GMT"
     },
     "/deepagents/frontend-tools": {
       "file": "deepagents__frontend-tools.md",
@@ -26,7 +26,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:22 GMT"
     },
     "/deepagents/generative-ui/a2ui/advanced": {
       "file": "deepagents__generative-ui__a2ui__advanced.md",
@@ -38,7 +38,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:22 GMT"
     },
     "/deepagents/generative-ui/a2ui/dynamic-schema": {
       "file": "deepagents__generative-ui__a2ui__dynamic-schema.md",
@@ -50,7 +50,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:22 GMT"
     },
     "/deepagents/generative-ui/a2ui/fixed-schema": {
       "file": "deepagents__generative-ui__a2ui__fixed-schema.md",
@@ -62,7 +62,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/generative-ui/a2ui/styling": {
       "file": "deepagents__generative-ui__a2ui__styling.md",
@@ -74,7 +74,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:22 GMT"
     },
     "/deepagents/generative-ui/state-rendering": {
       "file": "deepagents__generative-ui__state-rendering.md",
@@ -86,7 +86,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/generative-ui/tool-rendering": {
       "file": "deepagents__generative-ui__tool-rendering.md",
@@ -98,31 +98,43 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/generative-ui/your-components/interrupt-based": {
       "file": "deepagents__generative-ui__your-components__interrupt-based.md",
-      "sha256": "357ef26c857c8345dc94b312083e1f98a3ea9850f9c237283338f0c29b23da18",
-      "bytes": 15904,
-      "lines": 406,
+      "sha256": "8da705a7c925a763d0e57ac2307d92ebef609d2a4e33d1b0c1d5d10199704487",
+      "bytes": 18051,
+      "lines": 444,
       "routes": [
         "/generative-ui/your-components/interrupt-based"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
+    },
+    "/deepagents/human-in-the-loop/governed-actions": {
+      "file": "deepagents__human-in-the-loop__governed-actions.md",
+      "sha256": "c3ffbf2aa5a8b697765c47f5668c9ac1f3608ae778728bb504b77c18a995214b",
+      "bytes": 7168,
+      "lines": 256,
+      "routes": [
+        "/human-in-the-loop/governed-actions"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Fri, 04 Sep 2026 13:40:36 GMT"
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "8d89c1891579b0c5aca462be4f7677638bac5447470a8b9cfdb98d93e1852ed0",
-      "bytes": 17642,
-      "lines": 490,
+      "sha256": "91a401c26a742960cfd4ee95379887201f27a44eee66aecd14bead59bc983cc4",
+      "bytes": 18396,
+      "lines": 510,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Wed, 23 Sep 2026 07:50:28 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
@@ -134,7 +146,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/shared-state/in-app-agent-write": {
       "file": "deepagents__shared-state__in-app-agent-write.md",
@@ -146,19 +158,19 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/shared-state/predictive-state-updates": {
       "file": "deepagents__shared-state__predictive-state-updates.md",
-      "sha256": "bfa60c65a97797b09b06df0724ae4c92db22f781513adb30592c333030d55c66",
-      "bytes": 28670,
-      "lines": 627,
+      "sha256": "cee5b56acd869cb066125ac613849a6b6072ee2bfad2867f85aac539aea2c759",
+      "bytes": 30517,
+      "lines": 670,
       "routes": [
         "/shared-state/predictive-state-updates"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/shared-state/state-inputs-outputs": {
       "file": "deepagents__shared-state__state-inputs-outputs.md",
@@ -170,7 +182,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
     },
     "/deepagents/shared-state/workflow-execution": {
       "file": "deepagents__shared-state__workflow-execution.md",
@@ -182,12 +194,118 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Sun, 30 Aug 2026 13:45:23 GMT"
+    },
+    "/deepagents/webmcp": {
+      "file": "deepagents__webmcp.md",
+      "sha256": "7c0c06d96d3f0512fa576de85ba07926a0b4337f463f8beb4c3793728293c811",
+      "bytes": 7489,
+      "lines": 165,
+      "routes": [
+        "/webmcp"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
+    },
+    "/deepagents/generative-ui/frontend-cards": {
+      "file": "deepagents__generative-ui__frontend-cards.md",
+      "sha256": "3da6b0006df954f97a5eeabba6369ba30f31d09c75426a006f7c951f5c8e5e3d",
+      "bytes": 4417,
+      "lines": 139,
+      "routes": [
+        "/generative-ui/frontend-cards"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Fri, 11 Sep 2026 10:21:49 GMT"
+    },
+    "/deepagents/intelligence/memories": {
+      "file": "deepagents__intelligence__memories.md",
+      "sha256": "517889196a1446736c59e8fbfdaab24fa29a992f8c37167067bd5050742f181d",
+      "bytes": 12594,
+      "lines": 316,
+      "routes": [
+        "/intelligence/memories"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 24 Sep 2026 07:28:13 GMT"
+    },
+    "/deepagents/learning": {
+      "file": "deepagents__learning.md",
+      "sha256": "85a381fe2689ed6d5cbf996368967121cec76221556b8c4f5c6027dc12c2356b",
+      "bytes": 14150,
+      "lines": 233,
+      "routes": [
+        "/learning"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 24 Sep 2026 07:28:13 GMT"
+    },
+    "/deepagents/intelligence/learned-skills": {
+      "file": "deepagents__intelligence__learned-skills.md",
+      "sha256": "4108356baba3cf86b06a849b956b82a64f79a01fb1d644e5ffa54584b6a42ee2",
+      "bytes": 31593,
+      "lines": 580,
+      "routes": [
+        "/intelligence/learned-skills"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Fri, 25 Sep 2026 07:49:08 GMT"
+    },
+    "/deepagents/custom-look-and-feel/markdown": {
+      "file": "deepagents__custom-look-and-feel__markdown.md",
+      "sha256": "594924228c26e5e6f29ec8c052c03d685362e3a5e784142e096e5c939dcca3d8",
+      "bytes": 5836,
+      "lines": 159,
+      "routes": [
+        "/custom-look-and-feel/markdown"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Mon, 21 Sep 2026 08:16:36 GMT"
+    },
+    "/deepagents/cookbook/jev-generative-ui": {
+      "file": "deepagents__cookbook__jev-generative-ui.md",
+      "sha256": "4314f2ad35c170e18a9ff0266cd19bec77dbfa33de636a35854ec3cf03093fc0",
+      "bytes": 21916,
+      "lines": 428,
+      "routes": [
+        "/cookbook/jev-generative-ui"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Wed, 23 Sep 2026 07:50:28 GMT"
+    },
+    "/deepagents/threads-lifecycle": {
+      "file": "deepagents__threads-lifecycle.md",
+      "sha256": "a6f494f08e08c65e38f4f8d8df44830cafb2012361f990d3a6c4f7396a1c568f",
+      "bytes": 15759,
+      "lines": 257,
+      "routes": [
+        "/threads/lifecycle"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Wed, 23 Sep 2026 07:50:28 GMT"
+    },
+    "/deepagents/backend/message-history": {
+      "file": "deepagents__backend__message-history.md",
+      "sha256": "0cccce9c1ffa7ede0fd6eeb9adc1b5f1bce38cf54292e39bab7b4761db94f86d",
+      "routes": [
+        "/backend/message-history"
+      ],
+      "bytes": 15225,
+      "lines": 368,
+      "date": "Wed, 23 Sep 2026 07:50:28 GMT"
     }
   },
   "sitemap": {
-    "fetchedAt": "2026-08-26T10:23:57.993Z",
-    "urlsUnderRoot": 137,
+    "fetchedAt": "2026-09-04T10:56:11.541Z",
+    "urlsUnderRoot": 141,
     "knownUnmapped": [
       "https://docs.copilotkit.ai/deepagents/agent-config",
       "https://docs.copilotkit.ai/deepagents/agent-spec",
@@ -253,6 +371,17 @@
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop/interrupt-flow",
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt",
       "https://docs.copilotkit.ai/deepagents/inspector",
+      "https://docs.copilotkit.ai/deepagents/intelligence/analytics",
+      "https://docs.copilotkit.ai/deepagents/intelligence/channels",
+      "https://docs.copilotkit.ai/deepagents/intelligence/headless-ui",
+      "https://docs.copilotkit.ai/deepagents/intelligence/intelligence-platform",
+      "https://docs.copilotkit.ai/deepagents/intelligence/managed-intelligence-platform",
+      "https://docs.copilotkit.ai/deepagents/intelligence/overview",
+      "https://docs.copilotkit.ai/deepagents/intelligence/plans",
+      "https://docs.copilotkit.ai/deepagents/intelligence/quickstart",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-ecs",
+      "https://docs.copilotkit.ai/deepagents/intelligence/threads-explained",
       "https://docs.copilotkit.ai/deepagents/migrate/1.10.X",
       "https://docs.copilotkit.ai/deepagents/migrate/1.8.2",
       "https://docs.copilotkit.ai/deepagents/migrate/v2",
@@ -264,13 +393,6 @@
       "https://docs.copilotkit.ai/deepagents/prebuilt-components/copilot-threads-drawer",
       "https://docs.copilotkit.ai/deepagents/prebuilt-components/popup",
       "https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar",
-      "https://docs.copilotkit.ai/deepagents/premium/connect-your-runtime",
-      "https://docs.copilotkit.ai/deepagents/premium/headless-ui",
-      "https://docs.copilotkit.ai/deepagents/premium/intelligence-platform",
-      "https://docs.copilotkit.ai/deepagents/premium/managed-intelligence-platform",
-      "https://docs.copilotkit.ai/deepagents/premium/overview",
-      "https://docs.copilotkit.ai/deepagents/premium/self-hosting",
-      "https://docs.copilotkit.ai/deepagents/premium/threads-explained",
       "https://docs.copilotkit.ai/deepagents/programmatic-control",
       "https://docs.copilotkit.ai/deepagents/reference/v2/hooks/useCapabilities",
       "https://docs.copilotkit.ai/deepagents/runtime-server-adapter",
@@ -281,7 +403,6 @@
       "https://docs.copilotkit.ai/deepagents/telemetry",
       "https://docs.copilotkit.ai/deepagents/threads",
       "https://docs.copilotkit.ai/deepagents/threads-import",
-      "https://docs.copilotkit.ai/deepagents/threads-lifecycle",
       "https://docs.copilotkit.ai/deepagents/threads-self-managed",
       "https://docs.copilotkit.ai/deepagents/troubleshooting/common-issues",
       "https://docs.copilotkit.ai/deepagents/troubleshooting/debug-mode",

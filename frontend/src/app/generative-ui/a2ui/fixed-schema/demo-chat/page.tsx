@@ -25,9 +25,13 @@ export default function Page() {
       parentPath="/generative-ui/a2ui/fixed-schema"
       subtitle={`graph: ${AGENT_ID}`}
     >
-      <CopilotKit runtimeUrl="/api/copilotkit" agent={AGENT_ID} a2ui={{ catalog }}>
-        <CopilotChat agentId={AGENT_ID} className="h-full" />
-      </CopilotKit>
+      <div className="flex h-full flex-col">
+        <div className="min-h-0 flex-1">
+          <CopilotKit runtimeUrl="/api/copilotkit" agent={AGENT_ID} a2ui={{ catalog }}>
+            <CopilotChat agentId={AGENT_ID} className="h-full" />
+          </CopilotKit>
+        </div>
+      </div>
     </DemoFrame>
   );
 }

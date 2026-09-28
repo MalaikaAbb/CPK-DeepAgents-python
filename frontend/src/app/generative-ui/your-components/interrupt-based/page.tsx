@@ -29,12 +29,14 @@ export default function Page() {
                 On <strong>One interrupt</strong>, the first message you send is
                 answered with a name prompt instead of a reply. Type a name,
                 submit, and the run resumes — ask it its name afterwards and it
-                uses the one you gave. On{" "}
-                <strong>Two, dispatched by type</strong>, an amber
-                Approve/Reject card comes first, then the blue name form.
+                uses the one you gave. This half works. On{" "}
+                <strong>Two, dispatched by type</strong>, the page&apos;s snippet
+                is printed with <code>enabled: ({"{ eventValue }"})</code> and
+                there is no such property, so neither the Approve/Reject card
+                nor the name form is ever claimed.
               </>
             }
-            fail="A raw JSON blob in the chat instead of a form means no useInterrupt claimed the event — on the conditional tab that usually means the `enabled` predicate did not match the event's `type`."
+            fail="On the conditional tab a raw JSON blob instead of a form is the expected failure, not a surprise — it is what an unclaimed interrupt looks like. On the single tab it would be a real regression."
           />
         </div>
       </Panel>
@@ -68,13 +70,28 @@ export default function Page() {
         </p>
       </Callout>
 
-      <Callout tone="warn" title="Two gaps in the page">
+      <Callout tone="info" title="Closed by the 30 Aug revision">
         <p>
-          <strong>No agent is ever constructed.</strong> The page shows the
-          middleware classes and stops. The two{" "}
-          <code>create_deep_agent</code> calls in the <code>agents</code> block
-          above are written to the shape it describes.
+          This route used to report that the page never constructed an agent —
+          it showed the middleware classes and stopped. The 30 Aug revision
+          prints the <code>create_deep_agent</code> call end to end, including
+          the{" "}
+          <code>CopilotKitMiddleware(expose_state=[&quot;agent_name&quot;])</code>{" "}
+          entry that replaced the old &ldquo;add{" "}
+          <code>copilotkitMiddleware</code> to the graph&rdquo; instruction, and
+          a system prompt that names <code>agent_name</code> and tells the model
+          to use it. <code>agent</code> in the <code>agents</code> block above is
+          now that call verbatim, and the optional state field is{" "}
+          <code>NotRequired[str]</code> rather than a bare <code>str</code>.
         </p>
+        <p className="mt-2">
+          That is also the exact cause this route had filed against it — the
+          name reaching state but never reaching the prompt. Whether the fix
+          lands is what the next recording checks.
+        </p>
+      </Callout>
+
+      <Callout tone="warn" title="One gap left in the page">
         <p className="mt-2">
           <strong>
             The second <code>AgentState</code> is elided.
@@ -112,8 +129,9 @@ export default function Page() {
           value on the way out. The wire carries{" "}
           <code>&quot;value&quot;:
           &quot;{'{\\"type\\":\\"approval\\",…}'}&quot;</code>, so{" "}
-          <code>event.value.content</code> is <code>undefined</code>. The{" "}
-          <code>payloadOf</code> helper in the demo parses it.
+          <code>event.value.content</code> is <code>undefined</code>. The demo
+          keeps the page&apos;s form rather than parsing around it, so this stays
+          visible.
         </p>
         <p className="mt-2">
           The first section is unaffected: it passes <code>interrupt()</code> a

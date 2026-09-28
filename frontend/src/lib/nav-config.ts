@@ -196,6 +196,34 @@ export const NAV: NavGroup[] = [
         statusNote:
           "The progress renderer works. The action-handler half of the page calls exports that react-core 1.66.2 does not have.",
       },
+      {
+        path: "/generative-ui/frontend-cards",
+        hasDemo: true,
+        title: "Frontend-Driven Cards",
+        docPath: "/deepagents/generative-ui/frontend-cards",
+        summary:
+          "A card pushed into the transcript from frontend code as a `role: \"activity\"` message, which the agent never receives.",
+        status: "broken",
+        statusNote:
+          "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
+      },
+    ],
+  },
+  {
+    title: "Custom Look and Feel",
+    routes: [
+      {
+        path: "/custom-look-and-feel/markdown",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Markdown Rendering",
+        docPath: "/deepagents/custom-look-and-feel/markdown",
+        summary:
+          "The markdownRenderer slot on CopilotChatAssistantMessage: a Streamdown components map, a class string, or a component replacing the renderer outright.",
+        status: "partial",
+        statusNote:
+          "The slot mechanics are exactly as documented, read out of the shipped 1.71.0 bundle, and the custom-tag claim produces the page's exact TS2353. What fails: all three published blocks are a bare `<CopilotChat>` with no agent id, so they ask for `default` and throw on a Deep Agents runtime (the Frontend-Driven Cards defect again); none carries `use client`; and the headline `components` example styles with `.my-link` / `.my-heading`, which the page never defines. Built 2026-09-21 and not yet driven — the demo's probe is what checks the prop claims against the rendered HTML.",
+      },
     ],
   },
   {
@@ -210,6 +238,27 @@ export const NAV: NavGroup[] = [
         summary:
           "A tool registered with useFrontendTool that executes in the browser when the agent calls it.",
         status: "working",
+      },
+      {
+        path: "/webmcp",
+        title: "WebMCP",
+        docPath: "/deepagents/webmcp",
+        summary:
+          "Publishing an existing frontend tool to document.modelContext so WebMCP-aware browser agents can discover and call it.",
+        status: "not-started",
+        statusNote:
+          "Tracked for drift only — no demo yet. The page’s own verification steps need Chrome 149+ with the WebMCP origin trial or chrome://flags/#enable-webmcp-testing, and CopilotKit no-ops wherever document.modelContext is absent, so there is nothing a headless Chromium run can show.",
+      },
+      {
+        path: "/human-in-the-loop/governed-actions",
+        title: "Governed Actions",
+        docPath: "/deepagents/human-in-the-loop/governed-actions",
+        summary:
+          "Gating a side-effecting agent action behind an approval card, via useInterrupt or useHumanInTheLoop.",
+        status: "working",
+        hasDemo: true,
+        statusNote:
+          "The tool-call variant, with the page's schema unchanged — `z.record(z.unknown())` is valid on this repo's zod 3. The `useInterrupt` variant needs a backend that pauses a run and attaches `interrupt.metadata.action`, which no agent here does.",
       },
     ],
   },
@@ -271,6 +320,93 @@ export const NAV: NavGroup[] = [
         status: "broken",
         statusNote:
           "Upstream duplicate — identical title, prose and code to state-inputs-outputs. Nothing here to implement.",
+      },
+    ],
+  },
+  {
+    title: "Intelligence",
+    routes: [
+      {
+        path: "/intelligence/memories",
+        hasDemo: true,
+        title: "User Memories",
+        docPath: "/deepagents/intelligence/memories",
+        summary:
+          "Long-term memories per user or project, read and written from React with `useMemories`.",
+        status: "broken",
+        statusNote:
+          "The React snippet's import was wrong until the 2026-09-21 sync and now reads `@copilotkit/react-core/v2`, so the page's file compiles and runs here. What remains: on the Quickstart's runtime no memory request is ever sent, the hook reports `isAvailable: true` over an empty list, and every memory route 404s unless the runtime is built with `memory: { access }`, which the page never mentions. That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
+      },
+      {
+        path: "/intelligence/learned-skills",
+        hasDemo: true,
+        title: "Learned Skills",
+        docPath: "/deepagents/intelligence/learned-skills",
+        summary:
+          "Putting one Learning container's published Skills in front of an agent through a framework-native adapter, with no CLI download and no restart.",
+        status: "broken",
+        statusNote:
+          "Skill delivery: no row of the page's adapter table can be followed for this backend. Every Python package it names is 404 on PyPI, including the base client it says Python uses (unflagged, unlike the two adapters now marked pending release). The BuiltInAgent row's `learnedSkills` failed on runtime 1.71.0 (TS2353, TS2339, TS2724) and compiles on the 1.73.3 installed since 2026-09-23; the page still names no version, and BuiltInAgent replaces the Deep Agent rather than attaching to it. Every snippet now pins the placeholder revision `exact-revision-id`.",
+      },
+      {
+        path: "/learning",
+        hasDemo: true,
+        title: "Automatic Learning",
+        docPath: "/deepagents/learning",
+        summary:
+          "Routing selected Threads into a Learning container from the runtime, for Insights and reviewed Skills.",
+        status: "broken",
+        statusNote:
+          "The page's runtime snippet is mounted verbatim at `/api/copilotkit-learning`. Its `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws at module load without a key, so the route 500s and neither agent answers. `agents` and `identifyUser` are undefined on the page; `getLearningContainerId` needs runtime 1.70+; dashboard and CLI steps are not exercised.",
+      },
+    ],
+  },
+  {
+    title: "Rich Threads",
+    routes: [
+      {
+        path: "/threads/lifecycle",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Thread & History Lifecycle",
+        docPath: "/deepagents/threads-lifecycle",
+        summary:
+          "How a threadId is minted, lost on remount, restored with setActiveThreadId, and made authoritative with a threadId prop.",
+        status: "partial",
+        statusNote:
+          "The only Rich Threads page tracked here; the rest of the section stays in knownUnmapped. Runs on the runtime's InMemoryAgentRunner, whose connect() replays a thread's history for the life of the process. That is the page's \"persisting AgentRunner\" case; CopilotKit Intelligence and LangGraph's own checkpointer are not exercised. The page's `existingId` is never defined, so the demo supplies the first thread that held a conversation.",
+      },
+    ],
+  },
+  {
+    title: "Backend",
+    routes: [
+      {
+        path: "/backend/message-history",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Message history",
+        docPath: "/deepagents/backend/message-history",
+        summary:
+          "Trimming the transcript forwarded to the agent: the page's middleware inside a second runtime, and its messageFilter prop.",
+        status: "partial",
+        statusNote:
+          "The middleware and its check work as published, and on a LangGraph thread trimming loses nothing (the checkpointer holds the history). `messageFilter`, the page's recommended recipe, was not a prop on @copilotkit/react-core 1.71.0 or 1.73.0 (a type error that did nothing); it first ships in 1.73.1 and typechecks on the 1.73.3 installed since 2026-09-23, runtime effect not re-observed. The runtime snippet's `HttpAgent({ url: process.env.AGENT_URL! })` needs an AG-UI endpoint this backend does not serve; the demo runs the same middleware on the Quickstart's LangGraphAgent instead.",
+      },
+    ],
+  },
+  {
+    title: "Cookbook",
+    routes: [
+      {
+        path: "/cookbook/jev-generative-ui",
+        title: "Jev: fast generative UI",
+        docPath: "/deepagents/cookbook/jev-generative-ui",
+        summary:
+          "A workspace picker whose next control and candidate ranking come from Jev, TypeSafe's decision service, rendered through AG-UI as shared agent state.",
+        status: "broken",
+        statusNote:
+          "Not runnable here and not faked. The decision layer needs `@typesafe-ai/sdk` (absent) and a TYPESAFE_API_KEY from a third-party vendor; the fallback needs `@langchain/openai` (absent). Every published TypeScript block is in the repo verbatim and typechecks on the installed 1.71.0, three minors below the page's 1.73.0 pin, and on zod 3 rather than the pinned zod 4. The prepared controls, their schemas and `readAction` are wired up for real on the route; the Jev decision is absent and labelled as absent. No demo and no recorder entry, because there is nothing to film that would not be a stand-in. Built 2026-09-21 and not yet opened in a browser.",
       },
     ],
   },
