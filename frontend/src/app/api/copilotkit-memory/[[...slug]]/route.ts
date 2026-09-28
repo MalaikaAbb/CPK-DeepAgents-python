@@ -16,7 +16,7 @@ import { GRAPH_IDS, LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/ag
  * runtime unless it is constructed with `memory: { access }` (or the deprecated
  * `exposeMemoryRoutes: true`) — a "secure default", per the runtime's own
  * typings, present on 1.69.0 (this repo's lockfile until 2026-09-23) and on
- * CI's 1.71.0 alike; not re-checked on the 1.73.3 installed since.
+ * the 1.71.0 installed alongside it alike; not re-checked on the 1.73.3 installed since.
  * `/api/copilotkit`, built the way the Deep Agents Quickstart builds it, has
  * neither (and no `intelligence` either), so the page's `useMemories()`
  * reports unavailable there no matter what the organization is entitled to.
@@ -24,7 +24,7 @@ import { GRAPH_IDS, LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/ag
  * This mount is an Intelligence runtime over the same graphs with that one
  * option added, granting the user read-write. The typings only accept `memory`
  * on an Intelligence runtime, which needs `CPK_INTELLIGENCE_API_KEY`. This
- * harness has no key — locally or in CI — so without one the mount answers
+ * harness has no key, so without one the mount answers
  * 503 and says why, rather than pretending to be something it is not.
  */
 

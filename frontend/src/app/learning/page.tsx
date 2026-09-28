@@ -49,7 +49,7 @@ export default function Page() {
       <Callout tone="warn" title="Without an Intelligence key the page's runtime does not load">
         <code>apiKey: process.env.CPK_INTELLIGENCE_API_KEY!</code> — the{" "}
         <code>!</code> tells the type checker the key is there, and the page
-        never says it has to be. This harness has no key, locally or in CI, so
+        never says it has to be. This harness has no key, so
         the constructor throws at import time, the route answers 500, the
         provider lands in <code>error</code>, and the chat on either tab never
         enables its send button. Mounted anywhere shared, the same line would

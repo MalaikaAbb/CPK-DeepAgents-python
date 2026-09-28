@@ -29,7 +29,7 @@
  *   ctx.fail('Approve button never rendered')             -> [FAIL], clip still saved
  *
  * A `console.warn` reaches nobody: the summary, RECORD_RESULTS.json and the
- * daily report only see what goes through `ctx`.
+ * QA report only see what goes through `ctx`.
  *
  * ── Handlers for pages that reproduce a defect ─────────────────────────────
  * Pages here that carry a `knownIssue` give their handlers extra obligations:

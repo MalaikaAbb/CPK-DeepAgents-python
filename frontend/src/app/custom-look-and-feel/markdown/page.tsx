@@ -233,7 +233,7 @@ export default function Page() {
         checkable in DeepAgentspy-angular and nothing compares the two. Both
         reference links point outside <code>/deepagents</code> (
         <code>/reference/vue/…</code>, <code>/reference/angular/…</code>), so
-        the drift gate&apos;s in-section link scan does not follow them either.
+        this harness does not track them either.
       </Callout>
 
       <Panel

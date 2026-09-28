@@ -22,7 +22,7 @@
  * This repo is not only documenting an integration that works. Ten of the
  * pages below are on the QA report as broken, and their clips exist to show
  * that. `knownIssue` is what makes the run say `[ISSUE]` rather than `[PASS]`,
- * and it is the same object `ci/build-report.mjs` renders into the daily
+ * and it is the same object that is written to RECORD_RESULTS.json for the QA
  * report — so the sentence typed into Notepad on video and the row that goes
  * to the manager are one string, written here, once.
  *
@@ -36,8 +36,8 @@ import { definePages } from '../core/types';
 /**
  * Pages that stay registered but are never filmed.
  *
- * They keep their route, their doctor entry and their CI group, so drift and
- * coverage still track them and the findings still hold. Only the camera is
+ * They keep their route, their doctor entry and their `--list` entry, so doc
+ * drift still tracks them and the findings still hold. Only the camera is
  * off. A page belongs here when a clip would show nothing the findings do not
  * already say, or would film a wall rather than the feature.
  *
@@ -68,7 +68,8 @@ export const PAGES = definePages([
     // Leads with the versions rather than package.json, which declares RANGES:
     // a clip showing "^1.69.0" while the run installed 1.69.3 documents a floor
     // nobody tested. VERSIONS.md is generated after install
-    // (`node ci/write-versions.mjs`) and names what actually resolved.
+    // (`node scripts/write-versions.mjs`, run by `npm run doctor`) and names
+    // what actually resolved.
     ideFile: 'frontend/VERSIONS.md',
     startLine: 6,
     endLine: 20,
@@ -223,15 +224,41 @@ export const PAGES = definePages([
     route: 'generative-ui/your-components/interrupt-based',
     ideFile:
       'frontend/src/app/generative-ui/your-components/interrupt-based/demo-chat/page.tsx',
-    startLine: 12,
-    endLine: 39,
-    // The `agents` region, because `_SYSTEM_PROMPT` is the half of this that is
-    // worth reading: it names `agent_name` and tells the model to use it, which
-    // is what makes the name survive the interrupt.
-    extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
+    // The dispatched snippet as published: the two `enabled: ({ eventValue })` hooks.
+    startLine: 126,
+    endLine: 143,
+    extraTabs: [
+      // The multi-interrupt middleware: approval first, then the name.
+      { filePath: 'backend/src/interrupt_based.py', startLine: 56, endLine: 70 },
+      {
+        filePath:
+          'frontend/src/app/generative-ui/your-components/interrupt-based/fixed/demo-chat/page.tsx',
+        startLine: 87,
+        endLine: 101,
+      },
+    ],
     prompt: 'Hi there. Could you help me with something?',
     prompts: ['Hi there. Could you help me with something?', 'What should I call you?'],
     waitAfterPromptMs: 4000,
+    knownIssue: {
+      area: 'Deep Agents - Generative UI - Your Components - Interrupt-Based',
+      problem:
+        'With the page\'s "Condition UI executions" snippet, the agent pauses on its approval ' +
+        'interrupt but no card renders, so the run waits forever.',
+      impact: 'Anyone dispatching more than one interrupt type by `enabled` gets a stuck chat.',
+      likelyCause:
+        '`enabled` receives `{ name, value }`, not `{ eventValue }`, so the predicate throws and ' +
+        'CopilotKit treats the interrupt as disabled. `value` is also a JSON string.',
+      note: [
+        'interrupt-based - two types, no card',
+        '',
+        'one interrupt works',
+        'two types: doc filter reads eventValue.type',
+        'copilotkit passes value, not eventValue -> filter crashes',
+        'no card, agent waits forever',
+        'fixed route reads { value } and both cards show',
+      ].join('\n'),
+    },
     // No `knownIssue`, as of 01 Sep 2026: the page works. The entry that was
     // here filed the interrupt's name being lost, and it was written as an
     // explicit re-check -- the 30-Aug doc revision had changed both halves of

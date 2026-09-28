@@ -27,7 +27,7 @@ A page handler in `actions/` reports through its fourth argument, `ctx`:
 `ctx.warn(...)` for something it expected and did not see (a note on the
 result), `ctx.fail(...)` when the feature did not work (the clip is still
 saved, the page reports `FAIL`). A `console.warn` reaches nobody — the
-summary, `videos/RECORD_RESULTS.json` and the daily report only see what
+summary, `videos/RECORD_RESULTS.json` and the QA report only see what
 goes through `ctx`.
 
 When a change here is worth keeping across repos, it belongs in `core/` and
@@ -37,7 +37,7 @@ should be ported to the other copies — say so explicitly so it can be.
 
 This repo tracks defects as well as features, which the reference suite had no
 way to express: a broken page could only report `[FAIL]`, and five of those
-every night is a pipeline nobody reads. Four additions came out of that, none of
+on every run is a run nobody reads. Four additions came out of that, none of
 them framework-specific, all of them **owed to the sibling repos**:
 
 - `types.ts` — `KnownIssue`, and `knownIssue` on `PageDefinition`

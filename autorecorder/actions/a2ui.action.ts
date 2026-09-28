@@ -69,7 +69,7 @@ export const runA2uiSurfaceAction: PageActionHandler = async (
   //
   // 75s to start, not the default 30s. On the dynamic-schema agent a *second*
   // model writes the whole component tree before the first word is said, and
-  // 30s was a coin flip: Dynamic Schema and Advanced cleared it on CI while
+  // 30s was a coin flip: Dynamic Schema and Advanced cleared it on one run while
   // Styling -- same agent, same runtime, same prompt -- did not, and was
   // reported as a dead page. A limit that fails one of three identical calls is
   // measuring the limit, not the app.

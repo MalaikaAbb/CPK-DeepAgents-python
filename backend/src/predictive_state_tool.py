@@ -157,7 +157,7 @@ workflow = (
 #     graph = workflow.compile(checkpointer=MemorySaver())
 #
 # That is the one line of the 30 Aug revision that cannot go in verbatim.
-# `langgraph dev` — the server `langgraph.json` and the CI pipeline both run —
+# `langgraph dev` — the server `langgraph.json` runs under —
 # refuses a graph carrying its own checkpointer:
 #
 #     ValueError: Heads up! Your graph 'graph' from

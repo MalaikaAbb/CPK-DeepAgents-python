@@ -42,9 +42,6 @@ npm run record -- --pages=issues   # just the pages with known defects
 npm run record            # all pages, in order
 ```
 
-Or drive the whole thing — servers, installs, drift check, report — from the
-repo root with `npm run automate`. See [`ci/README.md`](../ci/README.md).
-
 | Flag | Effect |
 |---|---|
 | `--list`, `--help` | Print every registered route and exit |
@@ -59,8 +56,8 @@ repo root with `npm run automate`. See [`ci/README.md`](../ci/README.md).
 
 Videos land in `videos/` as `<videoPrefix>-<NN>-<name>.webm`, 1920×1080, ~25fps
 (Playwright's capture rate; it is not configurable). Per-page outcomes land
-beside them in `RECORD_RESULTS.json`, which is what `ci/build-report.mjs` turns
-into the QA report.
+beside them in `RECORD_RESULTS.json`, which is what the QA report is written
+from.
 
 **`videos/` is gitignored on purpose.** Recordings are build output — reproducible
 from this folder plus `npm run record` — and committing them is expensive: 17 clips
@@ -94,8 +91,8 @@ history had to be rewritten. Publish them as release assets or to a bucket.
   handler reported that the feature did not work (`ctx.fail`). The clip is still
   saved as evidence.
 
-Only **FAIL** sets a non-zero exit code, so CI can be gated on it while five
-documented defects record every night without turning the pipeline red.
+Only **FAIL** sets a non-zero exit code, so a script can be gated on it while
+five documented defects record on every run without failing it.
 
 ---
 
@@ -117,7 +114,7 @@ That one object does three jobs, which is the whole point of it existing:
 1. it flips the take's outcome to `[ISSUE]`,
 2. it is typed into a simulated Notepad window at the end of the clip, over the
    still-visible failure, so the video carries its own report, and
-3. `ci/build-report.mjs` renders it into `DOCUMENTED_REPORT.md`.
+3. it is written verbatim into `videos/RECORD_RESULTS.json`.
 
 The sentence on screen and the row that reaches a manager are the same string.
 There is no second place to update, so there is no second place to forget.
@@ -164,7 +161,8 @@ prebuilt tab to the custom-graph tab and asks the identical question.
 ### The note
 
 The four `knownIssue` fields are the *filed* version: they go verbatim into
-`DOCUMENTED_REPORT.md`, so they are written like a report. Typed into Notepad at
+`RECORD_RESULTS.json` and from there into the QA report, so they are written
+like a report. Typed into Notepad at
 human speed, that register reads as staged — nobody writes "Expected impact:"
 while the bug is still on screen in front of them.
 
@@ -197,9 +195,8 @@ closes, the recorder gathers what it saw: the diagnosed verdict, the browser
 console errors, and this page's slice of `videos/logs/backend.log` and `frontend.log` (from where they stood
 when the take began). Each section is windowed around the line most worth
 reading -- a traceback, an `Error`, a 4xx/5xx -- and that line is marked
-`>>`. The text is written to `videos/logs/<page-id>.error.log`, which CI
-uploads with the run, so an agent can diagnose from the log without re-running
-anything locally. This repo's engine has no simulated terminal window, so the
+`>>`. The text is written to `videos/logs/<page-id>.error.log`, so an agent can
+diagnose from the log without re-running the take. This repo's engine has no simulated terminal window, so the
 evidence is log-only: the clip still ends on the broken page and the recorder
 prints a note saying where the log went.
 
@@ -240,6 +237,7 @@ autorecorder/
 │   └── overlays/                 taskbar, cursor, Notepad, alert dialog, human pacing
 │
 ├── scripts/core-manifest.mjs   ← core/ drift check (--check / --write / --diff)
+├── scripts/write-versions.mjs  ← writes frontend/VERSIONS.md; run by `npm run doctor`
 ├── test/                       ← unit tests for the pure modules (`npm test`)
 │
 └── videos/                     ← output, plus RECORD_RESULTS.json per run
@@ -264,8 +262,8 @@ autorecorder/
 
 Every pace in a take comes from `core/overlays/human.ts`, seeded from the
 page id. So two clips do not type, pause and scroll in the same rhythm — but
-tonight's take of a page is identical to last night's, which keeps two
-recordings of the same defect comparable.
+a re-take of a page is identical to the last one, which keeps two recordings
+of the same defect comparable.
 
 - **Typing** has a person's rhythm: jittered keystrokes, a beat after
   punctuation, the odd mid-sentence pause — in the chat composer and in the
@@ -274,7 +272,7 @@ recordings of the same defect comparable.
 - **Scrolling** is in bursts: a few wheel notches, a reading pause, a few more,
   sometimes a nudge back up.
 - **Pauses** vary by about a quarter around their nominal length. They are
-  the only thing `AUTORECORD_PACE` scales (CI sets `0.85`): a reading or
+  the only thing `AUTORECORD_PACE` scales (e.g. `0.85`): a reading or
   thinking pause gets shorter, the typing, the mouse and the scrolling do not.
 - **The cursor** overshoots slightly on long travel and settles, hovers a
   variable moment before a click, drifts while a reply streams instead of

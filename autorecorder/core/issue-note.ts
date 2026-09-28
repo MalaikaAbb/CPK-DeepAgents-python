@@ -15,8 +15,8 @@ import { type KnownIssue } from './types';
  * It is written the way a person writes at the end of a test, not the way a
  * report is filed. Lower case, no headings, no "Expected impact:" labels --
  * just what was done, what happened, and what it probably means. The formal
- * version of the same finding is what `ci/build-report.mjs` renders into
- * DOCUMENTED_REPORT.md from the very same `KnownIssue`; that one is for the
+ * version of the same finding is what goes into DOCUMENTED_REPORT.md from the
+ * very same `KnownIssue`; that one is for the
  * manager, this one is a person thinking out loud on camera. A neatly formatted
  * memo appearing in Notepad at human typing speed reads as staged, which is the
  * one thing these clips cannot afford.

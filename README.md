@@ -8,11 +8,10 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 | **Doc root tracked** | <https://docs.copilotkit.ai/deepagents> |
 | **Language tab** | **Python** throughout. The TypeScript tabs are not implemented. |
 | **Backend flavour** | LangGraph CLI (`langgraph.json`), not the FastAPI tab |
-| **CopilotKit (npm)** | declared `^1.73.3` · lockfile 1.73.3 · installed 1.73.3 (`frontend/VERSIONS.md`) for `react-core`, `runtime` and `a2ui-renderer` alike. Upgraded 2026-09-23 from declared `^1.69.0` · lockfile 1.69.0 · installed 1.71.0; findings recorded before then name the version they were observed on |
+| **CopilotKit (npm)** | declared `^1.73.3` · lockfile 1.73.3 · installed 1.73.3 (`frontend/VERSIONS.md`, written by `autorecorder/scripts/write-versions.mjs`) for `react-core`, `runtime` and `a2ui-renderer` alike. Upgraded 2026-09-23 from declared `^1.69.0` · lockfile 1.69.0 · installed 1.71.0; findings recorded before then name the version they were observed on |
 | **CopilotKit (PyPI)** | `copilotkit` 0.1.94 |
 | **Agent framework** | `deepagents` 0.7.4 · `langgraph-cli[inmem]` |
 | **Frontend** | Next.js 16.3.0 · React 19.2.8 · TypeScript 5 · Tailwind 4 |
-| **CI** | none |
 
 ---
 
@@ -301,7 +300,7 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 
 **Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
 
-**Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. `npm run drift` therefore lists three `[no-recorder]` coverage gaps: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
+**Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
 The same table is rendered in-app at `/status`, generated from `frontend/src/lib/nav-config.ts` — that file is the single source of truth for routes, statuses and doc links, so this table and the app cannot drift apart.
 
@@ -358,22 +357,20 @@ Commit `doc-snapshot/` — `pages/`, `manifest.json` and `CHANGELOG.md` are the 
 
 ---
 
-## Automated recording and the daily QA report
+## Screen recording
 
 `autorecorder/` records one demo video per doc page — read the doc, show the
-code in a simulated VS Code, then drive the live feature — and `ci/` runs the
-whole thing: drift check, dependency install, both servers, the recordings, and
-the report they are evidence for.
+code in a simulated VS Code, then drive the live feature. Start both servers
+(§6) first; the recorder checks they answer before it launches a browser.
 
 ```bash
-npm run automate           # everything, from a cold checkout
-npm run automate:issues    # only the pages with a known defect
+npm run record:all         # every page
+npm run record:issues      # only the pages with a known defect
 npm run record -- --list   # what is registered
 npm run record:doctor      # is the recorder's config still valid?
 ```
 
-The pipeline is documented in [`ci/README.md`](ci/README.md); the recorder in
-[`autorecorder/README.md`](autorecorder/README.md).
+The recorder is documented in [`autorecorder/README.md`](autorecorder/README.md).
 
 ### Pages that are supposed to fail
 
@@ -381,14 +378,14 @@ Twelve routes are on the QA report as broken, and their clips exist to **show**
 that rather than to work around it. Each declares a `knownIssue` in
 `autorecorder/config/pages.config.ts`, and that one object drives three things:
 the run reports `[ISSUE]` instead of `[PASS]` (and still exits 0, so a dozen
-documented defects do not turn the nightly red), the recorder types the report
-into a simulated Notepad at the end of the clip, and `ci/build-report.mjs`
-renders it into `DOCUMENTED_REPORT.md`. The sentence on screen and the row that
-reaches a manager are the same string, written once.
+documented defects do not make every run fail), the recorder types the report
+into a simulated Notepad at the end of the clip, and the same object is written
+to `autorecorder/videos/RECORD_RESULTS.json`. The sentence on screen and the row
+that reaches a manager are the same string, written once.
 
 `[ISSUE]` means the page is on the known-issues list and recorded cleanly. It
-does **not** mean the defect was confirmed today — nothing automated can
-establish that. Watch the clip before sending the report on.
+does **not** mean the defect was confirmed on this run — the recorder alone
+cannot establish that. Watch the clip before sending the report on.
 
 ### Paired routes
 

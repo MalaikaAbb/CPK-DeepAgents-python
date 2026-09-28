@@ -19,9 +19,9 @@ import { closeNotepad, openNotepad, typeInNotepad } from '../core/overlays/notep
  * The demo pages carry data (probe rows, statuses) and nothing else; the
  * explanation lives here, not on the page.
  *
- * Log files: CI's `ci/automate.mjs` writes the servers' output unbuffered to
- * `autorecorder/videos/logs/{frontend,backend}.log`. Running servers by hand,
- * point `FRONTEND_LOG_FILE` / `BACKEND_LOG_FILE` at wherever their output goes.
+ * Log files: point `FRONTEND_LOG_FILE` / `BACKEND_LOG_FILE` at wherever the
+ * servers' output goes, ideally written unbuffered; the default is
+ * `autorecorder/videos/logs/{frontend,backend}.log`.
  */
 
 // ── 1. the real Next.js dev overlay ────────────────────────────────────────

@@ -39,7 +39,7 @@ export interface Cast {
 }
 import { type ConsoleEntry } from './console-capture';
 
-/** A server log the pipeline writes, and where it stood when this page began. */
+/** A server's log file, and where it stood when this page began. */
 export interface LogSource {
   title: string;
   path: string;
