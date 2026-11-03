@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import { RouteHeader } from "@/components/route-header";
-import { Callout, CodeBlock, KeyValue, Panel } from "@/components/ui";
+import { SourceCode } from "@/components/source-code";
+import { Callout, CodeBlock, KeyValue, Panel, TryIt } from "@/components/ui";
 
 const BOTH_PAGES_OPEN = `# Workflow Execution
 
@@ -16,18 +17,61 @@ export default function Page() {
     <>
       <RouteHeader path="/shared-state/workflow-execution" />
 
-      <Panel title="There is nothing on this page to implement">
+      <Panel title="What it demonstrates">
         <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          The nav lists Workflow Execution as its own entry, and the URL
-          resolves. But the page it serves is the Input/Output Schemas page —
-          the same subtitle, the same &ldquo;What is this?&rdquo;, the same three
-          <code> Steps</code>, the same <code>question</code>/
-          <code>answer</code>/<code>resources</code> example, the same{" "}
-          <code>StateGraph(OverallState, input=..., output=...)</code>, the same
-          closing <code>useAgent</code> snippet. Only the <code>h1</code>{" "}
-          differs.
+          Deciding which state properties are received and returned to the frontend
+          using LangGraph&apos;s <strong>Input and Output Schema feature</strong>.
         </p>
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+
+        <div className="mt-4 space-y-3 text-sm text-slate-700 dark:text-slate-300">
+          <p>
+            <strong>Step 1 (Old state):</strong> A monolithic <code>AgentState</code>{" "}
+            holding <code>question</code>, <code>answer</code>, and internal{" "}
+            <code>resources</code>.
+          </p>
+          <p>
+            <strong>Step 2 (Input/Output split):</strong> Splitting state into{" "}
+            <code>InputState(question)</code>, <code>OutputState(answer)</code>, and{" "}
+            <code>OverallState(InputState, OutputState, resources)</code> passed to{" "}
+            <code>StateGraph(OverallState, input_schema=..., output_schema=...)</code>.
+          </p>
+          <p>
+            <strong>Step 3 (Client inspection):</strong> Using <code>useAgent</code>{" "}
+            to verify that <code>answer</code> is returned, <code>question</code> is
+            accepted but not echoed, and <code>resources</code> is completely hidden.
+          </p>
+        </div>
+
+        <div className="mt-4">
+          <TryIt
+            prompts={[
+              "Ask a question in the chat (e.g. 'Why is the sky blue?')",
+              "Inspect the answer rendered from agent.state.answer in the main content panel",
+            ]}
+            expect="answer updates in agent.state; internal resources never crosses the wire."
+            fail="resources is exposed in state, or answer fails to update."
+          />
+        </div>
+      </Panel>
+
+      <Callout tone="warn" title="Upstream Doc Duplication & Discrepancies">
+        <p>
+          The nav lists &ldquo;Workflow Execution&rdquo; as its own entry, and the
+          URL resolves. However, the published doc page is an exact content duplicate of
+          the &ldquo;Input/Output Schemas&rdquo; doc (identical prose, steps, and
+          code).
+        </p>
+        <p className="mt-2">
+          Additionally, Step 3 in the published doc prints{" "}
+          <code>useAgent(&#123; agentId: &quot;sample_agent&quot; &#125;)</code>,
+          which references the Quickstart Deep Agent rather than the compiled
+          StateGraph with schema split. In this harness, the demo connects to{" "}
+          <code>state_io_graph</code> so the schema split is actually exercised.
+        </p>
+      </Callout>
+
+      <Panel title="Upstream Page Comparison">
+        <div className="grid gap-4 md:grid-cols-2">
           <CodeBlock
             code={BOTH_PAGES_OPEN}
             language="text"
@@ -39,61 +83,18 @@ export default function Page() {
             filename="deepagents/shared-state/state-inputs-outputs"
           />
         </div>
-        <p className="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          Everything below those two lines is identical. The subtitle on this
-          page describes the other page&apos;s topic, which is the giveaway: it
-          reads &ldquo;Decide which state properties are received and returned to
-          the frontend&rdquo;, not anything about workflow execution.
-        </p>
       </Panel>
 
-      <Panel title="What was checked">
-        <KeyValue
-          rows={[
-            ["Checked on", "2026-08-06"],
-            [
-              "Method",
-              <>
-                Both pages fetched as raw markdown (
-                <code>&lt;url&gt;.md</code>) and compared.
-              </>,
-            ],
-            ["Result", "Identical except for the h1 heading."],
-            [
-              "Consequence",
-              <>
-                Marked <strong>Broken</strong> in the status table rather than
-                guessed at. Per this repo&apos;s guardrails, a page that does not
-                serve its own content is recorded, not invented.
-              </>,
-            ],
-          ]}
-        />
+      <Panel title="The demo implementation">
+        <SourceCode file="frontend/src/app/shared-state/workflow-execution/demo-chat/page.tsx" />
       </Panel>
 
-      <Callout tone="info" title="Where the content actually lives">
-        <p>
-          Read{" "}
-          <Link
-            href="/shared-state/state-inputs-outputs"
-            className="underline underline-offset-4"
-          >
-            Input/Output Schemas
-          </Link>
-          , which covers the same material under the title it belongs to and
-          lists the problems with its code.
-        </p>
-      </Callout>
-
-      <Callout tone="warn" title="If the page is fixed upstream">
-        <p>
-          Re-run the fetch and rebuild this route against whatever it then
-          serves. Until then there is no way to tell what &ldquo;workflow
-          execution&rdquo; was meant to mean for Deep Agents — inferring it from
-          the title would be a guess, and guesses are what this repo is trying to
-          avoid.
-        </p>
-      </Callout>
+      <Panel
+        title="The backend graph"
+        description="The compiled StateGraph in backend/src/state_inputs_outputs.py"
+      >
+        <SourceCode file="backend/src/state_inputs_outputs.py" />
+      </Panel>
     </>
   );
 }
