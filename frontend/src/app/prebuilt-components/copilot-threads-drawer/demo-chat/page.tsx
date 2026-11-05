@@ -4,6 +4,7 @@ import {
   CopilotChat,
   CopilotChatConfigurationProvider,
   CopilotThreadsDrawer,
+  useCopilotChatConfiguration,
 } from "@copilotkit/react-core/v2";
 
 import { DemoFrame } from "@/components/demo-frame";
@@ -11,26 +12,37 @@ import { DemoFrame } from "@/components/demo-frame";
 /** The runtime id this demo binds to. Also shown in the demo header. */
 const AGENT_ID = "sample_agent";
 
+function NewConversationButton() {
+  const configuration = useCopilotChatConfiguration();
+
+  return (
+    <button
+      type="button"
+      onClick={() => configuration?.startNewThread()}
+      className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-100 dark:border-slate-700 dark:hover:bg-slate-800"
+    >
+      New conversation
+    </button>
+  );
+}
+
 /**
- * The doc's whole integration: a drawer and a chat inside one shared
- * `CopilotChatConfigurationProvider`.
+ * A drawer and a chat inside one shared `CopilotChatConfigurationProvider`,
+ * with a custom "New conversation" button.
  *
  * The shared configuration is the point. It holds the active thread, so
  * selecting a row connects the chat to that thread and replays its history, and
- * the "New Conversation" row resets the chat to a fresh welcome screen — with no
- * `threadId` state, no selection handler, and no props passed between the two
+ * both the drawer's "New Conversation" row and our custom `NewConversationButton`
+ * call `configuration.startNewThread()` to reset the chat to a fresh welcome screen —
+ * with no `threadId` state, no selection handler, and no props passed between the
  * components.
  *
  * `CopilotKitProvider` is not repeated here; the app already mounts one at the
  * root. The doc nests them because its sample is a whole page.
  *
- * One departure, and it is presentational only. The doc's wrapper is
- * `<div style={{ display: "flex", height: "100dvh" }}>` with the two components
- * as bare children. In a flex row `CopilotChat` has no flex basis of its own, so
- * it collapses to min-content — the chat renders one word per line beside a
- * full-width drawer. `flex: 1` plus `minWidth: 0` gives it the remaining space;
- * `minWidth` matters because a flex item's default `min-width: auto` refuses to
- * shrink below its content and would push the layout wider than the viewport.
+ * In a flex row `CopilotChat` has no flex basis of its own, so it collapses to
+ * min-content beside a full-width drawer unless constrained; `flex: 1` plus
+ * `minWidth: 0` gives it the remaining space.
  */
 export default function Page() {
   return (
@@ -41,9 +53,21 @@ export default function Page() {
       <CopilotChatConfigurationProvider agentId={AGENT_ID}>
         <div style={{ display: "flex", height: "100%" }}>
           <CopilotThreadsDrawer />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <CopilotChat />
-          </div>
+          <main
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minWidth: 0,
+            }}
+          >
+            <header className="border-b border-slate-200 p-2 dark:border-slate-800">
+              <NewConversationButton />
+            </header>
+            <div style={{ flex: 1, minHeight: 0 }}>
+              <CopilotChat />
+            </div>
+          </main>
         </div>
       </CopilotChatConfigurationProvider>
     </DemoFrame>

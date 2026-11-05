@@ -86,6 +86,26 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Needs the runtime in Intelligence mode, and a license token for the unlocked view — see the Quickstart's connection panel.",
       },
+      {
+        path: "/prebuilt-components/chat-controls",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Chat Controls",
+        docPath: "/deepagents/prebuilt-components/chat-controls",
+        summary:
+          "Open, close, and assistant message thumbs-up/down feedback on prebuilt surfaces.",
+        status: "working",
+      },
+      {
+        path: "/multimodal-attachments",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Multimodal Attachments",
+        docPath: "/deepagents/multimodal-attachments",
+        summary:
+          "File attachments (images, PDFs, audio, video) in CopilotChat with previews, lightbox, and upload handlers.",
+        status: "working",
+      },
     ],
   },
   {
@@ -313,13 +333,15 @@ export const NAV: NavGroup[] = [
       },
       {
         path: "/shared-state/workflow-execution",
+        hasDemo: true,
+        agentId: "state_io_graph",
         title: "Workflow Execution",
         docPath: "/deepagents/shared-state/workflow-execution",
         summary:
-          "Listed separately in the nav, but the page currently serves the Input/Output Schemas content verbatim.",
-        status: "broken",
+          "Decide which state properties are received and returned to the frontend via LangGraph's Input/Output Schema split.",
+        status: "working",
         statusNote:
-          "Upstream duplicate — identical title, prose and code to state-inputs-outputs. Nothing here to implement.",
+          "Implements the guide's 3 Steps. Upstream doc content is identical to state-inputs-outputs; both test state_io_graph.",
       },
     ],
   },
