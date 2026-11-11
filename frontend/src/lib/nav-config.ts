@@ -227,6 +227,18 @@ export const NAV: NavGroup[] = [
         statusNote:
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
+      {
+        path: "/generative-ui/mcp-apps",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "MCP Apps",
+        docPath: "/deepagents/generative-ui/mcp-apps",
+        summary:
+          "MCPAppsMiddleware on the runtime's LangGraphAgent adds an MCP server's UI-backed tools; their UI renders as sandboxed iframes in the chat.",
+        status: "partial",
+        statusNote:
+          "Added 2026-11-11, not yet driven. The page's runtime route runs verbatim at /api/copilotkit-mcp-apps (basePath changed) with the public Excalidraw server. The page asks for runtime 1.76+ and the current middleware (0.1.3, @ag-ui/client 1.x); this repo has runtime 1.73.3, so the import resolves to the 0.1.1 middleware runtime 1.73.3 already depends on (undeclared). The page's deploymentUrl falls back to 8123, not this repo's 8030: set LANGGRAPH_DEPLOYMENT_URL. Needs network access to mcp.excalidraw.com.",
+      },
     ],
   },
   {
