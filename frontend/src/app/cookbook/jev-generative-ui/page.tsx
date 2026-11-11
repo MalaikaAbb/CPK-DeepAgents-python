@@ -4,11 +4,11 @@ import { Callout, CodeBlock, KeyValue, Panel } from "@/components/ui";
 
 import { PreparedControls } from "./prepared-controls";
 
-const INSTALL = `npm install @copilotkit/core@1.73.0 @copilotkit/react-core@1.73.0 @copilotkit/runtime@1.73.0 @ag-ui/client@0.0.59 @ag-ui/core@0.0.59 @typesafe-ai/sdk@0.6.0 rxjs@7.8.1 zod@4.6.5 @langchain/openai@1.5.13 @langchain/core@1.2.11`;
+const INSTALL = `npm install @copilotkit/core@1.73.0 @copilotkit/react-core@1.73.0 @copilotkit/runtime@1.73.0 @ag-ui/client@1.0.1 @ag-ui/core@1.0.1 @typesafe-ai/sdk@0.6.0 rxjs@7.8.1 zod@4.6.5 @langchain/openai@1.5.13 @langchain/core@1.2.11`;
 
 const ENV = `TYPESAFE_API_KEY=your-typesafe-key
 OPENAI_API_KEY=your-openai-key
-OPENAI_MODEL=gpt-5.4`;
+OPENAI_MODEL=gpt-6-luna`;
 
 const SWALLOWED = `// lib/picker-agent.ts, the last published block
 void runPicker(input, controller.signal, (event) => subscriber.next(event))
@@ -25,8 +25,8 @@ const VERSIONS: [string, string, string][] = [
   ["@copilotkit/core", "1.73.0", "1.73.3 installed · undeclared (transitive)"],
   ["@copilotkit/react-core", "1.73.0", "1.73.3 installed · declared ^1.73.3"],
   ["@copilotkit/runtime", "1.73.0", "1.73.3 installed · declared ^1.73.3"],
-  ["@ag-ui/client", "0.0.59", "0.0.59 installed · undeclared (transitive)"],
-  ["@ag-ui/core", "0.0.59", "0.0.59 installed · undeclared (transitive)"],
+  ["@ag-ui/client", "1.0.1", "0.0.59 installed · undeclared (transitive)"],
+  ["@ag-ui/core", "1.0.1", "0.0.59 installed · undeclared (transitive)"],
   ["@typesafe-ai/sdk", "0.6.0", "absent"],
   ["rxjs", "7.8.1", "7.8.1 installed · undeclared (transitive)"],
   ["zod", "4.6.5", "3.25.76 installed · declared ^3.25.76"],
@@ -78,7 +78,7 @@ export default function Page() {
         the page never says one is needed.
       </Callout>
 
-      <Callout tone="warn" title="The install line is ten exact pins, six of which this repo does not meet">
+      <Callout tone="warn" title="The install line is ten exact pins; this repo meets only rxjs exactly">
         <pre className="mt-1 overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
           {INSTALL}
         </pre>
@@ -104,7 +104,10 @@ export default function Page() {
           Five of the ten are in this repo only as transitive dependencies of{" "}
           <code>@copilotkit/*</code>, declared nowhere in{" "}
           <code>frontend/package.json</code>. Two do not exist here at all. One
-          is a major version behind. And the 1.73.0 floor on the three
+          is a major version behind (zod), and since the 2026-11-11 sync so
+          are both AG-UI packages: the page moved its pin from 0.0.59, which
+          this repo has, to 1.0.1, which it does not install because AG-UI must
+          match the version CopilotKit 1.73.3 pins. And the 1.73.0 floor on the three
           CopilotKit packages is never justified: every published block in this
           repo typechecks against <strong>1.71.0</strong> (installed until
           2026-09-23) and against the 1.73.3 installed since,

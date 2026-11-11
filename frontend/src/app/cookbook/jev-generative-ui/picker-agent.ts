@@ -9,16 +9,19 @@
  * Everything else in the file resolves against packages this repo already has,
  * at the versions the recipe pins:
  *
- *   @ag-ui/client  0.0.59 installed, 0.0.59 pinned by the page   match
- *   @ag-ui/core    0.0.59 installed, 0.0.59 pinned by the page   match
+ *   @ag-ui/client  0.0.59 installed, 1.0.1  pinned by the page   major behind (pin moved 2026-11-11)
+ *   @ag-ui/core    0.0.59 installed, 1.0.1  pinned by the page   major behind (pin moved 2026-11-11)
  *   rxjs           7.8.1  installed, 7.8.1  pinned by the page   match
  *   @langchain/core 1.2.10 installed, 1.2.11 pinned by the page  one patch short
  *   @langchain/openai  absent,       1.5.13 pinned by the page   absent
  *   @typesafe-ai/sdk   absent,       0.6.0  pinned by the page   absent
  *
- * So this file is worth compiling: the AG-UI half of the recipe is being
- * typechecked against exactly the AG-UI the recipe asks for, and anything that
- * fails there is the recipe's, not a version skew. It typechecks.
+ * So this file is worth compiling: the AG-UI half of the recipe is typechecked
+ * against the AG-UI this repo's CopilotKit pins. Until the 2026-11-11 sync that
+ * was exactly the recipe's pin; the page now asks for `@ag-ui/*@1.0.1`, which
+ * is not installed (AG-UI must stay at the version CopilotKit pins, or two
+ * copies break `AbstractAgent`), so a pass here no longer proves the recipe's
+ * own versions. It typechecked on 0.0.59.
  *
  * One deviation, locational only: the relative imports are `./choose-panel`
  * and `./workspaces` rather than the same specifiers under `lib/`.
@@ -33,7 +36,11 @@ import { choosePanel } from "./choose-panel";
 import { candidates, clarificationOptions, StateSchema, type PickerState } from "./workspaces";
 
 async function explain(message: string, state: PickerState, signal: AbortSignal) {
-  const model = new ChatOpenAI({ model: process.env.OPENAI_MODEL || "gpt-5.4" });
+  const model = new ChatOpenAI({
+    model: process.env.OPENAI_MODEL || "gpt-6-luna",
+    modelKwargs: (process.env.OPENAI_MODEL || "gpt-6-luna") === "gpt-6-luna"
+      ? { reasoning_effort: "none" } : {},
+  });
   const response = await model.invoke([
     { role: "system", content: "Help choose among the supplied workspaces. " +
       "You can explain but cannot book, change a selection, or claim an action succeeded. " +
