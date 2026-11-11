@@ -184,6 +184,8 @@ The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` i
 
 **`/voice`** — ❌ **Reference only, no demo.** Added 2026-11-11. Speech-to-text in the chat composer through a runtime `TranscriptionService`. Rendered for Deep Agents the page says voice is not available yet and every code block is "Missing snippet: No demo found for deepagents::voice", so no runtime route or mic button is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #45.
 
+**`/generative-ui/reasoning`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendering reasoning tokens with the default card or a custom `reasoningMessage` slot. Rendered for Deep Agents the page says the feature is not available yet and all three code blocks are "Missing snippet", so there is no agent or demo. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #46.
+
 ### Rich Threads
 
 **`/headless-threads`** → `sample_agent`
@@ -343,8 +345,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 | [voice](https://docs.copilotkit.ai/deepagents/voice) | `/voice` | — | ❌ Broken | Added 2026-11-11. Reference only: no Deep Agents code on the rendered page — [FINDINGS.md](FINDINGS.md) #45 |
+| [generative-ui/reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) | `/generative-ui/reasoning` | — | ❌ Broken | Added 2026-11-11. Reference only: no Deep Agents code on the rendered page — [FINDINGS.md](FINDINGS.md) #46 |
 
-**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -566,5 +569,6 @@ Grouped the way the doc nav groups them.
 
 **Basics**
 - [Voice](https://docs.copilotkit.ai/deepagents/voice) — reference only; no Deep Agents code published
+- [Reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) — reference only; no Deep Agents code published
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.
