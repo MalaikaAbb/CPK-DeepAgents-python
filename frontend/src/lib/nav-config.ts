@@ -283,6 +283,21 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Human-in-the-loop",
+    routes: [
+      {
+        path: "/human-in-the-loop",
+        title: "HITL Overview",
+        docPath: "/deepagents/human-in-the-loop/index",
+        summary:
+          "The two ways to pause for a human: an LLM-called frontend tool (useHumanInTheLoop) or a graph-enforced interrupt() (useInterrupt).",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; both useHumanInTheLoop blocks (the hitl-in-chat demo and its slot data) are \"Missing snippet: No demo found for deepagents::hitl-in-chat\". No code is printed. Added 2026-11-11.",
+      },
+    ],
+  },
+  {
     title: "Shared State",
     routes: [
       {
