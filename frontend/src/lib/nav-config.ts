@@ -244,6 +244,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "The slot mechanics are exactly as documented, read out of the shipped 1.71.0 bundle, and the custom-tag claim produces the page's exact TS2353. What fails: all three published blocks are a bare `<CopilotChat>` with no agent id, so they ask for `default` and throw on a Deep Agents runtime (the Frontend-Driven Cards defect again); none carries `use client`; and the headline `components` example styles with `.my-link` / `.my-heading`, which the page never defines. Built 2026-09-21 and not yet driven — the demo's probe is what checks the prop claims against the rendered HTML.",
       },
+      {
+        path: "/custom-look-and-feel/css",
+        title: "CSS Customization",
+        docPath: "/deepagents/custom-look-and-feel/css",
+        summary:
+          "Re-skinning the chat with CSS: v1 --copilot-kit-* variables and .copilotKit* classes, v2 shadcn tokens on [data-copilotkit], icons and labels props.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the three blocks that make up its demo (scoped theme.css import, the variable overrides, the user-bubble rule) are \"Missing snippet: No demo found for deepagents::chat-customization-css\". The generic blocks it does print are shown as text: one imports `CopilotKitCSSProperties` from `@copilotkit/react-ui` (v1, not installed here), the `.copilotKit*` classes and `--copilot-kit-*` variables style the v1 components, and v2 `CopilotChat` (1.73.3) has no `icons` prop. Added 2026-11-11.",
+      },
     ],
   },
   {
