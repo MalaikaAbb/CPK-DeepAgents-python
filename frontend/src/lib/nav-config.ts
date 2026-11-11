@@ -287,6 +287,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
       },
+      {
+        path: "/generative-ui/components/transports",
+        title: "Transports",
+        docPath: "/deepagents/generative-ui/components/transports",
+        summary:
+          "How generated UI reaches the browser: the default render_ui tool transport, or transport: \"markdown\" with a2ui blocks in the reply; limiting it to some agents with agentIds.",
+        status: "broken",
+        statusNote:
+          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+      },
     ],
   },
   {
