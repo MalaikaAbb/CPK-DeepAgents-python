@@ -14,7 +14,7 @@ Every CopilotKit conversation is scoped to a **thread**, identified by a `thread
 ## The lifecycle at a glance
 
 1. **Mint.** When a chat mounts without an explicit `threadId`, the client generates one (a UUID v4).
-2. **Run.** Messages and tool calls stream under that `threadId`. If a server-side store is configured (CopilotKit Intelligence, or a persisting `AgentRunner`), they are persisted as they happen so the thread can be replayed later. A runtime with no persistence layer keeps nothing server-side. See [Threads & Persistence Architecture](/deepagents/intelligence/threads-explained) for the full server-side model.
+2. **Run.** Messages and tool calls stream under that `threadId`. If a server-side store is configured (CopilotKit Intelligence, or a persisting `AgentRunner`), they are persisted as they happen so the thread can be replayed later. A runtime with no persistence layer keeps nothing server-side. See [AG-UI Streams & Framework Threads](/deepagents/intelligence/threads-explained) for the full server-side model.
 3. **Hydrate.** When a chat mounts *with* a known `threadId`, the client connects and replays the persisted history into the UI.
 4. **Switch / start.** You change the active thread (restoring its history) or start a fresh one (clearing the view).
 
@@ -77,7 +77,9 @@ function MyComponent() {
   There is no v2 `useCopilotChat` hook and no v2 `initialMessages` prop. Read messages from `useAgent().agent.messages` and mutate with `agent.setMessages(...)` / `agent.addMessage(...)`. (`initialMessages` still exists on the **v1** `useCopilotChat` hook; see [below](#v1-vs-v2).)
 </Callout>
 
-## Scope Rich Threads to the signed-in user
+<span id="scope-rich-threads-to-the-signed-in-user" />
+
+## Scope AG-UI Streams to the signed-in user
 
 Your application owns end-user authentication. For an Intelligence-enabled
 Runtime, implement `identifyUser(request)` with the server-verified session or
@@ -126,7 +128,7 @@ credential is actually being read rather than silently ignored.
 
 See [Authentication](/deepagents/auth) for forwarding and verifying your provider's auth
 context. `identifyUser` is the additional Runtime contract that assigns the
-verified application user to Rich Threads.
+verified application user to threads.
 
 ## Switching threads and starting new ones
 
@@ -219,8 +221,8 @@ The bridge between the two is the `threadId`: when you pass an explicit CopilotK
 
 ### Future runs can remain durable in both places
 
-After historical import, future conversations that run through CopilotKit are
-written to CopilotKit Intelligence as Rich Threads. If your LangGraph agent
+Once Intelligence is connected, conversations that run through that runtime are
+recorded automatically in Intelligence. Historical import is optional. If your LangGraph agent
 continues using a durable checkpointer or LangGraph Platform, those same runs
 also continue through LangGraph's native persistence. The same applies to an ADK
 agent that remains connected to a durable session service with retained
@@ -237,6 +239,10 @@ rename, archive, or delete records in the native framework store.
   See [LangGraph persistence](/integrations/langgraph/advanced/persistence/message-persistence) for the framework-native (checkpointer) side, and [Importing and synchronizing thread history](/deepagents/threads-import) for bringing existing framework conversations into the platform store. (LangGraph *Platform* requires thread ids to be UUIDs, which CopilotKit's auto-minted ids already are.)
 </Callout>
 
+## Example: keep an existing LangGraph conversation
+
+Follow [Bring your own thread system](/deepagents/intelligence/bring-your-own-thread-system#example-keep-an-existing-langgraph-conversation) for an example that keeps native persistence and continues the same conversation.
+
 ## MCP Apps activity and history
 
 MCP Apps render through **activity messages** (`activityType: "mcp-apps"`), and that rendering is a **client-side** concern: the registered renderer resolves the referenced UI resource and runs any follow-up in the browser. So the visible MCP App UI is *re-derived on the client from the conversation* when it loads. It isn't a separately-stored artifact you persist on its own.
@@ -251,6 +257,6 @@ Practically, MCP App UI restores the same way the rest of the conversation does:
 ## See also
 
 - [Headless Threads](/deepagents/headless-threads) — the full `useThreads` API
-- [Threads & Persistence Architecture](/deepagents/intelligence/threads-explained) — server-side replay, resume, realtime sync
+- [AG-UI Streams & Framework Threads](/deepagents/intelligence/threads-explained) — server-side replay, resume, realtime sync
 - [Multi-conversation chat](/tutorials/multi-conversation-chat) — build a chat-history sidebar
 - [Importing and synchronizing thread history](/deepagents/threads-import) — bring existing framework conversations into the platform and keep future runs continuous

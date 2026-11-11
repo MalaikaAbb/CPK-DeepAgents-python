@@ -24,7 +24,7 @@ This recipe renders [shared agent state](/deepagents/shared-state). For tool-cal
 Use a Next.js App Router project with TypeScript, React 19, a root layout, and the `@/*` alias pointing to the project root. If your project uses `src/`, place all files below inside `src/` and point the alias there. Use Node.js 22 or later.
 
 ```bash
-npm install @copilotkit/core@1.73.0 @copilotkit/react-core@1.73.0 @copilotkit/runtime@1.73.0 @ag-ui/client@0.0.59 @ag-ui/core@0.0.59 @typesafe-ai/sdk@0.6.0 rxjs@7.8.1 zod@4.6.5 @langchain/openai@1.5.13 @langchain/core@1.2.11
+npm install @copilotkit/core@1.73.0 @copilotkit/react-core@1.73.0 @copilotkit/runtime@1.73.0 @ag-ui/client@1.0.1 @ag-ui/core@1.0.1 @typesafe-ai/sdk@0.6.0 rxjs@7.8.1 zod@4.6.5 @langchain/openai@1.5.13 @langchain/core@1.2.11
 ```
 
 Get a Jev key using the [TypeSafe quickstart](https://docs.typesafe.ai/introduction/quickstart). Add it and an OpenAI key to your server environment. Neither key belongs in a `NEXT_PUBLIC_` variable.
@@ -32,7 +32,7 @@ Get a Jev key using the [TypeSafe quickstart](https://docs.typesafe.ai/introduct
 ```dotenv title=".env.local"
 TYPESAFE_API_KEY=your-typesafe-key
 OPENAI_API_KEY=your-openai-key
-OPENAI_MODEL=gpt-5.4
+OPENAI_MODEL=gpt-6-luna
 ```
 
 The OpenAI model handles requests outside the two prepared panels. It is not called when Jev returns a usable panel. This local example stores a selection in agent state; it does not book a workspace or implement production authentication.
@@ -174,7 +174,11 @@ import { choosePanel } from "./choose-panel";
 import { candidates, clarificationOptions, StateSchema, type PickerState } from "./workspaces";
 
 async function explain(message: string, state: PickerState, signal: AbortSignal) {
-  const model = new ChatOpenAI({ model: process.env.OPENAI_MODEL || "gpt-5.4" });
+  const model = new ChatOpenAI({
+    model: process.env.OPENAI_MODEL || "gpt-6-luna",
+    modelKwargs: (process.env.OPENAI_MODEL || "gpt-6-luna") === "gpt-6-luna"
+      ? { reasoning_effort: "none" } : {},
+  });
   const response = await model.invoke([
     { role: "system", content: "Help choose among the supplied workspaces. " +
       "You can explain but cannot book, change a selection, or claim an action succeeded. " +

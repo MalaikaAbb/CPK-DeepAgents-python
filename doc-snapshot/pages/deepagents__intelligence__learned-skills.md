@@ -79,7 +79,7 @@ Set the container and revision in code below, **or** omit those parameters and u
 import { BuiltInAgent } from "@copilotkit/runtime/v2";
 
 const agent = new BuiltInAgent({
-  model: "openai/gpt-4o",
+  model: "openai/gpt-6-luna",
   prompt: "Follow the application's support policy.",
   learnedSkills: {
     // Set these here, or omit them to use environment variables (linked above).
@@ -116,7 +116,7 @@ const agent = new BuiltInAgent({
   },
   factory: ({ input, abortSignal, learnedSkills }) =>
     streamText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-6-luna"),
       system: [
         "Follow the application's support policy.",
         learnedSkills.catalog,
@@ -259,7 +259,7 @@ const agent = skills.wrapAgent(
   new Agent({
     id: "support",
     name: "Support",
-    model: "openai/gpt-4.1",
+    model: "openai/gpt-6-luna",
     instructions: "Follow the application's support policy.",
     inputProcessors: [skills],
     tools: { ...skills.tools },
@@ -369,7 +369,7 @@ BuiltInAgent accepts the list inside `learnedSkills`:
 
 ```typescript
 const agent = new BuiltInAgent({
-  model: "openai/gpt-4o",
+  model: "openai/gpt-6-luna",
   learnedSkills: {
     containers: [
       { id: "support", revision: "revision-123" },

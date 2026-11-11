@@ -174,7 +174,7 @@ experiences with CopilotKit requires our LangGraph SDK.
 
                         // Define your custom graph node
                         async function chatNode(state: AgentState, config: RunnableConfig) {
-                            const model = new ChatOpenAI({ model: "gpt-4o-mini" });
+                            const model = new ChatOpenAI({ modelKwargs: { reasoning_effort: "none" }, model: "gpt-6-luna" });
 
                             const steps = [
                                 "Analyzing input data...",
@@ -267,7 +267,7 @@ experiences with CopilotKit requires our LangGraph SDK.
                             )
 
                         tools = [step_progress_tool]
-                        model = ChatOpenAI(model="gpt-5.4")
+                        model = ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")
 
                         async def chat_node(state: AgentState, config: RunnableConfig):
                             streaming_config = copilotkit_customize_config(
@@ -404,8 +404,8 @@ experiences with CopilotKit requires our LangGraph SDK.
                         // 3. Define the chat node
                         async function chatNode(state: AgentState, config: RunnableConfig) {
                           const model = new ChatOpenAI({
-                            model: "gpt-5.4",
-                            modelKwargs: { parallel_tool_calls: false },
+                            model: "gpt-6-luna",
+                            modelKwargs: { parallel_tool_calls: false, reasoning_effort: "none" },
                           });
 
                           const modelWithTools = model.bindTools!([
@@ -566,6 +566,7 @@ experiences with CopilotKit requires our LangGraph SDK.
         <Tabs groupId="agent_language" items={["Python", "TypeScript"]} persist>
           <Tab value="Python">
             ```python title="agent.py"
+            from langchain_openai import ChatOpenAI
             from copilotkit import CopilotKitMiddleware, StateStreamingMiddleware, StateItem  # [!code highlight]
             from deepagents import create_deep_agent
             from langchain.tools import tool
@@ -575,7 +576,7 @@ experiences with CopilotKit requires our LangGraph SDK.
                 """Reports the current steps being executed"""
 
             agent = create_deep_agent(
-                model="openai:gpt-5.4",
+                model=ChatOpenAI(model="gpt-6-luna", reasoning_effort="none"),
                 tools=[step_progress_tool],
                 middleware=[
                     CopilotKitMiddleware(),
@@ -605,7 +606,7 @@ experiences with CopilotKit requires our LangGraph SDK.
             );
 
             export const agent = createDeepAgent({
-                model: "openai:gpt-5.4",
+                model: "openai:gpt-6-luna",
                 tools: [stepProgressTool],
                 middleware: [
                     observedStepsMiddleware,
