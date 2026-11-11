@@ -45,7 +45,7 @@ const agent = new BuiltInAgent({
   },
   factory: ({ input, abortSignal, learnedSkills }) =>
     streamText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-6-luna"),
       system: [
         "Follow the application's support policy.",
         learnedSkills.catalog,

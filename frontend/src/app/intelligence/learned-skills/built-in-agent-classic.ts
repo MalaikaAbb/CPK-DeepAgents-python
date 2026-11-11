@@ -31,7 +31,7 @@
 import { BuiltInAgent } from "@copilotkit/runtime/v2";
 
 const agent = new BuiltInAgent({
-  model: "openai/gpt-4o",
+  model: "openai/gpt-6-luna",
   prompt: "Follow the application's support policy.",
   learnedSkills: {
     // Set these here, or omit them to use environment variables (linked above).
