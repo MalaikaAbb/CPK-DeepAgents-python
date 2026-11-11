@@ -254,6 +254,18 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the three blocks that make up its demo (scoped theme.css import, the variable overrides, the user-bubble rule) are \"Missing snippet: No demo found for deepagents::chat-customization-css\". The generic blocks it does print are shown as text: one imports `CopilotKitCSSProperties` from `@copilotkit/react-ui` (v1, not installed here), the `.copilotKit*` classes and `--copilot-kit-*` variables style the v1 components, and v2 `CopilotChat` (1.73.3) has no `icons` prop. Added 2026-11-11.",
       },
+      {
+        path: "/custom-look-and-feel/slots",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Slots (Subcomponents)",
+        docPath: "/deepagents/custom-look-and-feel/slots",
+        summary:
+          "Overriding chat sub-components with class strings, props objects or whole components, nested to any depth.",
+        status: "partial",
+        statusNote:
+          "Added 2026-11-11, not yet driven in a browser. Rendered for Deep Agents the page says slots are not available yet and its own demo blocks (welcome screen, assistant message, disclaimer) are \"Missing snippet\"; those are not rebuilt. The seven generic blocks it prints run as tabs inside the Quickstart's provider. Three fail type-checking as published (`data-testid` on the messageView object; untyped CustomMessageView not assignable to the slot; plain CustomUserMessage not assignable to userMessage) and carry @ts-expect-error. CustomToolbar/CustomCopyButton/CustomUserMessage are undefined on the page and written minimal here.",
+      },
     ],
   },
   {
