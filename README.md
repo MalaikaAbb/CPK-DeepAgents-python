@@ -246,6 +246,8 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/generative-ui/json-render`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendered for Deep Agents the page says the feature is not available yet, has no Code tab, and prints only an example agent output; the renderer, catalog, runtime route and agent are described but not published. **Try:** open the route. **Expect:** the header, a warning callout and the example JSON. See [FINDINGS.md](FINDINGS.md) #55.
 
+**`/generative-ui/hashbrown`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendered for Deep Agents the page says the feature is not available yet, has no Code tab, and prints only an example agent output; the renderer, catalog, runtime route and agent are described but not published. **Try:** open the route. **Expect:** the header, a warning callout and the example JSON. See [FINDINGS.md](FINDINGS.md) #56.
+
 ### Custom Look and Feel
 
 **`/custom-look-and-feel/markdown`** → `sample_agent` — ⚠️ **Partial.** New upstream 2026-09-21. The `markdownRenderer` slot on `CopilotChatAssistantMessage`, reached from `<CopilotChat messageView={{ assistantMessage: { markdownRenderer } }} />`, in all three of the page's forms. The demo has five tabs and a probe that reads the rendered HTML rather than the library's own bookkeeping: the opening tag of the first `<a>`, the number of `[data-streamdown]` elements, the number of elements carrying a literal `node` attribute, and the number carrying the page's `.my-link` / `.my-heading`. **Page code, verbatim** is the published block with nothing added. *Try:* just open it. *Expect:* the chat paints, then throws `Agent 'default' not found after runtime sync` — the block carries no agent id, and Deep Agents registers no `default`, the same defect already reproduced on Frontend-Driven Cards. The other four tabs add `agentId="sample_agent"` and nothing else. **Not yet driven:** this route was built on 2026-09-21 and has no clip; the lines below are what the take should show. *Try:* `Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.` *Pass:* on **components map** the anchor row reads `<a href="…" target="_blank" rel="noopener noreferrer" class="my-link">` with no `data-streamdown`, and the `node` count is 0; on **no override** the same anchor carries `data-streamdown="link"` and Streamdown's classes; the reference-chip is plain text on every tab. *Fail:* a `node` count above 0, or a missing `rel`/`target` on the components tab. See [FINDINGS.md](FINDINGS.md) #32.
@@ -343,8 +345,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 | [generative-ui/json-render](https://docs.copilotkit.ai/deepagents/generative-ui/json-render) | `/generative-ui/json-render` | — | ❌ Broken | Added 2026-11-11. Reference only: no Code tab for Deep Agents, only an example output printed — [FINDINGS.md](FINDINGS.md) #55 |
+| [generative-ui/hashbrown](https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown) | `/generative-ui/hashbrown` | — | ❌ Broken | Added 2026-11-11. Reference only: no Code tab for Deep Agents, only an example output printed — [FINDINGS.md](FINDINGS.md) #56 |
 
-**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -536,6 +539,7 @@ Grouped the way the doc nav groups them.
 - [A2UI · Advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced)
 - [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
 - [JSON Render](https://docs.copilotkit.ai/deepagents/generative-ui/json-render) — reference only
+- [Hashbrown](https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown) — reference only
 
 **Custom Look and Feel**
 - [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)

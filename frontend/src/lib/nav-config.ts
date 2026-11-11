@@ -237,6 +237,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; it describes chat.tsx, json-render-renderer.tsx, catalog.ts, registry.tsx, the runtime route and the agent but prints none of them. The only code is an example agent output, shown as text. Added 2026-11-11.",
       },
+      {
+        path: "/generative-ui/hashbrown",
+        title: "Hashbrown",
+        docPath: "/deepagents/generative-ui/hashbrown",
+        summary:
+          "A dashboard streamed through Hashbrown's UI kit and progressive JSON parser in the assistant-message slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; HashBrownDashboard, HashBrownRenderMessage, the kit, the runtime route and the agent are described but not printed. The only code is an example assistant message, shown as text. Added 2026-11-11.",
+      },
     ],
   },
   {
