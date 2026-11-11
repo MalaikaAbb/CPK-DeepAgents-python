@@ -227,6 +227,18 @@ export const NAV: NavGroup[] = [
         statusNote:
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
+      {
+        path: "/generative-ui/tool-based",
+        hasDemo: true,
+        agentId: "tool_based_agent",
+        title: "Components as Tools",
+        docPath: "/deepagents/generative-ui/tool-based",
+        summary:
+          "A React component registered with useComponent becomes a frontend tool the Deep Agent can call, rendered inline with the tool args as props.",
+        status: "broken",
+        statusNote:
+          "Added 2026-11-11, not yet driven. The page's Deep Agent (CopilotKitMiddleware + SYSTEM_PROMPT naming render_bar_chart) runs as tool_based_agent, but the useComponent block that registers render_bar_chart is \"Missing snippet: No demo found for deepagents::gen-ui-tool-based\", so no tool is forwarded and the agent can only answer in prose. Prompt block moved above the agent (the page prints them in NameError order).",
+      },
     ],
   },
   {
