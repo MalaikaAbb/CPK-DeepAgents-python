@@ -307,6 +307,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
       },
+      {
+        path: "/generative-ui/components/from-a2ui",
+        title: "Adopt from A2UI",
+        docPath: "/deepagents/generative-ui/components/from-a2ui",
+        summary:
+          "Migrating from the a2ui renderer (A2UI v0.9: a2ui={{ catalog }}, createCatalog, runtime a2ui option) to components and surfaces (A2UI 1.0: generativeUI, createGenerativeUI, no runtime option).",
+        status: "broken",
+        statusNote:
+          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+      },
     ],
   },
   {
