@@ -268,6 +268,8 @@ A tool whose body runs in the browser. The Python side defines no tool at all.
 
 **`/human-in-the-loop`** — ❌ **Reference only, no demo.** Added 2026-11-11. HITL Overview. Rendered for Deep Agents: both `useHumanInTheLoop` blocks are "Missing snippet"; no code printed. **Try:** open the route. **Expect:** the header and a warning callout. See [FINDINGS.md](FINDINGS.md) #61.
 
+**`/human-in-the-loop/useInterrupt`** — ❌ **Reference only, no demo.** Added 2026-11-11. Pausing the Agent for Input. Rendered for Deep Agents: the page says `useInterrupt` is not available on this framework and prints no backend; its two generic frontend blocks are shown as text (`useInterrupt` on a Deep Agent runs on `/generative-ui/your-components/interrupt-based`). **Try:** open the route. **Expect:** the header and a warning callout. See [FINDINGS.md](FINDINGS.md) #62.
+
 ### Shared State
 
 **`/shared-state/in-app-agent-read`** → `shared_state_agent`
@@ -345,8 +347,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 | [human-in-the-loop/index](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) | `/human-in-the-loop` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #61 |
+| [human-in-the-loop/useInterrupt](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) | `/human-in-the-loop/useInterrupt` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #62 |
 
-**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -568,5 +571,6 @@ Grouped the way the doc nav groups them.
 
 **Human-in-the-loop**
 - [HITL Overview](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) — reference only
+- [Pausing the Agent for Input](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) — reference only
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.
