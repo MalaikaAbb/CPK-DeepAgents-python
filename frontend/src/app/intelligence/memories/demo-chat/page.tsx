@@ -31,7 +31,7 @@ import { MemoryList } from "../memory-list";
  *                  Agents Quickstart's runtime, which the page adds nothing to.
  *                  It has no `intelligence` and no `memory` option.
  *   memory-access  `/api/copilotkit-memory` — an Intelligence runtime with the
- *                  `memory: { access }` option the page never mentions. It needs
+ *                  `memory: { access }` option (documented by the page only since 2026-11-11). It needs
  *                  `CPK_INTELLIGENCE_API_KEY`; this harness has none, so it
  *                  answers 503 and the hook reports what a client sees then.
  *

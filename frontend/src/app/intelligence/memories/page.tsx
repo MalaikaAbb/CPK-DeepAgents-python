@@ -15,6 +15,26 @@ memory.access   /api/copilotkit-memory — no CPK_INTELLIGENCE_API_KEY in this h
 
 Chat            "Please remember that I prefer concise status updates." → "Got it! I'll keep updates brief."`;
 
+// The page's "Limiting access per request" runtime.ts block, verbatim
+// (added upstream 2026-11-11). Shown as text, not compiled: it has no imports
+// and calls `intelligence`, `resolveUser` and `isFreePlan`, which the page
+// never defines.
+const MEMORY_ACCESS_SNIPPET = `const runtime = new CopilotRuntime({
+  intelligence,
+  identifyUser: async (request) => resolveUser(request),
+  memory: {
+    access: ({ user, consumer }) => {
+      // Tenants on the free plan get recall, but record nothing new.
+      if (isFreePlan(user)) return { user: "read", project: "none" };
+
+      // The browser inspector is read-only; the agent may write.
+      return consumer === "client"
+        ? { user: "read", project: "read" }
+        : { user: "read-write", project: "read-write" };
+    },
+  },
+});`;
+
 export default function Page() {
   return (
     <>
@@ -70,13 +90,37 @@ export default function Page() {
         <code>CopilotRuntime</code> is built with <code>memory: {"{ access }"}</code>{" "}
         (or the deprecated <code>exposeMemoryRoutes: true</code>) — a
         &quot;secure default&quot; per the runtime&apos;s own typings, present on
-        1.69.0 and 1.71.0 alike. The page never mentions either. The second
-        runtime on the demo adds it, but the typings accept it only on an
-        Intelligence runtime, which needs <code>CPK_INTELLIGENCE_API_KEY</code>.
-        This harness has none, so that mount answers 503 and the platform side
-        — entitlement, what an unentitled project gets back — was not reached
+        1.69.0 and 1.71.0 alike. Since the 2026-11-11 sync the page documents
+        this in a new &quot;Limiting access per request&quot; section (shown
+        below); before that it never mentioned either. The second runtime on
+        the demo adds it, but the typings accept it only on an Intelligence
+        runtime, which needs <code>CPK_INTELLIGENCE_API_KEY</code>. This harness
+        has none, so that mount answers 503 and the platform side —
+        entitlement, what an unentitled project gets back — was not reached
         here.
       </Callout>
+
+      <Panel
+        title="The page's memory.access runtime (reference only)"
+        description="Verbatim from “Limiting access per request”, added upstream 2026-11-11. Not compiled or mounted."
+      >
+        <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
+          {MEMORY_ACCESS_SNIPPET}
+        </pre>
+        <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          The block has no imports and leans on three names the page never
+          defines: <code>intelligence</code>, <code>resolveUser</code> and{" "}
+          <code>isFreePlan</code>. It is therefore not wired in. The{" "}
+          <code>/api/copilotkit-memory</code> mount keeps its own
+          harness-written policy (<code>{'{ user: "read-write", project: "none" }'}</code>
+          ), labelled as not from the page; it never runs here anyway, because
+          that mount needs an Intelligence key. The section&apos;s table of
+          non-TypeScript callbacks (Python{" "}
+          <code>IntelligenceRuntime(memory_policy=...)</code>, Go, Ruby, .NET)
+          applies to native runtimes, which this harness does not use: its
+          runtime is the TypeScript one in the Next app.
+        </p>
+      </Panel>
 
       <Callout tone="warn" title="The page's own success check does not pass here">
         The 2026-09-17 sync added &quot;Set up User Memories&quot;, which ends

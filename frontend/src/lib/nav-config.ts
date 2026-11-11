@@ -357,7 +357,7 @@ export const NAV: NavGroup[] = [
           "Long-term memories per user or project, read and written from React with `useMemories`.",
         status: "broken",
         statusNote:
-          "The React snippet's import was wrong until the 2026-09-21 sync and now reads `@copilotkit/react-core/v2`, so the page's file compiles and runs here. What remains: on the Quickstart's runtime no memory request is ever sent, the hook reports `isAvailable: true` over an empty list, and every memory route 404s unless the runtime is built with `memory: { access }`, which the page never mentions. That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
+          "The React snippet's import was wrong until the 2026-09-21 sync and now reads `@copilotkit/react-core/v2`, so the page's file compiles and runs here. What remains: on the Quickstart's runtime no memory request is ever sent, the hook reports `isAvailable: true` over an empty list, and every memory route 404s unless the runtime is built with `memory: { access }`, which the page documents only since the 2026-11-11 sync (its example calls the undefined `isFreePlan`/`resolveUser`, so it is shown, not mounted). That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
       },
       {
         path: "/intelligence/learned-skills",

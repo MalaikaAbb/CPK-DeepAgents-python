@@ -8,7 +8,11 @@ import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
 import { GRAPH_IDS, LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/agents";
 
 /**
- * NOT FROM THE PAGE. The runtime option Memories & Recall never mentions.
+ * The `memory: { access }` option. Until the 2026-11-11 sync the page never
+ * mentioned it; it now documents it under "Limiting access per request". The
+ * policy callback below is still NOT FROM THE PAGE: the page's version calls
+ * `isFreePlan` and `resolveUser`, which it never defines (shown verbatim on the
+ * route instead), so this mount keeps the harness's fixed grant.
  *
  * The page says memory "is not a feature flag" and that `isAvailable: false` is
  * what an unentitled deployment looks like. The runtime has a gate before
@@ -51,7 +55,7 @@ function build(): CopilotRuntime | null {
       id: request.headers.get("x-copilotkit-user-id") ?? "demo-user",
       name: request.headers.get("x-copilotkit-user-name") ?? "Demo User",
     }),
-    // The missing option.
+    // Harness-written policy (not the page's; see the header).
     memory: {
       access: () => ({ user: "read-write", project: "none" }),
     },

@@ -30,7 +30,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #13 Predictive state (Python): the manual emission fragment is incomplete, and `cpk_action_node` is undefined.
 - #12 A2UI fixed-schema: `flight_schema.json` contents aren't shown (you author it in A2UI Composer).
 - #15 `workflow-execution` serves the same page as state-inputs-outputs.
-- #23 Memories: silently empty without an Intelligence runtime.
+- #23 Memories: silently empty without an Intelligence runtime. Since 2026-11-11 the page documents `memory: { access }` ("Limiting access per request"), but its runtime example has no imports and calls `intelligence`, `resolveUser` and `isFreePlan`, none defined on the page; shown verbatim on the route, not mounted.
 - #24 Learning: the runtime throws "`apiKey` is required" without a key. The key is now a listed prerequisite. `agents` and `identifyUser` are placeholders.
 - #27/#39 Learning: recommends LangGraph Python, whose package returns 404 on PyPI. Flagged only on learned-skills:145.
 - #38 Skill delivery: `-runtime`/`-langgraph` return 404 on PyPI (disclosed), and `revision: "exact-revision-id"` is in every example.
