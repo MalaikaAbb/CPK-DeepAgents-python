@@ -34,9 +34,14 @@ export default function Page() {
         <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
           Two buttons, because the page has two variants. <strong>Toggle
           Language</strong> writes and waits — nothing happens until you send a
-          message. <strong>Toggle + runAgent()</strong> is the page&apos;s
-          &ldquo;Advanced Usage&rdquo; section: it starts a run immediately, and
-          the agent replies in the new language without you typing anything.
+          message. <strong>Toggle + re-run agent</strong> (on the{" "}
+          <code>expose_state</code> side of the pair) is the page&apos;s
+          &ldquo;Re-run the agent with updated state&rdquo; section: it starts a
+          run immediately, and the agent replies in the new language without
+          you typing anything. Since the 2026-11-11 sync that section calls{" "}
+          <code>copilotkit.runAgent({"{ agent }"})</code> from{" "}
+          <code>useCopilotKit()</code> rather than <code>agent.runAgent()</code>
+          , so the run carries frontend tools and context.
         </p>
         <div className="mt-4">
           <TryIt
@@ -48,8 +53,8 @@ export default function Page() {
               <>
                 First answer in English. Toggle to <code>spanish</code>, ask
                 again, and the second answer is in Spanish — the panel and the
-                JSON dump both show the new value. <strong>Toggle +
-                runAgent()</strong> produces a fresh reply on its own, no typing.
+                JSON dump both show the new value. <strong>Toggle + re-run
+                agent</strong> produces a fresh reply on its own, no typing.
               </>
             }
             fail="The label flips but the agent keeps answering in English. That means the write landed but the model never saw it — check `expose_state` on CopilotKitMiddleware."
