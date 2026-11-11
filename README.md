@@ -254,6 +254,8 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/generative-ui/components/state-and-actions`** — ❌ **Reference only, no demo.** Added 2026-11-11. State and actions (Components and surfaces). Needs `@copilotkit/react-core/v2/generative-ui`, which the installed 1.73.3 does not ship, so the page's React blocks are shown as text. **Try:** open the route. **Expect:** the header, a warning callout and the verbatim blocks. See [FINDINGS.md](FINDINGS.md) #58.
 
+**`/generative-ui/components/theming`** — ❌ **Reference only, no demo.** Added 2026-11-11. Theming (Components and surfaces). Needs `@copilotkit/react-core/v2/generative-ui`, which the installed 1.73.3 does not ship, so the page's React blocks are shown as text. **Try:** open the route. **Expect:** the header, a warning callout and the verbatim blocks. See [FINDINGS.md](FINDINGS.md) #58.
+
 ### Custom Look and Feel
 
 **`/custom-look-and-feel/markdown`** → `sample_agent` — ⚠️ **Partial.** New upstream 2026-09-21. The `markdownRenderer` slot on `CopilotChatAssistantMessage`, reached from `<CopilotChat messageView={{ assistantMessage: { markdownRenderer } }} />`, in all three of the page's forms. The demo has five tabs and a probe that reads the rendered HTML rather than the library's own bookkeeping: the opening tag of the first `<a>`, the number of `[data-streamdown]` elements, the number of elements carrying a literal `node` attribute, and the number carrying the page's `.my-link` / `.my-heading`. **Page code, verbatim** is the published block with nothing added. *Try:* just open it. *Expect:* the chat paints, then throws `Agent 'default' not found after runtime sync` — the block carries no agent id, and Deep Agents registers no `default`, the same defect already reproduced on Frontend-Driven Cards. The other four tabs add `agentId="sample_agent"` and nothing else. **Not yet driven:** this route was built on 2026-09-21 and has no clip; the lines below are what the take should show. *Try:* `Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.` *Pass:* on **components map** the anchor row reads `<a href="…" target="_blank" rel="noopener noreferrer" class="my-link">` with no `data-streamdown`, and the `node` count is 0; on **no override** the same anchor carries `data-streamdown="link"` and Streamdown's classes; the reference-chip is plain text on every tab. *Fail:* a `node` count above 0, or a missing `rel`/`target` on the components tab. See [FINDINGS.md](FINDINGS.md) #32.
@@ -355,8 +357,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [generative-ui/components/catalogs](https://docs.copilotkit.ai/deepagents/generative-ui/components/catalogs) | `/generative-ui/components/catalogs` | — | ❌ Broken | Added 2026-11-11. Reference only: needs react-core `v2/generative-ui` (not in installed 1.73.3) — [FINDINGS.md](FINDINGS.md) #58 |
 | [generative-ui/components/standard-catalog](https://docs.copilotkit.ai/deepagents/generative-ui/components/standard-catalog) | `/generative-ui/components/standard-catalog` | — | ❌ Broken | Added 2026-11-11. Reference only: needs react-core `v2/generative-ui` (not in installed 1.73.3) — [FINDINGS.md](FINDINGS.md) #58 |
 | [generative-ui/components/state-and-actions](https://docs.copilotkit.ai/deepagents/generative-ui/components/state-and-actions) | `/generative-ui/components/state-and-actions` | — | ❌ Broken | Added 2026-11-11. Reference only: needs react-core `v2/generative-ui` (not in installed 1.73.3) — [FINDINGS.md](FINDINGS.md) #58 |
+| [generative-ui/components/theming](https://docs.copilotkit.ai/deepagents/generative-ui/components/theming) | `/generative-ui/components/theming` | — | ❌ Broken | Added 2026-11-11. Reference only: needs react-core `v2/generative-ui` (not in installed 1.73.3) — [FINDINGS.md](FINDINGS.md) #58 |
 
-**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 11 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 12 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -552,6 +555,7 @@ Grouped the way the doc nav groups them.
 - [Catalogs](https://docs.copilotkit.ai/deepagents/generative-ui/components/catalogs) — reference only (needs a newer CopilotKit)
 - [Standard catalog](https://docs.copilotkit.ai/deepagents/generative-ui/components/standard-catalog) — reference only (needs a newer CopilotKit)
 - [State and actions](https://docs.copilotkit.ai/deepagents/generative-ui/components/state-and-actions) — reference only (needs a newer CopilotKit)
+- [Theming](https://docs.copilotkit.ai/deepagents/generative-ui/components/theming) — reference only (needs a newer CopilotKit)
 
 **Custom Look and Feel**
 - [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
