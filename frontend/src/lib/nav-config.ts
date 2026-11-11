@@ -276,6 +276,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and every code block (the minimal message list and composer, useRenderedMessages, per-role dispatch, tool-call composition, bubble chrome) is \"Missing snippet: No demo found for deepagents::headless-simple / headless-complete\". The page prints no code at all for this framework. Added 2026-11-11.",
       },
+      {
+        path: "/custom-look-and-feel/reasoning-messages",
+        title: "Reasoning Messages",
+        docPath: "/deepagents/custom-look-and-feel/reasoning-messages",
+        summary:
+          "Customizing the reasoning card: header, content and toggle sub-slots, a fully custom component, or render-prop children on CopilotChatReasoningMessage.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-behaviour block (the agent connection) and the fully custom ReasoningBlock example are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No Deep Agents agent that emits reasoning tokens is published, so the generic slot blocks it does print would never render here; they are shown as text. Added 2026-11-11.",
+      },
     ],
   },
   {
