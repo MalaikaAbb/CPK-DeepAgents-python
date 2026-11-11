@@ -266,6 +266,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Added 2026-11-11, not yet driven in a browser. Rendered for Deep Agents the page says slots are not available yet and its own demo blocks (welcome screen, assistant message, disclaimer) are \"Missing snippet\"; those are not rebuilt. The seven generic blocks it prints run as tabs inside the Quickstart's provider. Three fail type-checking as published (`data-testid` on the messageView object; untyped CustomMessageView not assignable to the slot; plain CustomUserMessage not assignable to userMessage) and carry @ts-expect-error. CustomToolbar/CustomCopyButton/CustomUserMessage are undefined on the page and written minimal here.",
       },
+      {
+        path: "/custom-look-and-feel/headless-ui",
+        title: "Headless UI",
+        docPath: "/deepagents/custom-look-and-feel/headless-ui",
+        summary:
+          "A chat built from hooks alone (useAgent, useCopilotKit, useRenderToolCall and friends) with no CopilotChat and no slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and every code block (the minimal message list and composer, useRenderedMessages, per-role dispatch, tool-call composition, bubble chrome) is \"Missing snippet: No demo found for deepagents::headless-simple / headless-complete\". The page prints no code at all for this framework. Added 2026-11-11.",
+      },
     ],
   },
   {

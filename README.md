@@ -252,6 +252,8 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/custom-look-and-feel/slots`** → `sample_agent` — ⚠️ **Partial.** Added 2026-11-11, not yet driven in a browser. The seven generic slot blocks the page prints (class string, props object, whole component, two- and three-level nesting, tool-calls view, labels), one tab each, inside the Quickstart's `CopilotKitProvider`. The page's own Deep Agents demo blocks are "Missing snippet" and are not rebuilt. *Try:* each tab, then `What's the weather in Lisbon?`. *Pass:* each tab visibly changes its part of the chat (dashed box around the `get_weather` call on Tool calls; custom placeholder/welcome/disclaimer on Labels). *Fail:* a tab throws or looks like the default chat. Three blocks need `@ts-expect-error` to compile — see [FINDINGS.md](FINDINGS.md) #48.
 
+**`/custom-look-and-feel/headless-ui`** — ❌ **Reference only, no demo.** Added 2026-11-11. A chat built from hooks only. Rendered for Deep Agents the page prints no code at all (every block is "Missing snippet"), so nothing is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #49.
+
 ### Rich Threads
 
 **`/threads/lifecycle`** → `sample_agent` — ⚠️ **Partial.** Tracked 2026-09-21; the only Rich Threads page this repo implements. One button per lifecycle claim on the page, with the chat's resolved state read back from its `CopilotChatConfigurationProvider`, including the id of the parent provider the root `<CopilotKit>` supplies. **Try:** send a message, press "Remount chat", then "Open conversation", "New chat", "Pin a threadId prop" and "New chat" again. **Pass:** the remount keeps the id, because it is inherited from the parent, and the chat empties; "Open conversation" flips `hasExplicitThreadId` to true and replays the messages from the runtime's `InMemoryAgentRunner`; with the id pinned, "New chat" changes nothing and the amber line shows the `Ignoring startNewThread()` warning; the pinned id survives a remount. **Fail:** the re-opened thread shows 0 messages (nothing replayed). See [FINDINGS.md](FINDINGS.md) #35.
@@ -346,8 +348,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 | [custom-look-and-feel/css](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/css) | `/custom-look-and-feel/css` | — | ❌ Broken | Added 2026-11-11. Reference only: demo blocks missing for Deep Agents; printed blocks are v1 (`@copilotkit/react-ui`) or unsupported on v2 (`icons`) — [FINDINGS.md](FINDINGS.md) #47 |
 | [custom-look-and-feel/slots](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/slots) | `/custom-look-and-feel/slots` | `sample_agent` | ⚠️ Partial | Added 2026-11-11, not driven yet. Deep Agents demo blocks missing; generic blocks run in the Quickstart provider; three type errors kept — [FINDINGS.md](FINDINGS.md) #48 |
+| [custom-look-and-feel/headless-ui](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/headless-ui) | `/custom-look-and-feel/headless-ui` | — | ❌ Broken | Added 2026-11-11. Reference only: every code block is "Missing snippet" for Deep Agents — [FINDINGS.md](FINDINGS.md) #49 |
 
-**Totals:** 14 ✅ Working · 5 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 5 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -543,6 +546,7 @@ Grouped the way the doc nav groups them.
 - [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
 - [CSS Customization](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/css) — reference only
 - [Slots (Subcomponents)](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/slots)
+- [Headless UI](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/headless-ui) — reference only; no Deep Agents code published
 
 **Rich Threads**
 - [Thread & History Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle)
