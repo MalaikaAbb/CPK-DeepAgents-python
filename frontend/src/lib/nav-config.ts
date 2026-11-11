@@ -237,6 +237,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
       },
+      {
+        path: "/generative-ui/components/surfaces",
+        title: "Surfaces",
+        docPath: "/deepagents/generative-ui/components/surfaces",
+        summary:
+          "Named areas of the page (GenerativeUISurface id=…) that the chat can fill or change, with per-target component lists, auto-scroll, per-item keys and error fallbacks.",
+        status: "broken",
+        statusNote:
+          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+      },
     ],
   },
   {
