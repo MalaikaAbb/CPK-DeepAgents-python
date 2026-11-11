@@ -42,7 +42,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #28 Landing and Quickstart use different code for the same `route.ts`.
 - #30 Quickstart: two unlabelled `.env` captions.
 - #21 Quickstart installs the unused `@copilotkit/react-ui`.
-- #20 Model ids vary across pages.
+- #20 Model ids vary across pages. Since the 2026-11-11 sync, Dynamic Schema A2UI, State Rendering and Tool Rendering print `ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")`; the harness keeps `reasoning_effort="none"` verbatim and reads only the model id from `OPENAI_MODEL`, so a non-reasoning `OPENAI_MODEL` (e.g. `gpt-4o`) makes those three agents fail with an OpenAI 400 on `reasoning_effort`. Not run against a live model.
 - #17 Tool rendering says `useRenderToolCall` where it means `useRenderTool` (×2).
 - #18 Frontend tools links to `/langgraph/quickstart`.
 - #16 State I/O: deprecated `input=`/`output=`, and the snippet has no imports.

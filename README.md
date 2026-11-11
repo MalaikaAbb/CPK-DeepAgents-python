@@ -108,7 +108,7 @@ cp .env.example frontend/.env.local # then keep the frontend block
 | Variable | Goes in | Required | What it does |
 |---|---|---|---|
 | `OPENAI_API_KEY` | `backend/.env` | **yes** | The model key. Every agent reads it. |
-| `OPENAI_MODEL` | `backend/.env` | no | Model id for every agent. Defaults to `gpt-4o`. |
+| `OPENAI_MODEL` | `backend/.env` | no | Model id for every agent. Defaults to `gpt-5.4-mini` (`backend/src/shared.py`). Must be a reasoning model: the agents whose pages print `ChatOpenAI(..., reasoning_effort="none")` pass that argument, which `gpt-4o` rejects. |
 | `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8030`. |
 | `LANGSMITH_API_KEY` | `frontend/.env.local` | no | Sent as `langsmithApiKey`. Ignored by a local `langgraph dev`. |
 | `INTELLIGENCE_API_KEY` | `frontend/.env.local` | no | Puts the runtime in Intelligence mode so threads persist. Without it: SSE + in-memory runner. |
