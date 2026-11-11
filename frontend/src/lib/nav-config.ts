@@ -106,6 +106,16 @@ export const NAV: NavGroup[] = [
           "File attachments (images, PDFs, audio, video) in CopilotChat with previews, lightbox, and upload handlers.",
         status: "working",
       },
+      {
+        path: "/prebuilt-components/chat",
+        title: "CopilotChat",
+        docPath: "/deepagents/prebuilt-components/chat",
+        summary:
+          "An inline chat you place and size yourself: the base surface that CopilotSidebar and CopilotPopup wrap.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block (provider plus chat) and the self-contained code example with starter suggestions are \"Missing snippet: No demo found for deepagents::agentic-chat\". Added 2026-11-11.",
+      },
     ],
   },
   {
