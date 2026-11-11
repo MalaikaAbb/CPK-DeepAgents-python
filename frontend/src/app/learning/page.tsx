@@ -17,6 +17,74 @@ POST /api/copilotkit-learning        → 500   (single-route fallback)
 
 Client: runtime connection "error" · agent ready false · send button disabled on both tabs`;
 
+// Added upstream 2026-11-11, quoted as published and shown as text only: the
+// installed runtime (1.73.3) has neither `getTrajectoryLearningContainerIds`
+// nor `intelligence.experimental.learning` (both are on 1.85.0; the page names
+// no version), so none of these compile or run here.
+const TRAJECTORY_SNIPPET = `const intelligence = new CopilotKitIntelligence({
+  apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+  getTrajectoryLearningContainerIds: ({ trajectoryId, user }) =>
+    ["expense-review"],
+});`;
+
+const CLI_SNIPPET = `npx copilotkit@latest learning containers list
+
+npx copilotkit@latest learning containers default-id
+
+npx copilotkit@latest learning containers create --id <container-id> --name "<container name>"`;
+
+// The three "Manage Learning from your server" blocks, in page order. The
+// "// <title>" lines are the code-block captions, added here to separate them.
+const MANAGE_SNIPPET = `// Application server — Select a container and start a run
+import { CopilotKitIntelligence } from "@copilotkit/runtime/v2";
+
+const intelligence = new CopilotKitIntelligence({
+  apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+});
+
+const page = await intelligence.experimental.learning.listLearningContainers();
+// Use page.nextCursor to request another page when it is not null.
+const container = await intelligence.experimental.learning.getLearningContainer({
+  containerId: "expense-review",
+});
+
+// Call only after the authorized user requests a manual run.
+const admittedRun = await intelligence.experimental.learning.startLearningRun({
+  containerId: container.id,
+});
+const runs = await intelligence.experimental.learning.listLearningRuns({
+  containerId: container.id,
+});
+const progress = runs.find((run) => run.id === admittedRun.id);
+
+// Application server — Review a proposed Skill
+const candidates = await intelligence.experimental.learning.listLearningCandidates({
+  containerId: "expense-review",
+});
+const pending = candidates.find((item) => item.status === "pending_review");
+if (pending) {
+  const candidate = await intelligence.experimental.learning.getLearningCandidate({
+    containerId: "expense-review",
+    candidateId: pending.id,
+  });
+  const evidence = await Promise.all(
+    candidate.supportingInsights.map((insight) =>
+      intelligence.experimental.learning.getLearningInsightEvidence({
+        containerId: "expense-review",
+        insightId: insight.id,
+      }),
+    ),
+  );
+  // Show candidate.bundle.files and evidence to the authorized reviewer.
+}
+
+// Authorized review handler
+const review = await intelligence.experimental.learning.reviewLearningCandidate({
+  containerId: "expense-review",
+  candidateId, // The candidate the reviewer inspected.
+  action: "approve", // Use "reject" for an explicit rejection.
+});`;
+
 export default function Page() {
   return (
     <>
@@ -148,6 +216,41 @@ export default function Page() {
         harness does not have. They are not on the clip, and nothing here says
         whether they work.
       </Callout>
+
+      <Callout tone="warn" title="2026-11-11 sync: three new sections, none runnable on this runtime">
+        <p>
+          The page added <strong>Assign browser activity to a Learning Space</strong>{" "}
+          (<code>getTrajectoryLearningContainerIds</code> on{" "}
+          <code>CopilotKitIntelligence</code>), CLI commands for listing,
+          naming and creating containers, and{" "}
+          <strong>Manage Learning from your server</strong> (the experimental{" "}
+          <code>intelligence.experimental.learning.*</code> methods: list
+          containers, start a run, list and review candidates). The installed{" "}
+          <code>@copilotkit/runtime</code> 1.73.3 has neither the callback nor
+          the <code>experimental.learning</code> namespace (1.85.0 has both), and
+          the page names no minimum version. Bumping the runtime is out of scope
+          for a doc sync, so the blocks below are shown as published and not
+          mounted.
+        </p>
+        <p className="mt-2">
+          Even on a runtime that has them, the blocks are not self-contained:
+          the trajectory and management snippets need an Intelligence key and an
+          existing Space/container, the management blocks use top-level{" "}
+          <code>await</code> with no surrounding handler, and the review
+          handler&apos;s <code>candidateId</code> is never defined. The CLI
+          commands need a selected Intelligence project. None of this is
+          exercised here.
+        </p>
+      </Callout>
+
+      <Panel title="New upstream code (reference only)" description="Verbatim from the page; not compiled or mounted.">
+        <p className="mb-2 text-xs font-medium text-slate-500">Assign browser activity to a Learning Space</p>
+        <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">{TRAJECTORY_SNIPPET}</pre>
+        <p className="mb-2 mt-4 text-xs font-medium text-slate-500">Create a container (Terminal)</p>
+        <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">{CLI_SNIPPET}</pre>
+        <p className="mb-2 mt-4 text-xs font-medium text-slate-500">Manage Learning from your server</p>
+        <pre className="overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">{MANAGE_SNIPPET}</pre>
+      </Panel>
 
       <Panel title="Source">
         <SourceCode file="frontend/src/lib/learning-runtime.ts" />

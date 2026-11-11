@@ -379,7 +379,7 @@ export const NAV: NavGroup[] = [
           "Routing selected Threads into a Learning container from the runtime, for Insights and reviewed Skills.",
         status: "broken",
         statusNote:
-          "The page's runtime snippet is mounted verbatim at `/api/copilotkit-learning`. Its `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws at module load without a key, so the route 500s and neither agent answers. `agents` and `identifyUser` are undefined on the page; `getLearningContainerId` needs runtime 1.70+; dashboard and CLI steps are not exercised.",
+          "The page's runtime snippet is mounted verbatim at `/api/copilotkit-learning`. Its `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws at module load without a key, so the route 500s and neither agent answers. `agents` and `identifyUser` are undefined on the page; `getLearningContainerId` needs runtime 1.70+; dashboard and CLI steps are not exercised. The 2026-11-11 additions (`getTrajectoryLearningContainerIds`, `intelligence.experimental.learning.*`) are not on the installed 1.73.3 and are shown as reference text only.",
       },
     ],
   },

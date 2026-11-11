@@ -32,6 +32,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #15 `workflow-execution` serves the same page as state-inputs-outputs.
 - #23 Memories: silently empty without an Intelligence runtime. Since 2026-11-11 the page documents `memory: { access }` ("Limiting access per request"), but its runtime example has no imports and calls `intelligence`, `resolveUser` and `isFreePlan`, none defined on the page; shown verbatim on the route, not mounted.
 - #24 Learning: the runtime throws "`apiKey` is required" without a key. The key is now a listed prerequisite. `agents` and `identifyUser` are placeholders.
+- #43 Learning (2026-11-11): new `getTrajectoryLearningContainerIds` and `intelligence.experimental.learning.*` blocks need a newer `@copilotkit/runtime` than the installed 1.73.3 (present on 1.85.0); the page names no version. The management blocks use top-level `await` and an undefined `candidateId`. Shown as text on `/learning`, not run.
 - #27/#39 Learning: recommends LangGraph Python, whose package returns 404 on PyPI. Flagged only on learned-skills:145.
 - #38 Skill delivery: `-runtime`/`-langgraph` return 404 on PyPI (disclosed), and `revision: "exact-revision-id"` is in every example.
 - #33 Jev: all pins now exist on npm, but it needs `TYPESAFE_API_KEY` and has no Deep Agent.
