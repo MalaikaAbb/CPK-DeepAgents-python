@@ -29,12 +29,13 @@ class AgentState(CopilotKitState):
 #endregion
 
 #region prebuilt-agent
+from langchain_openai import ChatOpenAI
 from copilotkit import CopilotKitMiddleware, StateStreamingMiddleware, StateItem
 from deepagents import create_deep_agent
 from langchain.agents.middleware import AgentMiddleware
 from langchain.tools import tool
 
-from src.shared import MODEL
+from src.shared import OPENAI_MODEL
 
 
 @tool
@@ -47,7 +48,9 @@ class ObservedStepsMiddleware(AgentMiddleware[AgentState, Any]):
 
 
 agent = create_deep_agent(
-    model=MODEL,
+    # Page (2026-11-11): ChatOpenAI(model="gpt-6-luna", reasoning_effort="none").
+    # Model id read from OPENAI_MODEL like every agent here; reasoning_effort verbatim.
+    model=ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none"),
     tools=[step_progress_tool],
     middleware=[
         ObservedStepsMiddleware(),
