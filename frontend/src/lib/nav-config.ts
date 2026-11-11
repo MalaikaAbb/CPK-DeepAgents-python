@@ -297,6 +297,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
       },
+      {
+        path: "/generative-ui/components/markdown-mode",
+        title: "Markdown mode",
+        docPath: "/deepagents/generative-ui/components/markdown-mode",
+        summary:
+          "The markdown transport: the agent writes a2ui blocks inside its reply and the chat renders each as a live surface, with the catalog read from forwardedProps.copilotkit.ui on the agent side.",
+        status: "broken",
+        statusNote:
+          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+      },
     ],
   },
   {
