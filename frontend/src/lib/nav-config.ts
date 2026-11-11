@@ -239,6 +239,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Added 2026-11-11, not yet driven. The page's runtime route runs verbatim at /api/copilotkit-mcp-apps (basePath changed) with the public Excalidraw server. The page asks for runtime 1.76+ and the current middleware (0.1.3, @ag-ui/client 1.x); this repo has runtime 1.73.3, so the import resolves to the 0.1.1 middleware runtime 1.73.3 already depends on (undeclared). The page's deploymentUrl falls back to 8123, not this repo's 8030: set LANGGRAPH_DEPLOYMENT_URL. Needs network access to mcp.excalidraw.com.",
       },
+      {
+        path: "/generative-ui/open-generative-ui",
+        title: "Open Generative UI",
+        docPath: "/deepagents/generative-ui/open-generative-ui",
+        summary:
+          "The agent writes complete HTML/CSS/JS that streams into a sandboxed iframe in the chat, optionally calling back into host-side sandbox functions.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the runtime block (OpenGenerativeUIMiddleware), the CopilotChat page and both advanced blocks (sandbox functions) are \"Missing snippet: No demo found for deepagents::open-gen-ui / open-gen-ui-advanced\". Only a CDN HTML example is printed. Added 2026-11-11.",
+      },
     ],
   },
   {
