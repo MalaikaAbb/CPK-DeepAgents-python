@@ -227,6 +227,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
+      {
+        path: "/generative-ui/components",
+        title: "Components and surfaces",
+        docPath: "/deepagents/generative-ui/components",
+        summary:
+          "The agent renders your React components while it answers, in the chat or in named areas of the page, from a catalog you hand the provider (generativeUI={{ ui }}); the runtime then gives each run a render_ui tool and a guide.",
+        status: "broken",
+        statusNote:
+          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+      },
     ],
   },
   {
