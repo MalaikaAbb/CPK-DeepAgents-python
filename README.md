@@ -186,6 +186,8 @@ The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` i
 
 **`/prebuilt-components/sidebar`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotSidebar>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #52.
 
+**`/prebuilt-components/popup`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotPopup>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #53.
+
 ### Rich Threads
 
 **`/headless-threads`** → `sample_agent`
@@ -346,8 +348,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
 | [prebuilt-components/chat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) | `/prebuilt-components/chat` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #51 |
 | [prebuilt-components/sidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) | `/prebuilt-components/sidebar` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #52 |
+| [prebuilt-components/popup](https://docs.copilotkit.ai/deepagents/prebuilt-components/popup) | `/prebuilt-components/popup` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #53 |
 
-**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 9 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -570,5 +573,6 @@ Grouped the way the doc nav groups them.
 **Basics**
 - [CopilotChat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) — reference only
 - [CopilotSidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) — reference only
+- [CopilotPopup](https://docs.copilotkit.ai/deepagents/prebuilt-components/popup) — reference only
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.

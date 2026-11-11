@@ -126,6 +126,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block and the configuration example (open by default, named agent) are \"Missing snippet: No demo found for deepagents::prebuilt-sidebar\". Added 2026-11-11.",
       },
+      {
+        path: "/prebuilt-components/popup",
+        title: "CopilotPopup",
+        docPath: "/deepagents/prebuilt-components/popup",
+        summary:
+          "A floating launcher bubble that opens an overlay chat window, with defaultOpen, agentId, labels and header/toggleButton slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block (open by default, custom placeholder via labels) are \"Missing snippet: No demo found for deepagents::prebuilt-popup\". Added 2026-11-11.",
+      },
     ],
   },
   {
