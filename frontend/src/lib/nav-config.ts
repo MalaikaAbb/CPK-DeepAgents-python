@@ -305,6 +305,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says useInterrupt is not available on this framework and prints no backend. Its two frontend blocks (approve/cancel, multi-interrupt) are generic and shown as text. useInterrupt against a Deep Agent interrupt() is exercised on /generative-ui/your-components/interrupt-based. Added 2026-11-11.",
       },
+      {
+        path: "/human-in-the-loop/headless",
+        title: "Headless Interrupts",
+        docPath: "/deepagents/human-in-the-loop/headless",
+        summary:
+          "Resolving agent interrupts from any UI, built from useAgent, agent.subscribe and copilotkit.runAgent instead of a useInterrupt render slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says headless interrupts are not available on this framework and prints no code at all. Added 2026-11-11.",
+      },
     ],
   },
   {
