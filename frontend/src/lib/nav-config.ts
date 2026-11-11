@@ -116,6 +116,16 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block (provider plus chat) and the self-contained code example with starter suggestions are \"Missing snippet: No demo found for deepagents::agentic-chat\". Added 2026-11-11.",
       },
+      {
+        path: "/prebuilt-components/sidebar",
+        title: "CopilotSidebar",
+        docPath: "/deepagents/prebuilt-components/sidebar",
+        summary:
+          "A docked, collapsible chat that slides out beside the main content, with defaultOpen, agentId, labels and header/toggleButton slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block and the configuration example (open by default, named agent) are \"Missing snippet: No demo found for deepagents::prebuilt-sidebar\". Added 2026-11-11.",
+      },
     ],
   },
   {
