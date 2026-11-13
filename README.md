@@ -182,6 +182,11 @@ The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` i
 *Pass:* two rows in the drawer; clicking between them swaps the transcript.
 *Fail:* a locked "Threads are a CopilotKit Intelligence feature" panel — that is `licenseStatus`, not a bug. See the Quickstart's Live connection panel.
 
+**`/prebuilt-components/chat`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotChat>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #51.
+
+**`/prebuilt-components/sidebar`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotSidebar>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #52.
+
+**`/prebuilt-components/popup`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotPopup>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #53.
 **`/voice`** — ❌ **Reference only, no demo.** Added 2026-11-11. Speech-to-text in the chat composer through a runtime `TranscriptionService`. Rendered for Deep Agents the page says voice is not available yet and every code block is "Missing snippet: No demo found for deepagents::voice", so no runtime route or mic button is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #45.
 
 **`/generative-ui/reasoning`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendering reasoning tokens with the default card or a custom `reasoningMessage` slot. Rendered for Deep Agents the page says the feature is not available yet and all three code blocks are "Missing snippet", so there is no agent or demo. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #46.
@@ -356,6 +361,11 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — [FINDINGS.md](FINDINGS.md) #32 |
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
+| [prebuilt-components/chat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) | `/prebuilt-components/chat` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #51 |
+| [prebuilt-components/sidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) | `/prebuilt-components/sidebar` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #52 |
+| [prebuilt-components/popup](https://docs.copilotkit.ai/deepagents/prebuilt-components/popup) | `/prebuilt-components/popup` | — | ❌ Broken | Added 2026-11-11. Reference only: only the import line is published for Deep Agents — [FINDINGS.md](FINDINGS.md) #53 |
+
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 9 ❌ Broken · 1 🚧 Not started.
 | [custom-look-and-feel/css](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/css) | `/custom-look-and-feel/css` | — | ❌ Broken | Added 2026-11-11. Reference only: demo blocks missing for Deep Agents; printed blocks are v1 (`@copilotkit/react-ui`) or unsupported on v2 (`icons`) — [FINDINGS.md](FINDINGS.md) #47 |
 | [custom-look-and-feel/slots](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/slots) | `/custom-look-and-feel/slots` | `sample_agent` | ⚠️ Partial | Added 2026-11-11, not driven yet. Deep Agents demo blocks missing; generic blocks run in the Quickstart provider; three type errors kept — [FINDINGS.md](FINDINGS.md) #48 |
 | [custom-look-and-feel/headless-ui](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/headless-ui) | `/custom-look-and-feel/headless-ui` | — | ❌ Broken | Added 2026-11-11. Reference only: every code block is "Missing snippet" for Deep Agents — [FINDINGS.md](FINDINGS.md) #49 |
@@ -586,6 +596,9 @@ Grouped the way the doc nav groups them.
 - [Workflow Execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution)
 
 **Basics**
+- [CopilotChat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) — reference only
+- [CopilotSidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) — reference only
+- [CopilotPopup](https://docs.copilotkit.ai/deepagents/prebuilt-components/popup) — reference only
 - [Voice](https://docs.copilotkit.ai/deepagents/voice) — reference only; no Deep Agents code published
 - [Reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) — reference only; no Deep Agents code published
 **Agent capabilities**
