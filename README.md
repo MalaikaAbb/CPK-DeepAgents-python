@@ -169,7 +169,7 @@ Every route has a notes page (source, discrepancies, a **Try it** box) and, wher
 **`/`** — Introduction. Orientation and the live graph roster. Nothing to drive. Since 2026-09-21 the doc page carries a code block of its own, a `CopilotRuntime` route titled with the same filename the Quickstart uses and holding different code; both are printed side by side on the route, with the differences named. See [FINDINGS.md](FINDINGS.md) #28 and #29.
 
 **`/quickstart`** → `sample_agent`
-Proves the whole stack in one message: a Deep Agent with a single Python tool, published by the LangGraph server, reached through `CopilotRuntime`, driven by a `CopilotSidebar`.
+Proves the whole stack in one message: a Deep Agent with a single Python tool, published by the LangGraph server, reached through `CopilotRuntime`, driven by a `CopilotSidebar`. Since the 2026-11-11 sync the demo mounts the page's own `<CopilotKitProvider agentId="sample_agent">` (nested, so its conversation is separate from the other routes); not yet re-driven in a browser after that change.
 *Try:* `What's the weather in Lisbon?`
 *Pass:* tokens stream a word at a time; a collapsed `Called get_weather` row appears (that's `useDefaultRenderTool`); the reply says Lisbon is sunny.
 *Fail:* an error banner or no reply — `langgraph dev` is down, or `OPENAI_API_KEY` is missing from `backend/.env`.
@@ -377,7 +377,7 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 
 | Doc page | Route | Graph | Status | Notes |
 |---|---|---|---|---|
-| [quickstart](https://docs.copilotkit.ai/deepagents/quickstart) | `/quickstart` | `sample_agent` | ✅ Working | Python tab + Deep Agent runtime tab |
+| [quickstart](https://docs.copilotkit.ai/deepagents/quickstart) | `/quickstart` | `sample_agent` | ✅ Working | Python tab + Deep Agent runtime tab. 2026-11-11: page's bare `CopilotKitProvider` mounted around the demo, runtime exports PATCH/DELETE; not re-run since |
 | [prebuilt-components/copilot-threads-drawer](https://docs.copilotkit.ai/deepagents/prebuilt-components/copilot-threads-drawer) | `/prebuilt-components/copilot-threads-drawer` | `sample_agent` | ✅ Working | Needs Intelligence mode; the unlocked view needs a license token |
 | [headless-threads](https://docs.copilotkit.ai/deepagents/headless-threads) | `/headless-threads` | `sample_agent` | ✅ Working | Rename/archive/delete need `mutations: true`, i.e. Intelligence mode |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads-lifecycle` | `sample_agent` | ✅ Working | Switch/start are live regardless; replay needs a server-side store |

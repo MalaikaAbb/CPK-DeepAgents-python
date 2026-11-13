@@ -25,7 +25,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - **Correct setup (for reference):** a middleware with `state_schema`, plus `expose_state=["language"]`, plus `setState({ ...agent.state, language })`.
 
 ## Minor notes
-- #29 Quickstart: `touch app/api/copilotkit/route.ts`, but the code blocks are titled `[[...slug]]/route.ts`. A plain route has no `/info`. Not reproduced at runtime.
+- #29 Quickstart: ~~`touch app/api/copilotkit/route.ts`, but the code blocks are titled `[[...slug]]/route.ts`~~ — fixed upstream 2026-11-11 (the `mkdir`/`touch` line now creates `[[...slug]]/route.ts`).
 - #6 Predictive state: needs `<CopilotKit>`, not `<CopilotKitProvider>`, and the page doesn't say so. Fails silently.
 - #13 Predictive state (Python): the manual emission fragment is incomplete, and `cpk_action_node` is undefined.
 - #12 A2UI fixed-schema: `flight_schema.json` contents aren't shown (you author it in A2UI Composer).
@@ -41,8 +41,8 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #41 `/intelligence/connect-your-runtime` returns 404 with no redirect.
 - #28 Landing and Quickstart use different code for the same `route.ts`.
 - #30 Quickstart: two unlabelled `.env` captions.
-- #21 Quickstart installs the unused `@copilotkit/react-ui`.
-- #20 Model ids vary across pages. Since the 2026-11-11 sync, Dynamic Schema A2UI, State Rendering and Tool Rendering print `ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")`; the harness keeps `reasoning_effort="none"` verbatim and reads only the model id from `OPENAI_MODEL`, so a non-reasoning `OPENAI_MODEL` (e.g. `gpt-4o`) makes those three agents fail with an OpenAI 400 on `reasoning_effort`. Not run against a live model.
+- #21 Quickstart: ~~installs the unused `@copilotkit/react-ui`~~ — dropped upstream 2026-11-11. The install line now adds `@ag-ui/client@1.0.2`, used only by the FastAPI runtime tab; not installed here (Deep Agent tab, and `@ag-ui/client` must stay at the version CopilotKit pins).
+- #20 Model ids vary across pages.
 - #17 Tool rendering says `useRenderToolCall` where it means `useRenderTool` (×2).
 - #18 Frontend tools links to `/langgraph/quickstart`.
 - #16 State I/O: deprecated `input=`/`output=`, and the snippet has no imports.

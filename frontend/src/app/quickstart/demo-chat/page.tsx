@@ -4,21 +4,41 @@ import { CopilotSidebar, useDefaultRenderTool } from "@copilotkit/react-core/v2"
 
 import { DemoFrame } from "@/components/demo-frame";
 
+import { Providers } from "./providers";
+
 const AGENT_ID = "sample_agent";
 
 /**
- * The Quickstart's `app/page.tsx`.
+ * The Quickstart's `app/page.tsx`, inside the Quickstart's `app/providers.tsx`.
  *
- * Two departures, both because this is a harness rather than a one-agent app:
- * the `<details>` renderer is styled, and `agentId` is passed explicitly. The
- * page sets the agent once on the provider (`<CopilotKit agent="sample_agent">`)
- * because it has exactly one; here ten graphs share a provider, so each route
- * names the one it wants.
+ * Since the 2026-11-11 doc sync the page's provider is a bare
+ * `<CopilotKitProvider runtimeUrl="/api/copilotkit" agentId="sample_agent"
+ * useSingleEndpoint={false}>` (it was `<CopilotKit agent="sample_agent">`).
+ * That file is copied verbatim into `./providers.tsx` and mounted here, nested
+ * under the app-wide provider, so this demo exercises exactly the page's
+ * provider. The app-wide one (`components/providers.tsx`) stays on
+ * `<CopilotKit>` because other routes (Predictive State Updates) need the
+ * listeners only that wrapper mounts. Being nested, this demo no longer shares
+ * its conversation with the rest of the app.
+ *
+ * `<CopilotSidebar />` carries no `agentId`, as on the page: the provider's
+ * `agentId="sample_agent"` picks the agent. The one departure left is the
+ * styled `<details>` renderer and the harness `DemoFrame` around it.
  *
  * `useDefaultRenderTool` is the page's — a catch-all that draws every tool call
- * the agent makes, which is how you see `get_weather` fire at all.
+ * the agent makes, which is how you see `get_weather` fire at all. It is
+ * registered in `QuickstartPage`, below the nested provider, so it lands on
+ * the page's provider rather than the app-wide one.
  */
 export default function Page() {
+  return (
+    <Providers>
+      <QuickstartPage />
+    </Providers>
+  );
+}
+
+function QuickstartPage() {
   useDefaultRenderTool({
     render: ({ name, status, parameters, result }) => (
       <details className="my-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800/60">
@@ -51,7 +71,7 @@ export default function Page() {
         </p>
       </main>
 
-      <CopilotSidebar agentId={AGENT_ID} />
+      <CopilotSidebar />
     </DemoFrame>
   );
 }
