@@ -92,8 +92,43 @@ export default function Page() {
       </Callout>
 
       <Panel title="The demo's page">
-        <SourceCode file="frontend/src/app/quickstart/demo-chat/page.tsx" />
+        <SourceCodeGroup
+          files={[
+            { file: "frontend/src/app/quickstart/demo-chat/providers.tsx" },
+            { file: "frontend/src/app/quickstart/demo-chat/page.tsx" },
+          ]}
+        />
       </Panel>
+
+      <Callout tone="info" title="2026-11-11 sync: bare provider, four verbs, new install line">
+        <p>
+          The provider step now prints{" "}
+          <code>
+            {'<CopilotKitProvider runtimeUrl="/api/copilotkit" agentId="sample_agent" useSingleEndpoint={false}>'}
+          </code>{" "}
+          instead of <code>{'<CopilotKit agent="sample_agent">'}</code>. That
+          file is copied verbatim into the demo&apos;s own{" "}
+          <code>providers.tsx</code> and mounted around the demo only, so the
+          Quickstart now runs on its own provider (and its own conversation).
+          The app-wide provider keeps <code>&lt;CopilotKit&gt;</code>, because
+          Predictive State Updates depends on listeners only that wrapper
+          mounts.
+        </p>
+        <p className="mt-2">
+          The runtime route now exports <code>PATCH</code> and{" "}
+          <code>DELETE</code> as well as <code>GET</code>/<code>POST</code>,
+          and the <code>mkdir</code>/<code>touch</code> line creates the{" "}
+          <code>[[...slug]]</code> folder the code blocks were already titled
+          with. Both are applied here. The install line dropped{" "}
+          <code>@copilotkit/react-ui</code> and added{" "}
+          <code>@ag-ui/client@1.0.2</code>, which only the FastAPI tab imports;
+          this repo takes the Deep Agent tab and keeps <code>@ag-ui/client</code>{" "}
+          at the version its CopilotKit release pins, so that pin is not
+          installed. The agent&apos;s model literal is now{" "}
+          <code>openai:gpt-6-luna</code>; <code>main.py</code> still reads{" "}
+          <code>OPENAI_MODEL</code>.
+        </p>
+      </Callout>
 
       <Panel
         title="The agent"
