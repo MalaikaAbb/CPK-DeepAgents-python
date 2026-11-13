@@ -276,6 +276,24 @@ export const NAV: NavGroup[] = [
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
       {
+        path: "/generative-ui/json-render",
+        title: "JSON Render",
+        docPath: "/deepagents/generative-ui/json-render",
+        summary:
+          "The agent emits a { root, elements } JSON spec and @json-render/react renders it through a typed component registry in the assistant-message slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; it describes chat.tsx, json-render-renderer.tsx, catalog.ts, registry.tsx, the runtime route and the agent but prints none of them. The only code is an example agent output, shown as text. Added 2026-11-11.",
+      },
+      {
+        path: "/generative-ui/hashbrown",
+        title: "Hashbrown",
+        docPath: "/deepagents/generative-ui/hashbrown",
+        summary:
+          "A dashboard streamed through Hashbrown's UI kit and progressive JSON parser in the assistant-message slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; HashBrownDashboard, HashBrownRenderMessage, the kit, the runtime route and the agent are described but not printed. The only code is an example assistant message, shown as text. Added 2026-11-11.",
         path: "/generative-ui/tool-based",
         hasDemo: true,
         agentId: "tool_based_agent",
