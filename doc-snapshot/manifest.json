@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-08-26T10:23:57.993Z",
+  "syncedAt": "2026-10-15T15:01:02.455Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
-      "sha256": "d0d82bb3837c8c0f4e8f66746f110a94455cfe9ea5a90e2d85d836a1994069e8",
-      "bytes": 3261,
-      "lines": 55,
+      "sha256": "e3a39f804c4415946a8958ef80695c687b6b5370a48c7113af3af56e05b1ca19",
+      "bytes": 2943,
+      "lines": 76,
       "routes": [
         "/",
         "/doc-sync"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/frontend-tools": {
       "file": "deepagents__frontend-tools.md",
@@ -26,7 +26,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/a2ui/advanced": {
       "file": "deepagents__generative-ui__a2ui__advanced.md",
@@ -38,7 +38,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/a2ui/dynamic-schema": {
       "file": "deepagents__generative-ui__a2ui__dynamic-schema.md",
@@ -50,7 +50,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/a2ui/fixed-schema": {
       "file": "deepagents__generative-ui__a2ui__fixed-schema.md",
@@ -62,7 +62,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/a2ui/styling": {
       "file": "deepagents__generative-ui__a2ui__styling.md",
@@ -74,7 +74,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/state-rendering": {
       "file": "deepagents__generative-ui__state-rendering.md",
@@ -86,7 +86,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/generative-ui/tool-rendering": {
       "file": "deepagents__generative-ui__tool-rendering.md",
@@ -98,31 +98,55 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
     },
     "/deepagents/generative-ui/your-components/interrupt-based": {
       "file": "deepagents__generative-ui__your-components__interrupt-based.md",
-      "sha256": "357ef26c857c8345dc94b312083e1f98a3ea9850f9c237283338f0c29b23da18",
-      "bytes": 15904,
-      "lines": 406,
+      "sha256": "8da705a7c925a763d0e57ac2307d92ebef609d2a4e33d1b0c1d5d10199704487",
+      "bytes": 18051,
+      "lines": 444,
       "routes": [
         "/generative-ui/your-components/interrupt-based"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
+    },
+    "/deepagents/headless-threads": {
+      "file": "deepagents__headless-threads.md",
+      "sha256": "2227da5561cf9f9e51c0f20b3be3d8ed3a860f50dfa5033c7e0494c5f055a022",
+      "bytes": 11810,
+      "lines": 251,
+      "routes": [
+        "/headless-threads"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 15 Oct 2026 15:01:03 GMT"
+    },
+    "/deepagents/prebuilt-components/copilot-threads-drawer": {
+      "file": "deepagents__prebuilt-components__copilot-threads-drawer.md",
+      "sha256": "8d6379ac4b26bb80343192962847009fcba9197db21320b508e5848312f96303",
+      "bytes": 9096,
+      "lines": 210,
+      "routes": [
+        "/prebuilt-components/copilot-threads-drawer"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "8d89c1891579b0c5aca462be4f7677638bac5447470a8b9cfdb98d93e1852ed0",
-      "bytes": 17642,
-      "lines": 490,
+      "sha256": "91a401c26a742960cfd4ee95379887201f27a44eee66aecd14bead59bc983cc4",
+      "bytes": 18396,
+      "lines": 510,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
@@ -134,31 +158,31 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/shared-state/in-app-agent-write": {
       "file": "deepagents__shared-state__in-app-agent-write.md",
-      "sha256": "fd83c208d67c1609a79eeed6f9da96cf32509bdb91882a780d86eb02cea0e001",
-      "bytes": 5696,
-      "lines": 163,
+      "sha256": "46ea58717e5622bd337cc9ed23162ab9198d3aac7ba45b3dc7b3837c1dbfcd13",
+      "bytes": 5923,
+      "lines": 164,
       "routes": [
         "/shared-state/in-app-agent-write"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/shared-state/predictive-state-updates": {
       "file": "deepagents__shared-state__predictive-state-updates.md",
-      "sha256": "bfa60c65a97797b09b06df0724ae4c92db22f781513adb30592c333030d55c66",
-      "bytes": 28670,
-      "lines": 627,
+      "sha256": "cee5b56acd869cb066125ac613849a6b6072ee2bfad2867f85aac539aea2c759",
+      "bytes": 30517,
+      "lines": 670,
       "routes": [
         "/shared-state/predictive-state-updates"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/shared-state/state-inputs-outputs": {
       "file": "deepagents__shared-state__state-inputs-outputs.md",
@@ -170,7 +194,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     },
     "/deepagents/shared-state/workflow-execution": {
       "file": "deepagents__shared-state__workflow-execution.md",
@@ -182,12 +206,24 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
+    },
+    "/deepagents/threads-lifecycle": {
+      "file": "deepagents__threads-lifecycle.md",
+      "sha256": "3dfb4875c14ebb456d9bbaad98df44d1628ea9b1af06ea5e91c12099544afaba",
+      "bytes": 16107,
+      "lines": 263,
+      "routes": [
+        "/threads-lifecycle"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Thu, 15 Oct 2026 15:01:04 GMT"
     }
   },
   "sitemap": {
-    "fetchedAt": "2026-08-26T10:23:57.993Z",
-    "urlsUnderRoot": 137,
+    "fetchedAt": "2026-10-15T15:01:02.455Z",
+    "urlsUnderRoot": 158,
     "knownUnmapped": [
       "https://docs.copilotkit.ai/deepagents/agent-config",
       "https://docs.copilotkit.ai/deepagents/agent-spec",
@@ -205,12 +241,15 @@
       "https://docs.copilotkit.ai/deepagents/backend/ag-ui",
       "https://docs.copilotkit.ai/deepagents/backend/agent-runner",
       "https://docs.copilotkit.ai/deepagents/backend/copilot-runtime",
+      "https://docs.copilotkit.ai/deepagents/backend/custom-ag-ui-agent",
       "https://docs.copilotkit.ai/deepagents/backend/custom-agent",
+      "https://docs.copilotkit.ai/deepagents/backend/message-history",
       "https://docs.copilotkit.ai/deepagents/backend/runtime-endpoints",
       "https://docs.copilotkit.ai/deepagents/backend/self-managed-agents",
       "https://docs.copilotkit.ai/deepagents/build-with-agents",
       "https://docs.copilotkit.ai/deepagents/built-in-agent",
       "https://docs.copilotkit.ai/deepagents/cli",
+      "https://docs.copilotkit.ai/deepagents/community-frameworks",
       "https://docs.copilotkit.ai/deepagents/concepts/architecture",
       "https://docs.copilotkit.ai/deepagents/concepts/generative-ui-overview",
       "https://docs.copilotkit.ai/deepagents/concepts/oss-vs-enterprise",
@@ -223,10 +262,13 @@
       "https://docs.copilotkit.ai/deepagents/cookbook/arcade",
       "https://docs.copilotkit.ai/deepagents/cookbook/claude-managed-agents",
       "https://docs.copilotkit.ai/deepagents/cookbook/daytona",
+      "https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui",
+      "https://docs.copilotkit.ai/deepagents/cookbook/manufact",
       "https://docs.copilotkit.ai/deepagents/cookbook/openbox-governed-copilotkit",
       "https://docs.copilotkit.ai/deepagents/cookbook/oracle-agent-spec-memory",
       "https://docs.copilotkit.ai/deepagents/custom-look-and-feel/css",
       "https://docs.copilotkit.ai/deepagents/custom-look-and-feel/headless-ui",
+      "https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown",
       "https://docs.copilotkit.ai/deepagents/custom-look-and-feel/reasoning-messages",
       "https://docs.copilotkit.ai/deepagents/custom-look-and-feel/slots",
       "https://docs.copilotkit.ai/deepagents/deepagents",
@@ -238,6 +280,7 @@
       "https://docs.copilotkit.ai/deepagents/generative-ui",
       "https://docs.copilotkit.ai/deepagents/generative-ui/a2ui",
       "https://docs.copilotkit.ai/deepagents/generative-ui/display",
+      "https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards",
       "https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown",
       "https://docs.copilotkit.ai/deepagents/generative-ui/interactive",
       "https://docs.copilotkit.ai/deepagents/generative-ui/json-render",
@@ -249,12 +292,34 @@
       "https://docs.copilotkit.ai/deepagents/headless",
       "https://docs.copilotkit.ai/deepagents/headless-threads",
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop",
+      "https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions",
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless",
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop/interrupt-flow",
       "https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt",
       "https://docs.copilotkit.ai/deepagents/inspector",
+      "https://docs.copilotkit.ai/deepagents/intelligence/analytics",
+      "https://docs.copilotkit.ai/deepagents/intelligence/bring-your-own-thread-system",
+      "https://docs.copilotkit.ai/deepagents/intelligence/capture-interactions",
+      "https://docs.copilotkit.ai/deepagents/intelligence/captured-data",
+      "https://docs.copilotkit.ai/deepagents/intelligence/channels",
+      "https://docs.copilotkit.ai/deepagents/intelligence/headless-ui",
+      "https://docs.copilotkit.ai/deepagents/intelligence/intelligence-platform",
+      "https://docs.copilotkit.ai/deepagents/intelligence/learned-skills",
+      "https://docs.copilotkit.ai/deepagents/intelligence/managed-intelligence-platform",
+      "https://docs.copilotkit.ai/deepagents/intelligence/memories",
+      "https://docs.copilotkit.ai/deepagents/intelligence/overview",
+      "https://docs.copilotkit.ai/deepagents/intelligence/plans",
+      "https://docs.copilotkit.ai/deepagents/intelligence/quickstart",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-ecs",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-local",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-observability",
+      "https://docs.copilotkit.ai/deepagents/intelligence/standalone-collector",
+      "https://docs.copilotkit.ai/deepagents/intelligence/threads-explained",
+      "https://docs.copilotkit.ai/deepagents/learning",
       "https://docs.copilotkit.ai/deepagents/migrate/1.10.X",
       "https://docs.copilotkit.ai/deepagents/migrate/1.8.2",
+      "https://docs.copilotkit.ai/deepagents/migrate/ag-ui-1.0",
       "https://docs.copilotkit.ai/deepagents/migrate/v2",
       "https://docs.copilotkit.ai/deepagents/multi-agent/subagents",
       "https://docs.copilotkit.ai/deepagents/multimodal-attachments",
@@ -305,6 +370,7 @@
       "https://docs.copilotkit.ai/deepagents/tutorials/multi-conversation-chat",
       "https://docs.copilotkit.ai/deepagents/voice",
       "https://docs.copilotkit.ai/deepagents/vs-code-extension",
+      "https://docs.copilotkit.ai/deepagents/webmcp",
       "https://docs.copilotkit.ai/deepagents/whats-new",
       "https://docs.copilotkit.ai/deepagents/whats-new/a2a-mcp-handshake",
       "https://docs.copilotkit.ai/deepagents/whats-new/a2ui-launch",

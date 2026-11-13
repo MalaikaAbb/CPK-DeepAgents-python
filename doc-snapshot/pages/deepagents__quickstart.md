@@ -2,13 +2,11 @@
 
 > Get started with Deep Agents and CopilotKit in minutes.
 
-<OpsPlatformCTA
-  variant="card"
-  title="Ship Deep Agents to production"
-  body="Add persistent threads and the inspector with CopilotKit Intelligence."
-  ctaLabel="Create a free account"
-  surface="docs_deepagents_quickstart"
-/>
+## Start with your coding agent
+
+Use this prompt to connect your Deep Agents agent to CopilotKit and verify a working conversation. Your coding agent will follow this guide in your project, or you can work through the manual steps below.
+
+Ask your coding agent to follow the setup steps on this page for your selected framework and frontend.
 
 ## Prerequisites
 
@@ -23,9 +21,9 @@ Before you begin, you'll need the following:
 
 <Steps>
     <Step>
-        ### Create a free account
+        ### Set up CopilotKit Intelligence
 
-        <SignupLink surface="docs_deepagents_quickstart_step1">Sign up for a free developer account</SignupLink> for CopilotKit Intelligence to get a license key. You'll use it later to enable persistent threads and the inspector.
+        <SignupLink surface="docs_deepagents_quickstart_step1">Sign in to cloud-hosted Intelligence</SignupLink>. Cloud-hosted setup uses a server-side project API key and does not issue `COPILOTKIT_LICENSE_TOKEN`. You will connect the app after you create it below.
     </Step>
 
     <Step>
@@ -286,7 +284,7 @@ Before you begin, you'll need the following:
                     },
                     // [!code highlight:8]
                     intelligence: new CopilotKitIntelligence({
-                      apiKey: process.env.INTELLIGENCE_API_KEY!,
+                      apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
                     }),
                     // Threads are per-user. Without this, every visitor shares one history.
                     identifyUser: (request) => ({
@@ -311,17 +309,17 @@ Before you begin, you'll need the following:
                   CopilotRuntime,
                   createCopilotRuntimeHandler,
                 } from "@copilotkit/runtime/v2";
-                import { LangGraphHttpAgent } from "@copilotkit/runtime/langgraph";
+                import { HttpAgent } from "@ag-ui/client";
 
                 const runtime = new CopilotRuntime({
                     agents: {
-                        sample_agent: new LangGraphHttpAgent({
+                        sample_agent: new HttpAgent({
                             url: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
                         }),
                     },
                     // [!code highlight:8]
                     intelligence: new CopilotKitIntelligence({
-                      apiKey: process.env.INTELLIGENCE_API_KEY!,
+                      apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
                     }),
                     // Threads are per-user. Without this, every visitor shares one history.
                     identifyUser: (request) => ({
@@ -341,18 +339,23 @@ Before you begin, you'll need the following:
             </Tab>
         </Tabs>
 
-        The runtime reads the license key from step 1. Add it to the app that serves
-        this route:
+        From this frontend app directory, connect the runtime to an Intelligence project:
 
-        ```plaintext title=".env.local"
-        INTELLIGENCE_API_KEY=your_license_key
+        ```bash title="Terminal"
+        npx copilotkit@latest project select
+        ```
+
+        The command writes the server-side project API key to `.env`. The runtime reads it here:
+
+        ```plaintext title=".env"
+        CPK_INTELLIGENCE_API_KEY=cpk-...
         ```
 
         <Callout type="info" title="Running without the Intelligence Platform?">
           Drop the `intelligence` and `identifyUser` options and the runtime falls back
           to SSE mode with an in-memory runner. Chat still works, but Threads and the
           Inspector stay locked and the key is never read. See
-          [Connect your runtime to Intelligence](/deepagents/premium/connect-your-runtime) for the
+          [Connect your runtime to Intelligence](/deepagents/intelligence/quickstart) for the
           full constructor and how to confirm the key is in use.
         </Callout>
     </Step>
@@ -361,8 +364,25 @@ Before you begin, you'll need the following:
 
         Wrap your application with the CopilotKit provider:
 
-        ```tsx title="app/layout.tsx"
+        ```tsx title="app/providers.tsx"
+        "use client";
+
         import { CopilotKit } from "@copilotkit/react-core/v2";
+
+        export function Providers({ children }: { children: React.ReactNode }) {
+          return (
+            <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" useSingleEndpoint={false}>
+              {children}
+            </CopilotKit>
+          );
+        }
+        ```
+
+        `app/layout.tsx` is a server component and cannot import the provider
+        directly, so it renders your client file instead:
+
+        ```tsx title="app/layout.tsx"
+        import { Providers } from "./providers";
         import "@copilotkit/react-core/v2/styles.css";
 
         // ...
@@ -371,9 +391,9 @@ Before you begin, you'll need the following:
             return (
                 <html lang="en">
                     <body>
-                        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" useSingleEndpoint={false}>
+                        <Providers>
                             {children}
-                        </CopilotKit>
+                        </Providers>
                     </body>
                 </html>
             );
@@ -480,7 +500,7 @@ On localhost, click the Inspector button in the corner of the app.
 
 1. Open **Agents**, then **Agent**. Your agent is listed.
 2. Send a chat message. Open **Agents**, then **AG-UI Events**. Events are moving.
-3. Open **Threads**. The list is unlocked (Intelligence is on), or locked with Enable Intelligence (Intelligence is off).
+3. Open **Rich Threads**. The list is unlocked (Intelligence is on), or locked with Enable Intelligence (Intelligence is off).
 
 More detail: [Inspector](/deepagents/inspector).
 
