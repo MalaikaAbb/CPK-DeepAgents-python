@@ -24,7 +24,9 @@ Two deliberate departures:
   exactly as the TypeScript tab's does, so naming unreachable nodes would be
   a lie the type checker would not catch.
 * The model id reads `OPENAI_MODEL` like every other agent here. The
-  TypeScript tab pins `gpt-5.4-mini`.
+  TypeScript tab pins `new ChatOpenAI({ modelKwargs: { reasoning_effort:
+  "none" }, model: "gpt-6-luna" })` since the 2026-11-11 sync (was
+  `gpt-4o-mini`); the Python body this graph runs makes no model call.
 """
 
 #region agent-state
