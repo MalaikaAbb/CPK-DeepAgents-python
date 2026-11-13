@@ -182,6 +182,10 @@ The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` i
 *Pass:* two rows in the drawer; clicking between them swaps the transcript.
 *Fail:* a locked "Threads are a CopilotKit Intelligence feature" panel — that is `licenseStatus`, not a bug. See the Quickstart's Live connection panel.
 
+**`/voice`** — ❌ **Reference only, no demo.** Added 2026-11-11. Speech-to-text in the chat composer through a runtime `TranscriptionService`. Rendered for Deep Agents the page says voice is not available yet and every code block is "Missing snippet: No demo found for deepagents::voice", so no runtime route or mic button is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #45.
+
+**`/generative-ui/reasoning`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendering reasoning tokens with the default card or a custom `reasoningMessage` slot. Rendered for Deep Agents the page says the feature is not available yet and all three code blocks are "Missing snippet", so there is no agent or demo. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #46.
+
 ### Rich Threads
 
 **`/headless-threads`** → `sample_agent`
@@ -299,6 +303,10 @@ A hand-built `StateGraph` with `input_schema` / `output_schema`, because the pag
 *Fail:* a red badge on `question` or `resources` — `input_schema` / `output_schema` were dropped from the `StateGraph` call and the whole of `OverallState` is coming back.
 
 **`/shared-state/workflow-execution`** — reference only, no demo. The page currently serves the Input/Output Schemas content verbatim.
+
+### Agent capabilities
+
+**`/multi-agent/subagents`** — ❌ **Reference only, no demo.** Added 2026-11-11. The page teaches a supervisor that delegates to research/writing/critique sub-agents exposed as tools, with a live delegation log in shared state. Rendered for Deep Agents it says the feature is not available yet and shows "Missing snippet: No demo found for deepagents::subagents" in place of every code block, so there is nothing of this framework's to build. **Try:** open the route. **Expect:** the route header and a warning callout naming what is missing; no chat. A chat or delegation log here would mean someone filled the gap from another framework's code. See [FINDINGS.md](FINDINGS.md) #44.
 
 ### Intelligence
 
@@ -576,5 +584,11 @@ Grouped the way the doc nav groups them.
 - [Predictive State Updates — custom graph, tool emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=tool-emission)
 - [Input/Output Schemas](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs)
 - [Workflow Execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution)
+
+**Basics**
+- [Voice](https://docs.copilotkit.ai/deepagents/voice) — reference only; no Deep Agents code published
+- [Reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) — reference only; no Deep Agents code published
+**Agent capabilities**
+- [Sub-agents](https://docs.copilotkit.ai/deepagents/multi-agent/subagents) — reference only; no Deep Agents code published
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.

@@ -106,6 +106,26 @@ export const NAV: NavGroup[] = [
           "File attachments (images, PDFs, audio, video) in CopilotChat with previews, lightbox, and upload handlers.",
         status: "working",
       },
+      {
+        path: "/voice",
+        title: "Voice",
+        docPath: "/deepagents/voice",
+        summary:
+          "A mic button in the chat composer: the runtime transcribes recorded audio through a TranscriptionService and the transcript is sent as a message.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and all three code blocks (chat with runtimeUrl, the no-mic sample button, the voice runtime route with a TranscriptionService) are \"Missing snippet: No demo found for deepagents::voice\". No runtime route, no demo. Added 2026-11-11.",
+      },
+      {
+        path: "/generative-ui/reasoning",
+        title: "Reasoning",
+        docPath: "/deepagents/generative-ui/reasoning",
+        summary:
+          "Showing the model's reasoning tokens in the chat, with the built-in collapsible card or a custom reasoningMessage slot component.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-rendering block and both custom-rendering files (page.tsx, reasoning-block.tsx) are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No agent, no demo. Added 2026-11-11.",
+      },
     ],
   },
   {
@@ -384,6 +404,21 @@ export const NAV: NavGroup[] = [
         status: "working",
         statusNote:
           "Implements the guide's 3 Steps. Upstream doc content is identical to state-inputs-outputs; both test state_io_graph.",
+      },
+    ],
+  },
+  {
+    title: "Agent capabilities",
+    routes: [
+      {
+        path: "/multi-agent/subagents",
+        title: "Sub-agents",
+        docPath: "/deepagents/multi-agent/subagents",
+        summary:
+          "A supervisor that delegates research, drafting and critique to sub-agents exposed as tools, with a live delegation log in shared state.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and every code block is \"Missing snippet: No demo found for deepagents::subagents\". The `.md` export's LangGraph default code is not this framework's and is itself incomplete (unpublished HeaderForwardingMiddleware, no supervisor agent, undefined SubAgentName/DelegationLogProps/SUB_AGENT_STYLE). No agent, no demo. Added 2026-11-11.",
       },
     ],
   },
