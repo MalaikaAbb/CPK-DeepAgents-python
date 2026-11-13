@@ -134,6 +134,7 @@ We're going to have the agent ask us to name it, so we'll need a state property 
     <Tabs groupId="agent_language" items={['Python', 'TypeScript']} persist>
         <Tab value="Python">
             ```python title="agent.py"
+            from langchain_openai import ChatOpenAI
             from typing import Any, NotRequired
 
             from copilotkit import CopilotKitMiddleware, CopilotKitState
@@ -156,7 +157,7 @@ We're going to have the agent ask us to name it, so we'll need a state property 
                     return None
 
             agent = create_deep_agent(
-                model="openai:gpt-4o",
+                model=ChatOpenAI(model="gpt-6-luna", reasoning_effort="none"),
                 middleware=[
                     AgentNameMiddleware(),
                     CopilotKitMiddleware(expose_state=["agent_name"]), # [!code highlight]
@@ -200,7 +201,7 @@ We're going to have the agent ask us to name it, so we'll need a state property 
             });
 
             export const agent = createDeepAgent({
-                model: "openai:gpt-4o",
+                model: "openai:gpt-6-luna",
                 middleware: [
                     agentNameMiddleware,
                     stateAwareCopilotKitMiddleware,

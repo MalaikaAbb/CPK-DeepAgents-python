@@ -43,6 +43,7 @@ as this guide uses it as a starting point.
     <Tabs groupId="agent_language" items={['Python', 'TypeScript']} persist>
       <Tab value="Python">
         ```python title="agent.py"
+        from langchain_openai import ChatOpenAI
         from typing import Any, TypedDict
 
         from copilotkit import (
@@ -86,7 +87,7 @@ as this guide uses it as a starting point.
             )
 
         agent = create_deep_agent(
-            model="openai:gpt-5.4",
+            model=ChatOpenAI(model="gpt-6-luna", reasoning_effort="none"),
             tools=[report_research_progress],
             middleware=[
                 SearchesStateMiddleware(),
@@ -165,7 +166,7 @@ as this guide uses it as a starting point.
         );
 
         export const agent = createDeepAgent({
-          model: "openai:gpt-5.4",
+          model: "openai:gpt-6-luna",
           tools: [reportResearchProgress],
           middleware: [
             searchesStateMiddleware,

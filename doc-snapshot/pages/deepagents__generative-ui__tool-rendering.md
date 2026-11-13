@@ -43,6 +43,7 @@ as this guide uses it as a starting point.
 <Tabs groupId="agent_language" items={['Python', 'TypeScript']} persist>
     <Tab value="Python">
         ```python title="agent.py"
+        from langchain_openai import ChatOpenAI
         from deepagents import create_deep_agent
         from langchain.tools import tool
 
@@ -55,7 +56,7 @@ as this guide uses it as a starting point.
             return f"The weather for {location} is 70 degrees."
 
         agent = create_deep_agent(
-            model="openai:gpt-4o",
+            model=ChatOpenAI(model="gpt-6-luna", reasoning_effort="none"),
             tools=[get_weather], # [!code highlight]
             system_prompt="You are a helpful assistant.",
         )
@@ -82,7 +83,7 @@ as this guide uses it as a starting point.
         );
 
         export const agent = createDeepAgent({
-          model: "openai:gpt-4o",
+          model: "openai:gpt-6-luna",
           tools: [getWeather], // [!code highlight]
           systemPrompt: "You are a helpful assistant.",
         });
