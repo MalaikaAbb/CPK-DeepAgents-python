@@ -8,7 +8,7 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 | **Doc root tracked** | <https://docs.copilotkit.ai/deepagents> |
 | **Language tab** | **Python** throughout. The TypeScript tabs are not implemented. |
 | **Backend flavour** | LangGraph CLI (`langgraph.json`), not the FastAPI tab |
-| **CopilotKit (npm)** | declared `^1.73.3` · lockfile 1.73.3 · installed 1.73.3 (`frontend/VERSIONS.md`, written by `autorecorder/scripts/write-versions.mjs`) for `react-core`, `runtime` and `a2ui-renderer` alike. Upgraded 2026-09-23 from declared `^1.69.0` · lockfile 1.69.0 · installed 1.71.0; findings recorded before then name the version they were observed on |
+| **CopilotKit (npm)** | declared `^1.87.0` · lockfile 1.87.1 for `react-core`, `runtime` and `a2ui-renderer` alike; `@ag-ui/client`/`@ag-ui/core` overridden to 1.0.2, the exact version 1.87.1 depends on (`frontend/VERSIONS.md`, written by `autorecorder/scripts/write-versions.mjs`, shows the installed tree). Upgraded 2026-11-13 from `^1.73.3` (with `@ag-ui` 0.0.57) for Components and surfaces; 2026-09-23 from `^1.69.0`. Findings recorded before then name the version they were observed on |
 | **CopilotKit (PyPI)** | `copilotkit` 0.1.94 |
 | **Agent framework** | `deepagents` 0.7.4 · `langgraph-cli[inmem]` |
 | **Frontend** | Next.js 16.3.0 · React 19.2.8 · TypeScript 5 · Tailwind 4 |
@@ -253,6 +253,33 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/generative-ui/frontend-cards`** — ❌ **Broken as published**, works with one prop the page never mentions. New upstream 2026-09-11. A card pushed into the transcript from frontend code as a `role: "activity"` message, which is stripped from every run. The demo has two tabs. **As published** is step 2's provider unchanged (`runtimeUrl` + `renderActivityMessages`); its bare `useAgent()` and `<CopilotChat />` ask for the agent id `default`, which a Deep Agents runtime does not register. *Try:* just open it. *What happens:* the chat paints, then `useAgent()` throws `Agent 'default' not found after runtime sync` as soon as `/info` answers (3/3), and the demo prints that error where the chat was. **+ agent="sample_agent"** adds the Quickstart's provider prop and nothing else. *Try:* click **Simulate: deployment finished**, then ask `Have you been shown any deployment card?` *Pass:* the card renders; the probe row reads `agent.messages = activity, user, assistant` and `run payload = user` (read off the request that left the browser); the agent says it saw no card. *Fail:* no card, or `activity` in the payload row. The three snippets are verbatim; step 3's `<DeploymentWatcher />` is mounted inside step 2's provider, which the page never says to do, and its `wss://example.com` socket never delivers, so the button fires the same `addMessage`. See [FINDINGS.md](FINDINGS.md) #22.
 
+All live Components and surfaces demos run on `/api/copilotkit-genui` (Transports: `/api/copilotkit-genui-transports`, the page's `generativeUI: true` runtime) with the `components_agent` Deep Agents graph (`backend/src/components_agent.py`), which stands in for the section's TanStack `BuiltInAgent`: the page's prompt, no tools, and `CopilotKitMiddleware`, as the page says for a LangGraph Python agent. Each provider's `generativeUI` value is the page's; only `runtimeUrl` differs. Restart `langgraph dev` so the new graph loads. None of these has been checked in a browser yet (FINDINGS #58).
+
+**`/generative-ui/components`** — ⚠️ **Partial.** The page's provider (`generativeUI={{ ui: standardUI }}`) and a plain chat.
+*Try:* "Compare the Starter, Team, and Enterprise plans in a table". *Pass:* a table renders in the chat as live UI, not markdown. *Fail:* a plain-text table (no `render_ui` call), or a run error (backend not restarted).
+
+**`/generative-ui/components/surfaces`** — ⚠️ **Partial.** The page's error-boundary provider over `shopUI` with two of its targets: `featured` limited to ProductGrid/ProductCard, and `sidebar-notes` with `autoScroll={false}`. `FeaturedProducts` and the per-product recommendations target are not mounted.
+*Try:* "show three running shoes in the featured area". *Pass:* product cards appear in the featured box on the page, not in the chat. *Fail:* they land in the chat, or the agent says it has no such target.
+
+**`/generative-ui/components/catalogs`** — ⚠️ **Partial.** `shopUI` from "Create a catalog" (ProductGrid + ProductCard only). Combine, schema libraries and export are shown, not run.
+*Try:* "show me three running shoes as product cards". *Pass:* a grid of product cards. *Fail:* standard components (Table, Card) — they are not in this catalog.
+
+**`/generative-ui/components/standard-catalog`** — ⚠️ **Partial.** Three variants: `standardUI` as is, `omit(["Map", "Video", "HtmlView"])`, `overrides: { Card: MyCard }`. "Add your own components" is not mounted.
+*Try (omit):* "show the Eiffel Tower and the Louvre on a map". *Pass:* no map. *Try (override):* "put a short summary of our three plans in a card". *Pass:* a rounded-2xl card with a shadow (MyCard).
+
+**`/generative-ui/components/state-and-actions`** — ❌ **Broken (reference only).** Every sample needs a `Cart`/`cart` or `ProductCard` the page never defines, or is a fragment. Nothing is mounted.
+
+**`/generative-ui/components/theming`** — ⚠️ **Partial.** The provider theme (amber accent, Inter, 10px radius) and the page's `.a2ui-surface` CSS; the dark-mode script runs on a full reload.
+*Try:* "show a card with a primary button, a slider, and a bar chart of three months". *Pass:* amber accents. *Fail:* default blue.
+
+**`/generative-ui/components/transports`** — ⚠️ **Partial.** Tool transport, markdown transport, and `agentIds: ["shop"]` chatting as `default`.
+*Try:* "compare the Starter, Team, and Enterprise plans in a table" in each. *Pass:* tool — a separate tool-call message; markdown — inside the reply text; agentIds — plain text (default gets no catalog). No `shop` agent is published.
+
+**`/generative-ui/components/markdown-mode`** — ⚠️ **Partial.** Both providers: `transport: "markdown"`, and the same with `sendContext: false`.
+*Try:* "give me a seat-count slider that shows the monthly price at $29 per seat". *Pass:* the slider renders inside the reply on the first variant; `sendContext: false` answers without UI (expected: the page's own-prompt backend is an unwired Python fragment).
+
+**`/generative-ui/components/from-a2ui`** — ⚠️ **Partial.** The "After" catalog (standard + `Airport` + `Arrow`). `Airport`/`Arrow` are minimal components borrowed from the aws-strands-ts harness (the page never defines them).
+*Try:* "show a flight card from SFO (San Francisco) to JFK (New York) with a Book button". *Pass:* two airports with an arrow between them and a Book button.
 **`/generative-ui/mcp-apps`** → `sample_agent` via `/api/copilotkit-mcp-apps` — ⚠️ **Partial.** Added 2026-11-11, not yet driven. The page's runtime route (LangGraphAgent + `MCPAppsMiddleware` with the public Excalidraw server) on its own endpoint. Runs on the middleware 0.1.1 that runtime 1.73.3 already depends on, not the 0.1.3 + runtime 1.76 the page asks for. Set `LANGGRAPH_DEPLOYMENT_URL=http://localhost:8030` (the page's fallback is 8123). *Try:* `Draw a simple flowchart with three boxes: Plan, Build, Ship.` *Pass:* an Excalidraw canvas renders inline. *Fail:* prose only, an error banner, or a tool call with no iframe. See [FINDINGS.md](FINDINGS.md) #59.
 
 **`/generative-ui/open-generative-ui`** — ❌ **Reference only, no demo.** Added 2026-11-11. Agent-written HTML/CSS/JS streamed into a sandboxed iframe. Rendered for Deep Agents the page says the feature is not available yet; the runtime middleware, chat page and sandbox-function blocks are "Missing snippet", leaving only a CDN HTML example. **Try:** open the route. **Expect:** the header, a warning callout and the HTML example. See [FINDINGS.md](FINDINGS.md) #60.
@@ -378,6 +405,17 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — [FINDINGS.md](FINDINGS.md) #32 |
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
+| [generative-ui/components](https://docs.copilotkit.ai/deepagents/generative-ui/components) | `/generative-ui/components` | `components_agent` | ⚠️ Partial | Live: `standardUI` provider. `BuiltInAgent` → `components_agent` (Deep Agents). Not yet browser-checked. FINDINGS #58 |
+| [generative-ui/components/surfaces](https://docs.copilotkit.ai/deepagents/generative-ui/components/surfaces) | `/generative-ui/components/surfaces` | `components_agent` | ⚠️ Partial | Live: error-boundary provider, `featured` (limited) and `sidebar-notes` targets. Broken: `FeaturedProducts`, per-item target (undefined `products`/`Product`/`product`). #58 |
+| [generative-ui/components/catalogs](https://docs.copilotkit.ai/deepagents/generative-ui/components/catalogs) | `/generative-ui/components/catalogs` | `components_agent` | ⚠️ Partial | Live: `shopUI`. Broken: Combine (undefined `cartUI`) and export; schema libraries and positional order are fragments. #58 |
+| [generative-ui/components/standard-catalog](https://docs.copilotkit.ai/deepagents/generative-ui/components/standard-catalog) | `/generative-ui/components/standard-catalog` | `components_agent` | ⚠️ Partial | Live: as is, `omit`, `overrides`. Broken: extend (undefined `ProductCard`, `productSchema`). #58 |
+| [generative-ui/components/state-and-actions](https://docs.copilotkit.ai/deepagents/generative-ui/components/state-and-actions) | `/generative-ui/components/state-and-actions` | `components_agent` | ❌ Broken | Reference only: needs undefined `Cart`/`cart`/`ProductCard`, or fragments. #58 |
+| [generative-ui/components/theming](https://docs.copilotkit.ai/deepagents/generative-ui/components/theming) | `/generative-ui/components/theming` | `components_agent` | ⚠️ Partial | Live: provider theme, CSS variables, dark-mode script. Per-mode/map fragments and theme file shown only. #58 |
+| [generative-ui/components/transports](https://docs.copilotkit.ai/deepagents/generative-ui/components/transports) | `/generative-ui/components/transports` | `components_agent` | ⚠️ Partial | Live on `generativeUI: true` runtime: tool, markdown, `agentIds` as default. No `shop` agent published. #58 |
+| [generative-ui/components/markdown-mode](https://docs.copilotkit.ai/deepagents/generative-ui/components/markdown-mode) | `/generative-ui/components/markdown-mode` | `components_agent` | ⚠️ Partial | Live: both providers; `sendContext: false` shows no UI (own-prompt backend is an unwired Python fragment). #58 |
+| [generative-ui/components/from-a2ui](https://docs.copilotkit.ai/deepagents/generative-ui/components/from-a2ui) | `/generative-ui/components/from-a2ui` | `components_agent` | ⚠️ Partial | Live: After catalog; `Airport`/`Arrow` borrowed from aws-strands-ts. #58 |
+
+**Totals:** 14 ✅ Working · 12 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
 | [human-in-the-loop/index](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) | `/human-in-the-loop` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #61 |
 | [human-in-the-loop/useInterrupt](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) | `/human-in-the-loop/useInterrupt` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #62 |
 | [human-in-the-loop/headless](https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless) | `/human-in-the-loop/headless` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #63 |
@@ -589,6 +627,15 @@ Grouped the way the doc nav groups them.
 - [A2UI · Styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling)
 - [A2UI · Advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced)
 - [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
+- [Components and surfaces](https://docs.copilotkit.ai/deepagents/generative-ui/components) — live (partial)
+- [Surfaces](https://docs.copilotkit.ai/deepagents/generative-ui/components/surfaces) — live (partial)
+- [Catalogs](https://docs.copilotkit.ai/deepagents/generative-ui/components/catalogs) — live (partial)
+- [Standard catalog](https://docs.copilotkit.ai/deepagents/generative-ui/components/standard-catalog) — live (partial)
+- [State and actions](https://docs.copilotkit.ai/deepagents/generative-ui/components/state-and-actions) — reference only
+- [Theming](https://docs.copilotkit.ai/deepagents/generative-ui/components/theming) — live (partial)
+- [Transports](https://docs.copilotkit.ai/deepagents/generative-ui/components/transports) — live (partial)
+- [Markdown mode](https://docs.copilotkit.ai/deepagents/generative-ui/components/markdown-mode) — live (partial)
+- [Adopt from A2UI](https://docs.copilotkit.ai/deepagents/generative-ui/components/from-a2ui) — live (partial)
 - [MCP Apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps)
 - [Open Generative UI](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) — reference only; no Deep Agents code published
 - [A2UI](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui) — overview, reference
