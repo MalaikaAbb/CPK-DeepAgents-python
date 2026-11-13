@@ -19,6 +19,7 @@
         "predictive_tool_graph": "./src/predictive_state_tool.py:graph",
         "state_io_graph": "./src/state_inputs_outputs.py:graph",
         "components_agent": "./src/components_agent.py:agent"
+        "tool_based_agent": "./src/tool_based.py:agent"
     },
     "env": ".env"
 }
