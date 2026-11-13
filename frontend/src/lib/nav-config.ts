@@ -106,6 +106,26 @@ export const NAV: NavGroup[] = [
           "File attachments (images, PDFs, audio, video) in CopilotChat with previews, lightbox, and upload handlers.",
         status: "working",
       },
+      {
+        path: "/voice",
+        title: "Voice",
+        docPath: "/deepagents/voice",
+        summary:
+          "A mic button in the chat composer: the runtime transcribes recorded audio through a TranscriptionService and the transcript is sent as a message.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and all three code blocks (chat with runtimeUrl, the no-mic sample button, the voice runtime route with a TranscriptionService) are \"Missing snippet: No demo found for deepagents::voice\". No runtime route, no demo. Added 2026-11-11.",
+      },
+      {
+        path: "/generative-ui/reasoning",
+        title: "Reasoning",
+        docPath: "/deepagents/generative-ui/reasoning",
+        summary:
+          "Showing the model's reasoning tokens in the chat, with the built-in collapsible card or a custom reasoningMessage slot component.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-rendering block and both custom-rendering files (page.tsx, reasoning-block.tsx) are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No agent, no demo. Added 2026-11-11.",
+      },
     ],
   },
   {
