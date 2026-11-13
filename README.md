@@ -334,9 +334,9 @@ Reading agent state as ordinary reactive React state.
 *Fail:* an empty dump — the agent has not run yet; state only syncs once a run starts.
 
 **`/shared-state/in-app-agent-write`** → `shared_state_agent`
-`agent.setState` from the app, plus `agent.runAgent` to re-run immediately.
+`agent.setState` from the app, plus `copilotkit.runAgent({ agent })` (from `useCopilotKit()`, the page's re-run call since 2026-11-11; was `agent.runAgent()`) to re-run immediately.
 *Try:* `Tell me a fun fact about octopuses`, hit **Toggle Language**, ask again.
-*Pass:* first answer in English, second in Spanish. **Toggle + runAgent()** produces a fresh reply with no typing.
+*Pass:* first answer in English, second in Spanish. **Toggle + re-run agent** (on the `expose_state` side) produces a fresh reply with no typing.
 *Fail:* the label flips but answers stay English — the write landed but the model never saw it; check `expose_state`.
 
 **`/shared-state/predictive-state-updates`** → `predictive_state_agent`, `predictive_manual_graph`, `predictive_tool_graph`

@@ -27,8 +27,10 @@ What changed, and why the shape of this file changed with it:
 
 Two departures, both pre-existing:
 
-* The page pins `ChatOpenAI(model="gpt-5.4")`; every agent here reads
-  `OPENAI_MODEL` so a tester needs access to one model rather than four.
+* The page pins `ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")`
+  (was `gpt-5.4` before the 2026-11-11 sync); every agent here reads the model
+  id from `OPENAI_MODEL` so a tester needs access to one model rather than
+  four. `reasoning_effort="none"` is kept as printed.
 * `compile(checkpointer=MemorySaver())` is the page's and is *not* kept. It
   is the one line of the revision that cannot go in verbatim: `langgraph dev`
   rejects a graph carrying its own checkpointer and aborts startup for the
@@ -79,7 +81,7 @@ def step_progress_tool(steps: list[str], runtime: ToolRuntime) -> Command:
 
 
 tools = [step_progress_tool]
-model = ChatOpenAI(model=OPENAI_MODEL)
+model = ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none")
 
 
 async def chat_node(state: AgentState, config: RunnableConfig):

@@ -1,6 +1,6 @@
 "use client";
 
-import { CopilotChat, useAgent } from "@copilotkit/react-core/v2";
+import { CopilotChat, useAgent, useCopilotKit } from "@copilotkit/react-core/v2";
 
 import { DemoFrame } from "@/components/demo-frame";
 
@@ -12,10 +12,15 @@ import { DemoFrame } from "@/components/demo-frame";
  * `shared_state_fixed_agent` (`src/shared_state_fixed.py` = `src/shared_state.py`
  * plus `CopilotKitMiddleware(expose_state=["language"])`).
  *
- * `agent.runAgent()` is here and not next door on purpose. The doc page's own
- * "Advanced Usage" section shows it, but the reported defect is about the plain
- * `setState` path, so the failing route stays as the page prints it and the
- * extra button lives on this side of the pair.
+ * The re-run button is here and not next door on purpose. The doc page's own
+ * "Re-run the agent with updated state" section shows it, but the reported
+ * defect is about the plain `setState` path, so the failing route stays as the
+ * page prints it and the extra button lives on this side of the pair.
+ *
+ * Since the 2026-11-11 sync the page re-runs through the provider —
+ * `const { copilotkit } = useCopilotKit();` then `copilotkit.runAgent({ agent })`
+ * — instead of `agent.runAgent()`, so frontend tools and context go with the
+ * run. Those two lines are the page's; the separate button is the harness's.
  */
 const AGENT_ID = "shared_state_fixed_agent";
 
@@ -23,6 +28,7 @@ function YourMainContent() {
   const { agent } = useAgent({
     agentId: AGENT_ID,
   });
+  const { copilotkit } = useCopilotKit();
 
   const language = (agent.state.language as string) ?? "english";
 
@@ -32,7 +38,8 @@ function YourMainContent() {
 
   const toggleAndRun = () => {
     toggleLanguage();
-    void agent.runAgent();
+    // re-run the agent with updated state
+    copilotkit.runAgent({ agent });
   };
 
   return (
