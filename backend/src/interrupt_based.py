@@ -17,9 +17,12 @@ prints that call end to end — including the `CopilotKitMiddleware(expose_state
 graph" instruction. `multi_agent` is still not a call the page shows, so it
 stays written to the shape the page describes.
 
-`model=` is the one deliberate departure: the page hardcodes `openai:gpt-4o`
-and every agent in this backend reads `src.shared.MODEL` instead, so a tester
-needs access to one model rather than four. See `src/shared.py`.
+`model=` is the one deliberate departure: the page hardcodes
+`ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")` (was `openai:gpt-4o`
+before the 2026-11-11 sync) and every agent in this backend reads the model id
+from `src.shared` instead, so a tester needs access to one model rather than
+four. `reasoning_effort="none"` is kept on `agent` as printed; `multi_agent`
+is not a call the page prints and keeps `src.shared.MODEL`. See `src/shared.py`.
 """
 
 from typing import Any
@@ -35,6 +38,7 @@ class AgentState(CopilotKitState):
 #endregion
 
 #region single-interrupt
+from langchain_openai import ChatOpenAI
 from copilotkit import CopilotKitMiddleware
 from deepagents import create_deep_agent
 from langchain.agents.middleware import AgentMiddleware
@@ -71,7 +75,7 @@ class ApprovalAndNameMiddleware(AgentMiddleware[AgentState, Any]):
 #endregion
 
 #region agents
-from src.shared import MODEL
+from src.shared import MODEL, OPENAI_MODEL
 
 # The page's prompt verbatim. The comma splice after "chooses a name" is the
 # page's own -- the sentence never finishes that clause before starting a new
@@ -82,7 +86,7 @@ _SYSTEM_PROMPT = (
 )
 
 agent = create_deep_agent(
-    model=MODEL,
+    model=ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none"),
     middleware=[
         AgentNameMiddleware(),
         CopilotKitMiddleware(expose_state=["agent_name"]),

@@ -34,7 +34,7 @@ Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgr
 - #24 Learning: the runtime throws "`apiKey` is required" without a key. The key is now a listed prerequisite. `agents` and `identifyUser` are placeholders.
 - #27/#39 Learning: recommends LangGraph Python, whose package returns 404 on PyPI. Flagged only on learned-skills:145.
 - #38 Skill delivery: `-runtime`/`-langgraph` return 404 on PyPI (disclosed), and `revision: "exact-revision-id"` is in every example.
-- #33 Jev: all pins now exist on npm, but it needs `TYPESAFE_API_KEY` and has no Deep Agent.
+- #33 Jev: all pins now exist on npm, but it needs `TYPESAFE_API_KEY` and has no Deep Agent. Since 2026-11-11 it pins `@ag-ui/client`/`@ag-ui/core@1.0.1` next to `@copilotkit/*@1.73.0`, whose own AG-UI dependency is 0.0.x, so following the install line yields two AG-UI copies; not installed here.
 - #35 Threads Lifecycle: `existingId` is undefined (a placeholder).
 - #37 Message history: generic `HttpAgent({ url: AGENT_URL })` snippet.
 - #40 Plans: says Developer includes User Memory. Not re-tested (needs a key).
