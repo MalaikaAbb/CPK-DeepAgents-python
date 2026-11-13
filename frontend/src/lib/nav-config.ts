@@ -264,6 +264,48 @@ export const NAV: NavGroup[] = [
         statusNote:
           "The slot mechanics are exactly as documented, read out of the shipped 1.71.0 bundle, and the custom-tag claim produces the page's exact TS2353. What fails: all three published blocks are a bare `<CopilotChat>` with no agent id, so they ask for `default` and throw on a Deep Agents runtime (the Frontend-Driven Cards defect again); none carries `use client`; and the headline `components` example styles with `.my-link` / `.my-heading`, which the page never defines. Built 2026-09-21 and not yet driven — the demo's probe is what checks the prop claims against the rendered HTML.",
       },
+      {
+        path: "/custom-look-and-feel/css",
+        title: "CSS Customization",
+        docPath: "/deepagents/custom-look-and-feel/css",
+        summary:
+          "Re-skinning the chat with CSS: v1 --copilot-kit-* variables and .copilotKit* classes, v2 shadcn tokens on [data-copilotkit], icons and labels props.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the three blocks that make up its demo (scoped theme.css import, the variable overrides, the user-bubble rule) are \"Missing snippet: No demo found for deepagents::chat-customization-css\". The generic blocks it does print are shown as text: one imports `CopilotKitCSSProperties` from `@copilotkit/react-ui` (v1, not installed here), the `.copilotKit*` classes and `--copilot-kit-*` variables style the v1 components, and v2 `CopilotChat` (1.73.3) has no `icons` prop. Added 2026-11-11.",
+      },
+      {
+        path: "/custom-look-and-feel/slots",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Slots (Subcomponents)",
+        docPath: "/deepagents/custom-look-and-feel/slots",
+        summary:
+          "Overriding chat sub-components with class strings, props objects or whole components, nested to any depth.",
+        status: "partial",
+        statusNote:
+          "Added 2026-11-11, not yet driven in a browser. Rendered for Deep Agents the page says slots are not available yet and its own demo blocks (welcome screen, assistant message, disclaimer) are \"Missing snippet\"; those are not rebuilt. The seven generic blocks it prints run as tabs inside the Quickstart's provider. Three fail type-checking as published (`data-testid` on the messageView object; untyped CustomMessageView not assignable to the slot; plain CustomUserMessage not assignable to userMessage) and carry @ts-expect-error. CustomToolbar/CustomCopyButton/CustomUserMessage are undefined on the page and written minimal here.",
+      },
+      {
+        path: "/custom-look-and-feel/headless-ui",
+        title: "Headless UI",
+        docPath: "/deepagents/custom-look-and-feel/headless-ui",
+        summary:
+          "A chat built from hooks alone (useAgent, useCopilotKit, useRenderToolCall and friends) with no CopilotChat and no slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and every code block (the minimal message list and composer, useRenderedMessages, per-role dispatch, tool-call composition, bubble chrome) is \"Missing snippet: No demo found for deepagents::headless-simple / headless-complete\". The page prints no code at all for this framework. Added 2026-11-11.",
+      },
+      {
+        path: "/custom-look-and-feel/reasoning-messages",
+        title: "Reasoning Messages",
+        docPath: "/deepagents/custom-look-and-feel/reasoning-messages",
+        summary:
+          "Customizing the reasoning card: header, content and toggle sub-slots, a fully custom component, or render-prop children on CopilotChatReasoningMessage.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-behaviour block (the agent connection) and the fully custom ReasoningBlock example are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No Deep Agents agent that emits reasoning tokens is published, so the generic slot blocks it does print would never render here; they are shown as text. Added 2026-11-11.",
+      },
     ],
   },
   {
