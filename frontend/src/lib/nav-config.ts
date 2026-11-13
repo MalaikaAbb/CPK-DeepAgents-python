@@ -431,6 +431,41 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Human-in-the-loop",
+    routes: [
+      {
+        path: "/human-in-the-loop",
+        title: "HITL Overview",
+        docPath: "/deepagents/human-in-the-loop/index",
+        summary:
+          "The two ways to pause for a human: an LLM-called frontend tool (useHumanInTheLoop) or a graph-enforced interrupt() (useInterrupt).",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; both useHumanInTheLoop blocks (the hitl-in-chat demo and its slot data) are \"Missing snippet: No demo found for deepagents::hitl-in-chat\". No code is printed. Added 2026-11-11.",
+      },
+      {
+        path: "/human-in-the-loop/useInterrupt",
+        title: "Pausing the Agent for Input",
+        docPath: "/deepagents/human-in-the-loop/useInterrupt",
+        summary:
+          "useInterrupt's render props (interrupt, interrupts, resolve, cancel) for the AG-UI standard interrupt flow and the legacy on_interrupt event.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says useInterrupt is not available on this framework and prints no backend. Its two frontend blocks (approve/cancel, multi-interrupt) are generic and shown as text. useInterrupt against a Deep Agent interrupt() is exercised on /generative-ui/your-components/interrupt-based. Added 2026-11-11.",
+      },
+      {
+        path: "/human-in-the-loop/headless",
+        title: "Headless Interrupts",
+        docPath: "/deepagents/human-in-the-loop/headless",
+        summary:
+          "Resolving agent interrupts from any UI, built from useAgent, agent.subscribe and copilotkit.runAgent instead of a useInterrupt render slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says headless interrupts are not available on this framework and prints no code at all. Added 2026-11-11.",
+      },
+    ],
+  },
+  {
     title: "Shared State",
     routes: [
       {

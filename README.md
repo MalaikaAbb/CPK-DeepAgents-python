@@ -290,6 +290,14 @@ A tool whose body runs in the browser. The Python side defines no tool at all.
 
 **`/human-in-the-loop/governed-actions`** — ✅ **Working.** An approval card gating a side-effecting action. The run stops on the card, which shows the policy verdict, the reference that produced it, and the exact arguments; it proceeds only on approval. The `useHumanInTheLoop` variant is implemented; the `useInterrupt` variant is not, because it needs a backend that pauses a run and attaches `interrupt.metadata.action`, and no graph here does. The published schema goes in unchanged — `z.record(z.unknown())` is valid on this repo's zod 3, though it does not compile on the zod 4 that MsPy-react and AG2-react run. The `useEffect` that auto-resolves `allow` and `deny` omits `onApprove` and `onBlock` from its dependency array; kept as published, warning and all.
 
+### Human-in-the-loop
+
+**`/human-in-the-loop`** — ❌ **Reference only, no demo.** Added 2026-11-11. HITL Overview. Rendered for Deep Agents: both `useHumanInTheLoop` blocks are "Missing snippet"; no code printed. **Try:** open the route. **Expect:** the header and a warning callout. See [FINDINGS.md](FINDINGS.md) #61.
+
+**`/human-in-the-loop/useInterrupt`** — ❌ **Reference only, no demo.** Added 2026-11-11. Pausing the Agent for Input. Rendered for Deep Agents: the page says `useInterrupt` is not available on this framework and prints no backend; its two generic frontend blocks are shown as text (`useInterrupt` on a Deep Agent runs on `/generative-ui/your-components/interrupt-based`). **Try:** open the route. **Expect:** the header and a warning callout. See [FINDINGS.md](FINDINGS.md) #62.
+
+**`/human-in-the-loop/headless`** — ❌ **Reference only, no demo.** Added 2026-11-11. Headless Interrupts. Rendered for Deep Agents: the page says headless interrupts are not available on this framework and prints no code. **Try:** open the route. **Expect:** the header and a warning callout. See [FINDINGS.md](FINDINGS.md) #63.
+
 ### Shared State
 
 **`/shared-state/in-app-agent-read`** → `shared_state_agent`
@@ -370,6 +378,11 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — [FINDINGS.md](FINDINGS.md) #32 |
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
+| [human-in-the-loop/index](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) | `/human-in-the-loop` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #61 |
+| [human-in-the-loop/useInterrupt](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) | `/human-in-the-loop/useInterrupt` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #62 |
+| [human-in-the-loop/headless](https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless) | `/human-in-the-loop/headless` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #63 |
+
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 9 ❌ Broken · 1 🚧 Not started.
 | [generative-ui/mcp-apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps) | `/generative-ui/mcp-apps` | `sample_agent` | ⚠️ Partial | Added 2026-11-11, not driven. Page's runtime at its own basePath; middleware 0.1.1 (transitive) instead of the page's 0.1.3 / runtime 1.76+; needs mcp.excalidraw.com — [FINDINGS.md](FINDINGS.md) #59 |
 | [generative-ui/open-generative-ui](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) | `/generative-ui/open-generative-ui` | — | ❌ Broken | Added 2026-11-11. Reference only: runtime and frontend blocks missing for Deep Agents — [FINDINGS.md](FINDINGS.md) #60 |
 
@@ -615,6 +628,10 @@ Grouped the way the doc nav groups them.
 - [Input/Output Schemas](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs)
 - [Workflow Execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution)
 
+**Human-in-the-loop**
+- [HITL Overview](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) — reference only
+- [Pausing the Agent for Input](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) — reference only
+- [Headless Interrupts](https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless) — reference only
 **Basics**
 - [CopilotChat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) — reference only
 - [CopilotSidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) — reference only
