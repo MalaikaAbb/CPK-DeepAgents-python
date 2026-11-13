@@ -30,6 +30,8 @@ export const GRAPH_IDS = [
   "predictive_manual_graph",
   "predictive_tool_graph",
   "state_io_graph",
+  // Components as Tools: the page's Deep Agent; its useComponent half is unpublished.
+  "tool_based_agent",
 ] as const;
 
 export type GraphId = (typeof GRAPH_IDS)[number];
