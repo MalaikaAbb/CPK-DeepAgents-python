@@ -276,6 +276,14 @@ export const NAV: NavGroup[] = [
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
       {
+        path: "/generative-ui/a2ui",
+        title: "A2UI",
+        docPath: "/deepagents/generative-ui/a2ui",
+        summary:
+          "Overview of A2UI: switching the runtime's A2UI middleware on, the three approaches (fixed, fixed streaming, dynamic), and the createSurface / updateComponents / updateDataModel operations.",
+        status: "reference",
+        statusNote:
+          "Overview, no demo of its own. Its two blocks are shown as text: the runtime block declares `const runtime` twice and registers an undefined `myAgent` under `default`, and the Python block calls the helpers with undefined `surface_id`/`components`/`data`. The mechanism itself runs on the A2UI Fixed Schema and Dynamic Schema routes. The \"Fixed Schema (Streaming)\" approach it lists has no page in this repo. Added 2026-11-11.",
         path: "/generative-ui/json-render",
         title: "JSON Render",
         docPath: "/deepagents/generative-ui/json-render",
