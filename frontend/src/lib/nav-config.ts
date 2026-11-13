@@ -346,6 +346,21 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Agent capabilities",
+    routes: [
+      {
+        path: "/multi-agent/subagents",
+        title: "Sub-agents",
+        docPath: "/deepagents/multi-agent/subagents",
+        summary:
+          "A supervisor that delegates research, drafting and critique to sub-agents exposed as tools, with a live delegation log in shared state.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and every code block is \"Missing snippet: No demo found for deepagents::subagents\". The `.md` export's LangGraph default code is not this framework's and is itself incomplete (unpublished HeaderForwardingMiddleware, no supervisor agent, undefined SubAgentName/DelegationLogProps/SUB_AGENT_STYLE). No agent, no demo. Added 2026-11-11.",
+      },
+    ],
+  },
+  {
     title: "Intelligence",
     routes: [
       {
