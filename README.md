@@ -253,6 +253,9 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/generative-ui/frontend-cards`** — ❌ **Broken as published**, works with one prop the page never mentions. New upstream 2026-09-11. A card pushed into the transcript from frontend code as a `role: "activity"` message, which is stripped from every run. The demo has two tabs. **As published** is step 2's provider unchanged (`runtimeUrl` + `renderActivityMessages`); its bare `useAgent()` and `<CopilotChat />` ask for the agent id `default`, which a Deep Agents runtime does not register. *Try:* just open it. *What happens:* the chat paints, then `useAgent()` throws `Agent 'default' not found after runtime sync` as soon as `/info` answers (3/3), and the demo prints that error where the chat was. **+ agent="sample_agent"** adds the Quickstart's provider prop and nothing else. *Try:* click **Simulate: deployment finished**, then ask `Have you been shown any deployment card?` *Pass:* the card renders; the probe row reads `agent.messages = activity, user, assistant` and `run payload = user` (read off the request that left the browser); the agent says it saw no card. *Fail:* no card, or `activity` in the payload row. The three snippets are verbatim; step 3's `<DeploymentWatcher />` is mounted inside step 2's provider, which the page never says to do, and its `wss://example.com` socket never delivers, so the button fires the same `addMessage`. See [FINDINGS.md](FINDINGS.md) #22.
 
+**`/generative-ui/mcp-apps`** → `sample_agent` via `/api/copilotkit-mcp-apps` — ⚠️ **Partial.** Added 2026-11-11, not yet driven. The page's runtime route (LangGraphAgent + `MCPAppsMiddleware` with the public Excalidraw server) on its own endpoint. Runs on the middleware 0.1.1 that runtime 1.73.3 already depends on, not the 0.1.3 + runtime 1.76 the page asks for. Set `LANGGRAPH_DEPLOYMENT_URL=http://localhost:8030` (the page's fallback is 8123). *Try:* `Draw a simple flowchart with three boxes: Plan, Build, Ship.` *Pass:* an Excalidraw canvas renders inline. *Fail:* prose only, an error banner, or a tool call with no iframe. See [FINDINGS.md](FINDINGS.md) #59.
+
+**`/generative-ui/open-generative-ui`** — ❌ **Reference only, no demo.** Added 2026-11-11. Agent-written HTML/CSS/JS streamed into a sandboxed iframe. Rendered for Deep Agents the page says the feature is not available yet; the runtime middleware, chat page and sandbox-function blocks are "Missing snippet", leaving only a CDN HTML example. **Try:** open the route. **Expect:** the header, a warning callout and the HTML example. See [FINDINGS.md](FINDINGS.md) #60.
 **`/generative-ui/a2ui`** — 📄 **Reference.** Added 2026-11-11. The A2UI overview: the runtime switch, the three approaches and the three v0.9 operations. Its two blocks are shown as text; neither runs as printed (`const runtime` declared twice with an undefined `myAgent`; Python helpers called with undefined arguments). The mechanism is exercised on `/generative-ui/a2ui/fixed-schema` and `/generative-ui/a2ui/dynamic-schema`. **Try:** open the route and follow the links. See [FINDINGS.md](FINDINGS.md) #57.
 **`/generative-ui/json-render`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendered for Deep Agents the page says the feature is not available yet, has no Code tab, and prints only an example agent output; the renderer, catalog, runtime route and agent are described but not published. **Try:** open the route. **Expect:** the header, a warning callout and the example JSON. See [FINDINGS.md](FINDINGS.md) #55.
 
@@ -367,6 +370,10 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — [FINDINGS.md](FINDINGS.md) #32 |
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — [FINDINGS.md](FINDINGS.md) #33 |
 | [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — [FINDINGS.md](FINDINGS.md) #35 |
+| [generative-ui/mcp-apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps) | `/generative-ui/mcp-apps` | `sample_agent` | ⚠️ Partial | Added 2026-11-11, not driven. Page's runtime at its own basePath; middleware 0.1.1 (transitive) instead of the page's 0.1.3 / runtime 1.76+; needs mcp.excalidraw.com — [FINDINGS.md](FINDINGS.md) #59 |
+| [generative-ui/open-generative-ui](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) | `/generative-ui/open-generative-ui` | — | ❌ Broken | Added 2026-11-11. Reference only: runtime and frontend blocks missing for Deep Agents — [FINDINGS.md](FINDINGS.md) #60 |
+
+**Totals:** 14 ✅ Working · 5 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
 | [generative-ui/a2ui](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui) | `/generative-ui/a2ui` | — | 📄 Reference | Added 2026-11-11. Overview; snippets shown as text (duplicate `const runtime`, undefined `myAgent`); mechanism runs on the fixed/dynamic routes — [FINDINGS.md](FINDINGS.md) #57 |
 
 **Totals:** 14 ✅ Working · 4 ⚠️ Partial · 1 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
@@ -535,6 +542,7 @@ deepagents/
             ├── api/
             │   ├── copilotkit/[[...slug]]/route.ts   all graphs, A2UI off for fixed-schema
             │   ├── copilotkit-a2ui-dynamic/[[...slug]]/route.ts  dynamic-schema only, injection on
+            │   ├── copilotkit-mcp-apps/[[...slug]]/route.ts  MCP Apps page's runtime (Excalidraw middleware)
             │   ├── copilotkit-learning/[[...slug]]/route.ts      the Learning page's runtime
             │   └── copilotkit-memory/[[...slug]]/route.ts        memory: { access }, the undocumented option
             ├── cookbook/jev-generative-ui/            every published block, four of them compiled and unmounted
@@ -568,6 +576,8 @@ Grouped the way the doc nav groups them.
 - [A2UI · Styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling)
 - [A2UI · Advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced)
 - [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
+- [MCP Apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps)
+- [Open Generative UI](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) — reference only; no Deep Agents code published
 - [A2UI](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui) — overview, reference
 - [JSON Render](https://docs.copilotkit.ai/deepagents/generative-ui/json-render) — reference only
 - [Hashbrown](https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown) — reference only
