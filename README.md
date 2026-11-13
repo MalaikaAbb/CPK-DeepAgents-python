@@ -296,6 +296,10 @@ A hand-built `StateGraph` with `input_schema` / `output_schema`, because the pag
 
 **`/shared-state/workflow-execution`** — reference only, no demo. The page currently serves the Input/Output Schemas content verbatim.
 
+### Agent capabilities
+
+**`/multi-agent/subagents`** — ❌ **Reference only, no demo.** Added 2026-11-11. The page teaches a supervisor that delegates to research/writing/critique sub-agents exposed as tools, with a live delegation log in shared state. Rendered for Deep Agents it says the feature is not available yet and shows "Missing snippet: No demo found for deepagents::subagents" in place of every code block, so there is nothing of this framework's to build. **Try:** open the route. **Expect:** the route header and a warning callout naming what is missing; no chat. A chat or delegation log here would mean someone filled the gap from another framework's code. See [FINDINGS.md](FINDINGS.md) #44.
+
 ### Intelligence
 
 **`/intelligence/memories`** — ❌ **Broken as documented.** New upstream 2026-09-11. **Try:** **Save**, then `Please remember that I prefer concise status updates.`, then switch to the second runtime and **Save** again. **What happens:** the page's React snippet used not to compile (it imported `useMemories` from the package root); the 2026-09-21 sync fixed that to `@copilotkit/react-core/v2`, so the published file now runs here as published and the demo's corrected copy is gone. On the documented runtime — the Deep Agents Quickstart's, which is not an Intelligence runtime — no memory request ever leaves the browser: the hook reports `isAvailable: true`, the page's `MemoryList` renders an empty list instead of "Memory is not available", the save fails with "Runtime URL is not configured", and the agent says "Got it! I'll keep updates brief." The second runtime adds `memory: { access }`, which the page never mentions and without which every `/memories/*` route 404s even on an Intelligence runtime; it needs `CPK_INTELLIGENCE_API_KEY`, which this harness does not have, so it answers 503 and the platform side was not reached. See [FINDINGS.md](FINDINGS.md) #23.
@@ -348,6 +352,8 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [generative-ui/reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) | `/generative-ui/reasoning` | — | ❌ Broken | Added 2026-11-11. Reference only: no Deep Agents code on the rendered page — [FINDINGS.md](FINDINGS.md) #46 |
 
 **Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
+| [multi-agent/subagents](https://docs.copilotkit.ai/deepagents/multi-agent/subagents) | `/multi-agent/subagents` | — | ❌ Broken | Added 2026-11-11. Reference only: rendered page has no Deep Agents code ("No demo found for deepagents::subagents"); `.md` LangGraph default is incomplete — [FINDINGS.md](FINDINGS.md) #44 |
+
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -570,5 +576,7 @@ Grouped the way the doc nav groups them.
 **Basics**
 - [Voice](https://docs.copilotkit.ai/deepagents/voice) — reference only; no Deep Agents code published
 - [Reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) — reference only; no Deep Agents code published
+**Agent capabilities**
+- [Sub-agents](https://docs.copilotkit.ai/deepagents/multi-agent/subagents) — reference only; no Deep Agents code published
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.
