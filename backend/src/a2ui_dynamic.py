@@ -2,8 +2,12 @@
 
 https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/dynamic-schema
 
-The page's Python verbatim, except that `ChatOpenAI(model="gpt-5.4")` reads the
-model id from `.env` like every other agent here.
+The page's Python verbatim, except that the model id in
+`ChatOpenAI(model="gpt-6-luna", reasoning_effort="none")` is read from `.env`
+like every other agent here. `reasoning_effort="none"` is kept as printed
+(doc-sync 2026-11-11); OpenAI rejects it for non-reasoning models, so
+`OPENAI_MODEL` must name a reasoning-capable model (e.g. the default
+`gpt-5.4-mini`), not `gpt-4o`.
 
 There is deliberately nothing else in this file. The page's point is that the
 backend needs no A2UI code at all: `CopilotKitMiddleware` injects and executes
@@ -22,7 +26,7 @@ from langchain_openai import ChatOpenAI
 from src.shared import OPENAI_MODEL
 
 graph = create_deep_agent(
-    model=ChatOpenAI(model=OPENAI_MODEL),
+    model=ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none"),
     tools=[],
     middleware=[CopilotKitMiddleware()],
     system_prompt=(

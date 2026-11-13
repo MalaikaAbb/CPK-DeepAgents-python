@@ -24,6 +24,7 @@ Two pieces of glue follow from that, both marked below:
 from typing import Any
 
 # region agent-state
+from langchain_openai import ChatOpenAI
 from typing import Any, TypedDict
 from copilotkit import (
     CopilotKitMiddleware,
@@ -37,7 +38,7 @@ from langchain.messages import ToolMessage
 from langchain.tools import ToolRuntime, tool
 from langgraph.types import Command
 
-from src.shared import MODEL
+from src.shared import OPENAI_MODEL
 
 
 class Search(TypedDict):
@@ -73,7 +74,9 @@ def report_research_progress(
 
 
 agent = create_deep_agent(
-    model=MODEL,
+    # Page (2026-11-11): ChatOpenAI(model="gpt-6-luna", reasoning_effort="none").
+    # Model id read from OPENAI_MODEL like every agent here; reasoning_effort verbatim.
+    model=ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none"),
     tools=[report_research_progress],
     middleware=[
         SearchesStateMiddleware(),
