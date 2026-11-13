@@ -229,43 +229,51 @@ export const NAV: NavGroup[] = [
       },
       {
         path: "/generative-ui/components",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Components and surfaces",
         docPath: "/deepagents/generative-ui/components",
         summary:
           "The agent renders your React components while it answers, in the chat or in named areas of the page, from a catalog you hand the provider (generativeUI={{ ui }}); the runtime then gives each run a render_ui tool and a guide.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live on /api/copilotkit-genui: the page's provider (generativeUI={{ ui: standardUI }}) and chat. The page's TanStack BuiltInAgent is swapped for the components_agent Deep Agents graph (same prompt, no tools, CopilotKitMiddleware as the page says for Python LangGraph agents). Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/surfaces",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Surfaces",
         docPath: "/deepagents/generative-ui/components/surfaces",
         summary:
           "Named areas of the page (GenerativeUISurface id=…) that the chat can fill or change, with per-target component lists, auto-scroll, per-item keys and error fallbacks.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: the page's errorBoundary provider with the 'limit the components' and 'autoScroll off' targets and its CSS. Broken: 'Add a page target' (FeaturedProducts needs a products list and a Product type the page never defines) and 'One target for each item' (reads an undefined product). shopUI is the Catalogs page's catalog. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/catalogs",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Catalogs",
         docPath: "/deepagents/generative-ui/components/catalogs",
         summary:
           "Declaring your own components and their typed props once with createGenerativeUI, merging in standardUI, typing component props from the schema, and exporting the catalog as A2UI JSON.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: shopUI ('Create a catalog'). Broken: 'Combine catalogs' extends an undefined cartUI (so the export sample, which exports it, too); the schema-library and positional-order samples are fragments, shown not run. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/standard-catalog",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Standard catalog",
         docPath: "/deepagents/generative-ui/components/standard-catalog",
         summary:
           "The 69 ready-made components in standardUI (the A2UI 1.0 basic catalog plus extensions), and how to drop or replace some of them.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: standardUI as is, omit and overrides. Broken: 'Add your own components' uses ProductCard and productSchema, never defined. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/state-and-actions",
@@ -275,47 +283,55 @@ export const NAV: NavGroup[] = [
           "Feeding live app state into generated UI (useGenerativeUIState), running your code on events (useGenerativeUIFunction), and two-way writable props.",
         status: "broken",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Reference only. Every sample needs pieces the page never defines (a Cart type and cart instance, ProductCard) or is a fragment (events, writable, function declarations), so nothing is mounted.",
       },
       {
         path: "/generative-ui/components/theming",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Theming",
         docPath: "/deepagents/generative-ui/components/theming",
         summary:
           "Styling the standard components through the provider's theme option (CSS variables, GenerativeUITheme), dark mode, and map styles.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: the provider theme, the page's CSS variables and its dark-mode script (rendered in the body, not <head>). Shown, not run: the per-mode and map theme fragments and the theme file. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/transports",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Transports",
         docPath: "/deepagents/generative-ui/components/transports",
         summary:
           "How generated UI reaches the browser: the default render_ui tool transport, or transport: \"markdown\" with a2ui blocks in the reply; limiting it to some agents with agentIds.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live on a generativeUI: true runtime (/api/copilotkit-genui-transports), as printed: tool, markdown, and agentIds: [\"shop\"] chatting as default. No page publishes a shop agent, so only the 'other agents get nothing' half runs. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/markdown-mode",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Markdown mode",
         docPath: "/deepagents/generative-ui/components/markdown-mode",
         summary:
           "The markdown transport: the agent writes a2ui blocks inside its reply and the chat renders each as a live surface, with the catalog read from forwardedProps.copilotkit.ui on the agent side.",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: both providers. sendContext: false is expected to show no UI: the page's own-prompt backend is a Python fragment with an undefined input and MY_PROMPT and no agent around it, so it is not wired. Not yet browser-checked.",
       },
       {
         path: "/generative-ui/components/from-a2ui",
+        hasDemo: true,
+        agentId: "components_agent",
         title: "Adopt from A2UI",
         docPath: "/deepagents/generative-ui/components/from-a2ui",
         summary:
           "Migrating from the a2ui renderer (A2UI v0.9: a2ui={{ catalog }}, createCatalog, runtime a2ui option) to components and surfaces (A2UI 1.0: generativeUI, createGenerativeUI, no runtime option).",
-        status: "broken",
+        status: "partial",
         statusNote:
-          "Reference only. Needs `@copilotkit/react-core/v2/generative-ui` and the provider's `generativeUI` prop, which the installed 1.73.3 does not have (present in 1.84.0, absent in 1.79.1); a missing module fails the build, so the page's React blocks are shown as text. Angular blocks omitted. Added 2026-11-11.",
+          "Live: the After catalog on the shared runtime. Airport and Arrow are never defined on the page; minimal ones are borrowed from the aws-strands-ts harness (labelled). Not yet browser-checked.",
       },
     ],
   },

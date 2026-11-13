@@ -37,12 +37,14 @@ export default function Page() {
         </p>
       </Panel>
 
-      <Callout tone="warn" title="Needs a newer CopilotKit than this repo installs">
+      <Callout tone="warn" title="Broken: reference only">
         <p>
-          Everything this page teaches lives in <code>@copilotkit/react-core/v2/generative-ui</code> and the provider&apos;s <code>generativeUI</code> prop. The installed <code>@copilotkit/react-core</code> is 1.73.3, which has neither: the entry point first appears in a release after 1.79.1 (1.84.0 has it). Importing a module that does not exist fails the Next build outright, so the page&apos;s React blocks are shown below as text instead of compiled. Upgrading CopilotKit is a dependency change outside a doc sync.
-        </p>
-        <p className="mt-2">
-          Angular blocks are left out (this is a React harness). Nothing is borrowed from other harnesses or the showcase.
+          Nothing on this page is mounted. Its samples need a <code>Cart</code>{" "}
+          type and a <code>cart</code> instance, and a <code>ProductCard</code>,
+          that the page never defines, or are fragments (<code>events</code>,{" "}
+          <code>writable</code>, function declarations) with no catalog around
+          them. Nothing is written in their place. The code is shown below as
+          printed.
         </p>
       </Callout>
 
