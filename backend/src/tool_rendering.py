@@ -11,10 +11,11 @@ either: this route renders a backend tool, it does not call frontend ones.
 """
 
 #region tool-rendering-agent
+from langchain_openai import ChatOpenAI
 from deepagents import create_deep_agent
 from langchain.tools import tool
 
-from src.shared import MODEL
+from src.shared import OPENAI_MODEL
 
 
 @tool
@@ -26,7 +27,9 @@ def get_weather(location: str):
 
 
 agent = create_deep_agent(
-    model=MODEL,
+    # Page (2026-11-11): ChatOpenAI(model="gpt-6-luna", reasoning_effort="none").
+    # Model id read from OPENAI_MODEL like every agent here; reasoning_effort verbatim.
+    model=ChatOpenAI(model=OPENAI_MODEL, reasoning_effort="none"),
     tools=[get_weather],
     system_prompt="You are a helpful assistant.",
 )

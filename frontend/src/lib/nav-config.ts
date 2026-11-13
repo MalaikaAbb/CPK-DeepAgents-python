@@ -106,6 +106,54 @@ export const NAV: NavGroup[] = [
           "File attachments (images, PDFs, audio, video) in CopilotChat with previews, lightbox, and upload handlers.",
         status: "working",
       },
+      {
+        path: "/prebuilt-components/chat",
+        title: "CopilotChat",
+        docPath: "/deepagents/prebuilt-components/chat",
+        summary:
+          "An inline chat you place and size yourself: the base surface that CopilotSidebar and CopilotPopup wrap.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block (provider plus chat) and the self-contained code example with starter suggestions are \"Missing snippet: No demo found for deepagents::agentic-chat\". Added 2026-11-11.",
+      },
+      {
+        path: "/prebuilt-components/sidebar",
+        title: "CopilotSidebar",
+        docPath: "/deepagents/prebuilt-components/sidebar",
+        summary:
+          "A docked, collapsible chat that slides out beside the main content, with defaultOpen, agentId, labels and header/toggleButton slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block and the configuration example (open by default, named agent) are \"Missing snippet: No demo found for deepagents::prebuilt-sidebar\". Added 2026-11-11.",
+      },
+      {
+        path: "/prebuilt-components/popup",
+        title: "CopilotPopup",
+        docPath: "/deepagents/prebuilt-components/popup",
+        summary:
+          "A floating launcher bubble that opens an overlay chat window, with defaultOpen, agentId, labels and header/toggleButton slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; apart from a two-line import it prints, the basic setup block (open by default, custom placeholder via labels) are \"Missing snippet: No demo found for deepagents::prebuilt-popup\". Added 2026-11-11.",
+        path: "/voice",
+        title: "Voice",
+        docPath: "/deepagents/voice",
+        summary:
+          "A mic button in the chat composer: the runtime transcribes recorded audio through a TranscriptionService and the transcript is sent as a message.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and all three code blocks (chat with runtimeUrl, the no-mic sample button, the voice runtime route with a TranscriptionService) are \"Missing snippet: No demo found for deepagents::voice\". No runtime route, no demo. Added 2026-11-11.",
+      },
+      {
+        path: "/generative-ui/reasoning",
+        title: "Reasoning",
+        docPath: "/deepagents/generative-ui/reasoning",
+        summary:
+          "Showing the model's reasoning tokens in the chat, with the built-in collapsible card or a custom reasoningMessage slot component.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-rendering block and both custom-rendering files (page.tsx, reasoning-block.tsx) are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No agent, no demo. Added 2026-11-11.",
+      },
     ],
   },
   {
@@ -227,6 +275,168 @@ export const NAV: NavGroup[] = [
         statusNote:
           "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
       },
+      {
+        path: "/generative-ui/components",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Components and surfaces",
+        docPath: "/deepagents/generative-ui/components",
+        summary:
+          "The agent renders your React components while it answers, in the chat or in named areas of the page, from a catalog you hand the provider (generativeUI={{ ui }}); the runtime then gives each run a render_ui tool and a guide.",
+        status: "partial",
+        statusNote:
+          "Live on /api/copilotkit-genui: the page's provider (generativeUI={{ ui: standardUI }}) and chat. The page's TanStack BuiltInAgent is swapped for the components_agent Deep Agents graph (same prompt, no tools, CopilotKitMiddleware as the page says for Python LangGraph agents). Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/surfaces",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Surfaces",
+        docPath: "/deepagents/generative-ui/components/surfaces",
+        summary:
+          "Named areas of the page (GenerativeUISurface id=…) that the chat can fill or change, with per-target component lists, auto-scroll, per-item keys and error fallbacks.",
+        status: "partial",
+        statusNote:
+          "Live: the page's errorBoundary provider with the 'limit the components' and 'autoScroll off' targets and its CSS. Broken: 'Add a page target' (FeaturedProducts needs a products list and a Product type the page never defines) and 'One target for each item' (reads an undefined product). shopUI is the Catalogs page's catalog. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/catalogs",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Catalogs",
+        docPath: "/deepagents/generative-ui/components/catalogs",
+        summary:
+          "Declaring your own components and their typed props once with createGenerativeUI, merging in standardUI, typing component props from the schema, and exporting the catalog as A2UI JSON.",
+        status: "partial",
+        statusNote:
+          "Live: shopUI ('Create a catalog'). Broken: 'Combine catalogs' extends an undefined cartUI (so the export sample, which exports it, too); the schema-library and positional-order samples are fragments, shown not run. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/standard-catalog",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Standard catalog",
+        docPath: "/deepagents/generative-ui/components/standard-catalog",
+        summary:
+          "The 69 ready-made components in standardUI (the A2UI 1.0 basic catalog plus extensions), and how to drop or replace some of them.",
+        status: "partial",
+        statusNote:
+          "Live: standardUI as is, omit and overrides. Broken: 'Add your own components' uses ProductCard and productSchema, never defined. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/state-and-actions",
+        title: "State and actions",
+        docPath: "/deepagents/generative-ui/components/state-and-actions",
+        summary:
+          "Feeding live app state into generated UI (useGenerativeUIState), running your code on events (useGenerativeUIFunction), and two-way writable props.",
+        status: "broken",
+        statusNote:
+          "Reference only. Every sample needs pieces the page never defines (a Cart type and cart instance, ProductCard) or is a fragment (events, writable, function declarations), so nothing is mounted.",
+      },
+      {
+        path: "/generative-ui/components/theming",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Theming",
+        docPath: "/deepagents/generative-ui/components/theming",
+        summary:
+          "Styling the standard components through the provider's theme option (CSS variables, GenerativeUITheme), dark mode, and map styles.",
+        status: "partial",
+        statusNote:
+          "Live: the provider theme, the page's CSS variables and its dark-mode script (rendered in the body, not <head>). Shown, not run: the per-mode and map theme fragments and the theme file. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/transports",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Transports",
+        docPath: "/deepagents/generative-ui/components/transports",
+        summary:
+          "How generated UI reaches the browser: the default render_ui tool transport, or transport: \"markdown\" with a2ui blocks in the reply; limiting it to some agents with agentIds.",
+        status: "partial",
+        statusNote:
+          "Live on a generativeUI: true runtime (/api/copilotkit-genui-transports), as printed: tool, markdown, and agentIds: [\"shop\"] chatting as default. No page publishes a shop agent, so only the 'other agents get nothing' half runs. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/markdown-mode",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Markdown mode",
+        docPath: "/deepagents/generative-ui/components/markdown-mode",
+        summary:
+          "The markdown transport: the agent writes a2ui blocks inside its reply and the chat renders each as a live surface, with the catalog read from forwardedProps.copilotkit.ui on the agent side.",
+        status: "partial",
+        statusNote:
+          "Live: both providers. sendContext: false is expected to show no UI: the page's own-prompt backend is a Python fragment with an undefined input and MY_PROMPT and no agent around it, so it is not wired. Not yet browser-checked.",
+      },
+      {
+        path: "/generative-ui/components/from-a2ui",
+        hasDemo: true,
+        agentId: "components_agent",
+        title: "Adopt from A2UI",
+        docPath: "/deepagents/generative-ui/components/from-a2ui",
+        summary:
+          "Migrating from the a2ui renderer (A2UI v0.9: a2ui={{ catalog }}, createCatalog, runtime a2ui option) to components and surfaces (A2UI 1.0: generativeUI, createGenerativeUI, no runtime option).",
+        status: "partial",
+        statusNote:
+          "Live: the After catalog on the shared runtime. Airport and Arrow are never defined on the page; minimal ones are borrowed from the aws-strands-ts harness (labelled). Not yet browser-checked.",
+        path: "/generative-ui/mcp-apps",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "MCP Apps",
+        docPath: "/deepagents/generative-ui/mcp-apps",
+        summary:
+          "MCPAppsMiddleware on the runtime's LangGraphAgent adds an MCP server's UI-backed tools; their UI renders as sandboxed iframes in the chat.",
+        status: "partial",
+        statusNote:
+          "Added 2026-11-11, not yet driven. The page's runtime route runs verbatim at /api/copilotkit-mcp-apps (basePath changed) with the public Excalidraw server. The page asks for runtime 1.76+ and the current middleware (0.1.3, @ag-ui/client 1.x); this repo has runtime 1.73.3, so the import resolves to the 0.1.1 middleware runtime 1.73.3 already depends on (undeclared). The page's deploymentUrl falls back to 8123, not this repo's 8030: set LANGGRAPH_DEPLOYMENT_URL. Needs network access to mcp.excalidraw.com.",
+      },
+      {
+        path: "/generative-ui/open-generative-ui",
+        title: "Open Generative UI",
+        docPath: "/deepagents/generative-ui/open-generative-ui",
+        summary:
+          "The agent writes complete HTML/CSS/JS that streams into a sandboxed iframe in the chat, optionally calling back into host-side sandbox functions.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the runtime block (OpenGenerativeUIMiddleware), the CopilotChat page and both advanced blocks (sandbox functions) are \"Missing snippet: No demo found for deepagents::open-gen-ui / open-gen-ui-advanced\". Only a CDN HTML example is printed. Added 2026-11-11.",
+        path: "/generative-ui/a2ui",
+        title: "A2UI",
+        docPath: "/deepagents/generative-ui/a2ui",
+        summary:
+          "Overview of A2UI: switching the runtime's A2UI middleware on, the three approaches (fixed, fixed streaming, dynamic), and the createSurface / updateComponents / updateDataModel operations.",
+        status: "reference",
+        statusNote:
+          "Overview, no demo of its own. Its two blocks are shown as text: the runtime block declares `const runtime` twice and registers an undefined `myAgent` under `default`, and the Python block calls the helpers with undefined `surface_id`/`components`/`data`. The mechanism itself runs on the A2UI Fixed Schema and Dynamic Schema routes. The \"Fixed Schema (Streaming)\" approach it lists has no page in this repo. Added 2026-11-11.",
+        path: "/generative-ui/json-render",
+        title: "JSON Render",
+        docPath: "/deepagents/generative-ui/json-render",
+        summary:
+          "The agent emits a { root, elements } JSON spec and @json-render/react renders it through a typed component registry in the assistant-message slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; it describes chat.tsx, json-render-renderer.tsx, catalog.ts, registry.tsx, the runtime route and the agent but prints none of them. The only code is an example agent output, shown as text. Added 2026-11-11.",
+      },
+      {
+        path: "/generative-ui/hashbrown",
+        title: "Hashbrown",
+        docPath: "/deepagents/generative-ui/hashbrown",
+        summary:
+          "A dashboard streamed through Hashbrown's UI kit and progressive JSON parser in the assistant-message slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and has no Code tab; HashBrownDashboard, HashBrownRenderMessage, the kit, the runtime route and the agent are described but not printed. The only code is an example assistant message, shown as text. Added 2026-11-11.",
+        path: "/generative-ui/tool-based",
+        hasDemo: true,
+        agentId: "tool_based_agent",
+        title: "Components as Tools",
+        docPath: "/deepagents/generative-ui/tool-based",
+        summary:
+          "A React component registered with useComponent becomes a frontend tool the Deep Agent can call, rendered inline with the tool args as props.",
+        status: "broken",
+        statusNote:
+          "Added 2026-11-11, not yet driven. The page's Deep Agent (CopilotKitMiddleware + SYSTEM_PROMPT naming render_bar_chart) runs as tool_based_agent, but the useComponent block that registers render_bar_chart is \"Missing snippet: No demo found for deepagents::gen-ui-tool-based\", so no tool is forwarded and the agent can only answer in prose. Prompt block moved above the agent (the page prints them in NameError order).",
+      },
     ],
   },
   {
@@ -243,6 +453,48 @@ export const NAV: NavGroup[] = [
         status: "partial",
         statusNote:
           "The slot mechanics are exactly as documented, read out of the shipped 1.71.0 bundle, and the custom-tag claim produces the page's exact TS2353. What fails: all three published blocks are a bare `<CopilotChat>` with no agent id, so they ask for `default` and throw on a Deep Agents runtime (the Frontend-Driven Cards defect again); none carries `use client`; and the headline `components` example styles with `.my-link` / `.my-heading`, which the page never defines. Built 2026-09-21 and not yet driven — the demo's probe is what checks the prop claims against the rendered HTML.",
+      },
+      {
+        path: "/custom-look-and-feel/css",
+        title: "CSS Customization",
+        docPath: "/deepagents/custom-look-and-feel/css",
+        summary:
+          "Re-skinning the chat with CSS: v1 --copilot-kit-* variables and .copilotKit* classes, v2 shadcn tokens on [data-copilotkit], icons and labels props.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the three blocks that make up its demo (scoped theme.css import, the variable overrides, the user-bubble rule) are \"Missing snippet: No demo found for deepagents::chat-customization-css\". The generic blocks it does print are shown as text: one imports `CopilotKitCSSProperties` from `@copilotkit/react-ui` (v1, not installed here), the `.copilotKit*` classes and `--copilot-kit-*` variables style the v1 components, and v2 `CopilotChat` (1.73.3) has no `icons` prop. Added 2026-11-11.",
+      },
+      {
+        path: "/custom-look-and-feel/slots",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Slots (Subcomponents)",
+        docPath: "/deepagents/custom-look-and-feel/slots",
+        summary:
+          "Overriding chat sub-components with class strings, props objects or whole components, nested to any depth.",
+        status: "partial",
+        statusNote:
+          "Added 2026-11-11, not yet driven in a browser. Rendered for Deep Agents the page says slots are not available yet and its own demo blocks (welcome screen, assistant message, disclaimer) are \"Missing snippet\"; those are not rebuilt. The seven generic blocks it prints run as tabs inside the Quickstart's provider. Three fail type-checking as published (`data-testid` on the messageView object; untyped CustomMessageView not assignable to the slot; plain CustomUserMessage not assignable to userMessage) and carry @ts-expect-error. CustomToolbar/CustomCopyButton/CustomUserMessage are undefined on the page and written minimal here.",
+      },
+      {
+        path: "/custom-look-and-feel/headless-ui",
+        title: "Headless UI",
+        docPath: "/deepagents/custom-look-and-feel/headless-ui",
+        summary:
+          "A chat built from hooks alone (useAgent, useCopilotKit, useRenderToolCall and friends) with no CopilotChat and no slots.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet, and every code block (the minimal message list and composer, useRenderedMessages, per-role dispatch, tool-call composition, bubble chrome) is \"Missing snippet: No demo found for deepagents::headless-simple / headless-complete\". The page prints no code at all for this framework. Added 2026-11-11.",
+      },
+      {
+        path: "/custom-look-and-feel/reasoning-messages",
+        title: "Reasoning Messages",
+        docPath: "/deepagents/custom-look-and-feel/reasoning-messages",
+        summary:
+          "Customizing the reasoning card: header, content and toggle sub-slots, a fully custom component, or render-prop children on CopilotChatReasoningMessage.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; the default-behaviour block (the agent connection) and the fully custom ReasoningBlock example are \"Missing snippet: No demo found for deepagents::reasoning-default / reasoning-custom\". No Deep Agents agent that emits reasoning tokens is published, so the generic slot blocks it does print would never render here; they are shown as text. Added 2026-11-11.",
       },
     ],
   },
@@ -279,6 +531,41 @@ export const NAV: NavGroup[] = [
         hasDemo: true,
         statusNote:
           "The tool-call variant, with the page's schema unchanged — `z.record(z.unknown())` is valid on this repo's zod 3. The `useInterrupt` variant needs a backend that pauses a run and attaches `interrupt.metadata.action`, which no agent here does.",
+      },
+    ],
+  },
+  {
+    title: "Human-in-the-loop",
+    routes: [
+      {
+        path: "/human-in-the-loop",
+        title: "HITL Overview",
+        docPath: "/deepagents/human-in-the-loop/index",
+        summary:
+          "The two ways to pause for a human: an LLM-called frontend tool (useHumanInTheLoop) or a graph-enforced interrupt() (useInterrupt).",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet; both useHumanInTheLoop blocks (the hitl-in-chat demo and its slot data) are \"Missing snippet: No demo found for deepagents::hitl-in-chat\". No code is printed. Added 2026-11-11.",
+      },
+      {
+        path: "/human-in-the-loop/useInterrupt",
+        title: "Pausing the Agent for Input",
+        docPath: "/deepagents/human-in-the-loop/useInterrupt",
+        summary:
+          "useInterrupt's render props (interrupt, interrupts, resolve, cancel) for the AG-UI standard interrupt flow and the legacy on_interrupt event.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says useInterrupt is not available on this framework and prints no backend. Its two frontend blocks (approve/cancel, multi-interrupt) are generic and shown as text. useInterrupt against a Deep Agent interrupt() is exercised on /generative-ui/your-components/interrupt-based. Added 2026-11-11.",
+      },
+      {
+        path: "/human-in-the-loop/headless",
+        title: "Headless Interrupts",
+        docPath: "/deepagents/human-in-the-loop/headless",
+        summary:
+          "Resolving agent interrupts from any UI, built from useAgent, agent.subscribe and copilotkit.runAgent instead of a useInterrupt render slot.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says headless interrupts are not available on this framework and prints no code at all. Added 2026-11-11.",
       },
     ],
   },
@@ -342,6 +629,21 @@ export const NAV: NavGroup[] = [
         status: "working",
         statusNote:
           "Implements the guide's 3 Steps. Upstream doc content is identical to state-inputs-outputs; both test state_io_graph.",
+      },
+    ],
+  },
+  {
+    title: "Agent capabilities",
+    routes: [
+      {
+        path: "/multi-agent/subagents",
+        title: "Sub-agents",
+        docPath: "/deepagents/multi-agent/subagents",
+        summary:
+          "A supervisor that delegates research, drafting and critique to sub-agents exposed as tools, with a live delegation log in shared state.",
+        status: "broken",
+        statusNote:
+          "Reference only. Rendered for Deep Agents the page says the feature is not available yet and every code block is \"Missing snippet: No demo found for deepagents::subagents\". The `.md` export's LangGraph default code is not this framework's and is itself incomplete (unpublished HeaderForwardingMiddleware, no supervisor agent, undefined SubAgentName/DelegationLogProps/SUB_AGENT_STYLE). No agent, no demo. Added 2026-11-11.",
       },
     ],
   },
