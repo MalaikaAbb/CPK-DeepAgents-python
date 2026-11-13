@@ -182,6 +182,15 @@ The drop-in conversation sidebar. A `CopilotThreadsDrawer` and a `CopilotChat` i
 *Pass:* two rows in the drawer; clicking between them swaps the transcript.
 *Fail:* a locked "Threads are a CopilotKit Intelligence feature" panel — that is `licenseStatus`, not a bug. See the Quickstart's Live connection panel.
 
+**`/prebuilt-components/chat`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotChat>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #51.
+
+**`/prebuilt-components/sidebar`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotSidebar>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #52.
+
+**`/prebuilt-components/popup`** — ❌ **Reference only, no demo.** Added 2026-11-11. `<CopilotPopup>`. Rendered for Deep Agents the page prints only a two-line import; its setup and example blocks are "Missing snippet", so no demo is built (the component is exercised by other routes). **Try:** open the route. **Expect:** the header, a warning callout and the import block. See [FINDINGS.md](FINDINGS.md) #53.
+**`/voice`** — ❌ **Reference only, no demo.** Added 2026-11-11. Speech-to-text in the chat composer through a runtime `TranscriptionService`. Rendered for Deep Agents the page says voice is not available yet and every code block is "Missing snippet: No demo found for deepagents::voice", so no runtime route or mic button is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #45.
+
+**`/generative-ui/reasoning`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendering reasoning tokens with the default card or a custom `reasoningMessage` slot. Rendered for Deep Agents the page says the feature is not available yet and all three code blocks are "Missing snippet", so there is no agent or demo. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #46.
+
 ### Rich Threads
 
 **`/headless-threads`** → `sample_agent`
@@ -244,9 +253,26 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/generative-ui/frontend-cards`** — ❌ **Broken as published**, works with one prop the page never mentions. New upstream 2026-09-11. A card pushed into the transcript from frontend code as a `role: "activity"` message, which is stripped from every run. The demo has two tabs. **As published** is step 2's provider unchanged (`runtimeUrl` + `renderActivityMessages`); its bare `useAgent()` and `<CopilotChat />` ask for the agent id `default`, which a Deep Agents runtime does not register. *Try:* just open it. *What happens:* the chat paints, then `useAgent()` throws `Agent 'default' not found after runtime sync` as soon as `/info` answers (3/3), and the demo prints that error where the chat was. **+ agent="sample_agent"** adds the Quickstart's provider prop and nothing else. *Try:* click **Simulate: deployment finished**, then ask `Have you been shown any deployment card?` *Pass:* the card renders; the probe row reads `agent.messages = activity, user, assistant` and `run payload = user` (read off the request that left the browser); the agent says it saw no card. *Fail:* no card, or `activity` in the payload row. The three snippets are verbatim; step 3's `<DeploymentWatcher />` is mounted inside step 2's provider, which the page never says to do, and its `wss://example.com` socket never delivers, so the button fires the same `addMessage`. See [FINDINGS.md](FINDINGS.md) #22.
 
+**`/generative-ui/mcp-apps`** → `sample_agent` via `/api/copilotkit-mcp-apps` — ⚠️ **Partial.** Added 2026-11-11, not yet driven. The page's runtime route (LangGraphAgent + `MCPAppsMiddleware` with the public Excalidraw server) on its own endpoint. Runs on the middleware 0.1.1 that runtime 1.73.3 already depends on, not the 0.1.3 + runtime 1.76 the page asks for. Set `LANGGRAPH_DEPLOYMENT_URL=http://localhost:8030` (the page's fallback is 8123). *Try:* `Draw a simple flowchart with three boxes: Plan, Build, Ship.` *Pass:* an Excalidraw canvas renders inline. *Fail:* prose only, an error banner, or a tool call with no iframe. See [FINDINGS.md](FINDINGS.md) #59.
+
+**`/generative-ui/open-generative-ui`** — ❌ **Reference only, no demo.** Added 2026-11-11. Agent-written HTML/CSS/JS streamed into a sandboxed iframe. Rendered for Deep Agents the page says the feature is not available yet; the runtime middleware, chat page and sandbox-function blocks are "Missing snippet", leaving only a CDN HTML example. **Try:** open the route. **Expect:** the header, a warning callout and the HTML example. See [FINDINGS.md](FINDINGS.md) #60.
+**`/generative-ui/a2ui`** — 📄 **Reference.** Added 2026-11-11. The A2UI overview: the runtime switch, the three approaches and the three v0.9 operations. Its two blocks are shown as text; neither runs as printed (`const runtime` declared twice with an undefined `myAgent`; Python helpers called with undefined arguments). The mechanism is exercised on `/generative-ui/a2ui/fixed-schema` and `/generative-ui/a2ui/dynamic-schema`. **Try:** open the route and follow the links. See [FINDINGS.md](FINDINGS.md) #57.
+**`/generative-ui/json-render`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendered for Deep Agents the page says the feature is not available yet, has no Code tab, and prints only an example agent output; the renderer, catalog, runtime route and agent are described but not published. **Try:** open the route. **Expect:** the header, a warning callout and the example JSON. See [FINDINGS.md](FINDINGS.md) #55.
+
+**`/generative-ui/hashbrown`** — ❌ **Reference only, no demo.** Added 2026-11-11. Rendered for Deep Agents the page says the feature is not available yet, has no Code tab, and prints only an example agent output; the renderer, catalog, runtime route and agent are described but not published. **Try:** open the route. **Expect:** the header, a warning callout and the example JSON. See [FINDINGS.md](FINDINGS.md) #56.
+**`/generative-ui/tool-based`** → `tool_based_agent` — ❌ **Broken as published.** Added 2026-11-11, not yet driven. The page's Deep Agent with `CopilotKitMiddleware` and a prompt that names `render_bar_chart`; the frontend `useComponent` registration is "Missing snippet" for Deep Agents and is not written. *Try:* `Show me a bar chart of the five largest US states by area.` *Expect (what the published code gives):* a short prose reply, no chart, no tool call. *Fail:* no reply (backend down), or a chart (someone filled the gap). See [FINDINGS.md](FINDINGS.md) #54.
+
 ### Custom Look and Feel
 
 **`/custom-look-and-feel/markdown`** → `sample_agent` — ⚠️ **Partial.** New upstream 2026-09-21. The `markdownRenderer` slot on `CopilotChatAssistantMessage`, reached from `<CopilotChat messageView={{ assistantMessage: { markdownRenderer } }} />`, in all three of the page's forms. The demo has five tabs and a probe that reads the rendered HTML rather than the library's own bookkeeping: the opening tag of the first `<a>`, the number of `[data-streamdown]` elements, the number of elements carrying a literal `node` attribute, and the number carrying the page's `.my-link` / `.my-heading`. **Page code, verbatim** is the published block with nothing added. *Try:* just open it. *Expect:* the chat paints, then throws `Agent 'default' not found after runtime sync` — the block carries no agent id, and Deep Agents registers no `default`, the same defect already reproduced on Frontend-Driven Cards. The other four tabs add `agentId="sample_agent"` and nothing else. **Not yet driven:** this route was built on 2026-09-21 and has no clip; the lines below are what the take should show. *Try:* `Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.` *Pass:* on **components map** the anchor row reads `<a href="…" target="_blank" rel="noopener noreferrer" class="my-link">` with no `data-streamdown`, and the `node` count is 0; on **no override** the same anchor carries `data-streamdown="link"` and Streamdown's classes; the reference-chip is plain text on every tab. *Fail:* a `node` count above 0, or a missing `rel`/`target` on the components tab. See [FINDINGS.md](FINDINGS.md) #32.
+
+**`/custom-look-and-feel/css`** — ❌ **Reference only, no demo.** Added 2026-11-11. CSS theming of the chat. Rendered for Deep Agents the page says the feature is not available yet and its demo blocks are "Missing snippet"; the generic blocks it prints are shown as text because they target the v1 UI package (`@copilotkit/react-ui`, not installed) or would re-skin the whole app, and the icons block uses a prop v2 `CopilotChat` lacks. **Try:** open the route. **Expect:** the header, a warning callout and six verbatim code blocks; no chat. See [FINDINGS.md](FINDINGS.md) #47.
+
+**`/custom-look-and-feel/slots`** → `sample_agent` — ⚠️ **Partial.** Added 2026-11-11, not yet driven in a browser. The seven generic slot blocks the page prints (class string, props object, whole component, two- and three-level nesting, tool-calls view, labels), one tab each, inside the Quickstart's `CopilotKitProvider`. The page's own Deep Agents demo blocks are "Missing snippet" and are not rebuilt. *Try:* each tab, then `What's the weather in Lisbon?`. *Pass:* each tab visibly changes its part of the chat (dashed box around the `get_weather` call on Tool calls; custom placeholder/welcome/disclaimer on Labels). *Fail:* a tab throws or looks like the default chat. Three blocks need `@ts-expect-error` to compile — see [FINDINGS.md](FINDINGS.md) #48.
+
+**`/custom-look-and-feel/headless-ui`** — ❌ **Reference only, no demo.** Added 2026-11-11. A chat built from hooks only. Rendered for Deep Agents the page prints no code at all (every block is "Missing snippet"), so nothing is built. **Try:** open the route. **Expect:** the header and a warning callout; no chat. See [FINDINGS.md](FINDINGS.md) #49.
+
+**`/custom-look-and-feel/reasoning-messages`** — ❌ **Reference only, no demo.** Added 2026-11-11. Customizing the reasoning card. Rendered for Deep Agents the agent block and the custom-component block are "Missing snippet", and no agent here streams reasoning tokens, so the four generic slot blocks are shown as text rather than wired to a chat that would never show them. **Try:** open the route. **Expect:** the header, a warning callout and four verbatim code blocks. See [FINDINGS.md](FINDINGS.md) #50.
 
 ### Rich Threads
 
@@ -299,6 +325,10 @@ A hand-built `StateGraph` with `input_schema` / `output_schema`, because the pag
 *Fail:* a red badge on `question` or `resources` — `input_schema` / `output_schema` were dropped from the `StateGraph` call and the whole of `OverallState` is coming back.
 
 **`/shared-state/workflow-execution`** — reference only, no demo. The page currently serves the Input/Output Schemas content verbatim.
+
+### Agent capabilities
+
+**`/multi-agent/subagents`** — ❌ **Reference only, no demo.** Added 2026-11-11. The page teaches a supervisor that delegates to research/writing/critique sub-agents exposed as tools, with a live delegation log in shared state. Rendered for Deep Agents it says the feature is not available yet and shows "Missing snippet: No demo found for deepagents::subagents" in place of every code block, so there is nothing of this framework's to build. **Try:** open the route. **Expect:** the route header and a warning callout naming what is missing; no chat. A chat or delegation log here would mean someone filled the gap from another framework's code. See [FINDINGS.md](FINDINGS.md) #44.
 
 ### Intelligence
 
@@ -353,6 +383,20 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [human-in-the-loop/headless](https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless) | `/human-in-the-loop/headless` | — | ❌ Broken | Added 2026-11-11. Reference only: not available for Deep Agents per the rendered page — [FINDINGS.md](FINDINGS.md) #63 |
 
 **Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 9 ❌ Broken · 1 🚧 Not started.
+| [generative-ui/mcp-apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps) | `/generative-ui/mcp-apps` | `sample_agent` | ⚠️ Partial | Added 2026-11-11, not driven. Page's runtime at its own basePath; middleware 0.1.1 (transitive) instead of the page's 0.1.3 / runtime 1.76+; needs mcp.excalidraw.com — [FINDINGS.md](FINDINGS.md) #59 |
+| [generative-ui/open-generative-ui](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) | `/generative-ui/open-generative-ui` | — | ❌ Broken | Added 2026-11-11. Reference only: runtime and frontend blocks missing for Deep Agents — [FINDINGS.md](FINDINGS.md) #60 |
+
+**Totals:** 14 ✅ Working · 5 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
+| [generative-ui/a2ui](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui) | `/generative-ui/a2ui` | — | 📄 Reference | Added 2026-11-11. Overview; snippets shown as text (duplicate `const runtime`, undefined `myAgent`); mechanism runs on the fixed/dynamic routes — [FINDINGS.md](FINDINGS.md) #57 |
+
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 1 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
+| [generative-ui/json-render](https://docs.copilotkit.ai/deepagents/generative-ui/json-render) | `/generative-ui/json-render` | — | ❌ Broken | Added 2026-11-11. Reference only: no Code tab for Deep Agents, only an example output printed — [FINDINGS.md](FINDINGS.md) #55 |
+| [generative-ui/hashbrown](https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown) | `/generative-ui/hashbrown` | — | ❌ Broken | Added 2026-11-11. Reference only: no Code tab for Deep Agents, only an example output printed — [FINDINGS.md](FINDINGS.md) #56 |
+
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 8 ❌ Broken · 1 🚧 Not started.
+| [generative-ui/tool-based](https://docs.copilotkit.ai/deepagents/generative-ui/tool-based) | `/generative-ui/tool-based` | `tool_based_agent` | ❌ Broken | Added 2026-11-11, not driven. Backend published; the `useComponent` block is missing for Deep Agents, so the prompted tool is never registered — [FINDINGS.md](FINDINGS.md) #54 |
+
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 7 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. That leaves three routes with no recorder entry: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
@@ -492,6 +536,7 @@ deepagents/
 │       ├── a2ui_fixed.py             a2ui_fixed_agent
 │       ├── a2ui_dynamic.py           a2ui_dynamic_agent
 │       ├── state_inputs_outputs.py   state_io_graph — a StateGraph, not a Deep Agent
+│       ├── tool_based.py             tool_based_agent (Components as Tools; frontend half unpublished)
 │       └── a2ui_schemas/             flight_schema.json, booked_schema.json
 │
 └── frontend/                         Next.js App Router
@@ -510,6 +555,7 @@ deepagents/
             ├── api/
             │   ├── copilotkit/[[...slug]]/route.ts   all graphs, A2UI off for fixed-schema
             │   ├── copilotkit-a2ui-dynamic/[[...slug]]/route.ts  dynamic-schema only, injection on
+            │   ├── copilotkit-mcp-apps/[[...slug]]/route.ts  MCP Apps page's runtime (Excalidraw middleware)
             │   ├── copilotkit-learning/[[...slug]]/route.ts      the Learning page's runtime
             │   └── copilotkit-memory/[[...slug]]/route.ts        memory: { access }, the undocumented option
             ├── cookbook/jev-generative-ui/            every published block, four of them compiled and unmounted
@@ -543,9 +589,19 @@ Grouped the way the doc nav groups them.
 - [A2UI · Styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling)
 - [A2UI · Advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced)
 - [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
+- [MCP Apps](https://docs.copilotkit.ai/deepagents/generative-ui/mcp-apps)
+- [Open Generative UI](https://docs.copilotkit.ai/deepagents/generative-ui/open-generative-ui) — reference only; no Deep Agents code published
+- [A2UI](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui) — overview, reference
+- [JSON Render](https://docs.copilotkit.ai/deepagents/generative-ui/json-render) — reference only
+- [Hashbrown](https://docs.copilotkit.ai/deepagents/generative-ui/hashbrown) — reference only
+- [Components as Tools](https://docs.copilotkit.ai/deepagents/generative-ui/tool-based) — backend only; `useComponent` block not published for Deep Agents
 
 **Custom Look and Feel**
 - [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
+- [CSS Customization](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/css) — reference only
+- [Slots (Subcomponents)](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/slots)
+- [Headless UI](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/headless-ui) — reference only; no Deep Agents code published
+- [Reasoning Messages](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/reasoning-messages) — reference only
 
 **Rich Threads**
 - [Thread & History Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle)
@@ -576,5 +632,13 @@ Grouped the way the doc nav groups them.
 - [HITL Overview](https://docs.copilotkit.ai/deepagents/human-in-the-loop/index) — reference only
 - [Pausing the Agent for Input](https://docs.copilotkit.ai/deepagents/human-in-the-loop/useInterrupt) — reference only
 - [Headless Interrupts](https://docs.copilotkit.ai/deepagents/human-in-the-loop/headless) — reference only
+**Basics**
+- [CopilotChat](https://docs.copilotkit.ai/deepagents/prebuilt-components/chat) — reference only
+- [CopilotSidebar](https://docs.copilotkit.ai/deepagents/prebuilt-components/sidebar) — reference only
+- [CopilotPopup](https://docs.copilotkit.ai/deepagents/prebuilt-components/popup) — reference only
+- [Voice](https://docs.copilotkit.ai/deepagents/voice) — reference only; no Deep Agents code published
+- [Reasoning](https://docs.copilotkit.ai/deepagents/generative-ui/reasoning) — reference only; no Deep Agents code published
+**Agent capabilities**
+- [Sub-agents](https://docs.copilotkit.ai/deepagents/multi-agent/subagents) — reference only; no Deep Agents code published
 
 **Not covered by this repo.** The Deep Agents sidebar also lists Human in the Loop, and an Intelligence Platform group (Rich Threads, Headless Threads, Thread & History Lifecycle, Synchronize Thread History, and four premium pages). Those were outside the scope requested for this build. Every page listed above is implemented or explicitly accounted for.
